@@ -36,7 +36,6 @@ POST_UNINSTALL = :
 bin_PROGRAMS = bin/avc_two_way$(EXEEXT) bin/example_yuv$(EXEEXT) \
 	bin/example_mjpg$(EXEEXT) bin/example_avc$(EXEEXT) \
 	bin/fw_downloader$(EXEEXT) bin/fw_check$(EXEEXT) \
-	bin/skype_avc_two_way$(EXEEXT) bin/skype_avc_one_way$(EXEEXT) \
 	bin/example_vp8$(EXEEXT) bin/vp8_two_way$(EXEEXT) \
 	bin/avc_simulcast$(EXEEXT) bin/vp8_simulcast$(EXEEXT) \
 	bin/example_control$(EXEEXT)
@@ -93,9 +92,6 @@ am_libqic_sky_module_a_OBJECTS =  \
 	qic_api/qic_src/libqic_sky_module_a-demux.$(OBJEXT) \
 	qic_api/qic_src/libqic_sky_module_a-qic_control.$(OBJEXT) \
 	qic_api/qic_src/libqic_sky_module_a-qic_xuctrl.$(OBJEXT) \
-	qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.$(OBJEXT) \
-	qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.$(OBJEXT) \
-	qic_api/sky_src/libqic_sky_module_a-sky_parseframe.$(OBJEXT) \
 	qic_api/qic_src/libqic_sky_module_a-vp8demux.$(OBJEXT) \
 	qic_api/qic_src/libqic_sky_module_a-mdparse.$(OBJEXT)
 libqic_sky_module_a_OBJECTS = $(am_libqic_sky_module_a_OBJECTS)
@@ -177,22 +173,6 @@ bin_fw_downloader_OBJECTS = $(am_bin_fw_downloader_OBJECTS)
 bin_fw_downloader_DEPENDENCIES =
 bin_fw_downloader_LINK = $(CCLD) $(bin_fw_downloader_CFLAGS) $(CFLAGS) \
 	$(bin_fw_downloader_LDFLAGS) $(LDFLAGS) -o $@
-am_bin_skype_avc_one_way_OBJECTS =  \
-	qic_example/bin_skype_avc_one_way-skype_avc_one_way.$(OBJEXT) \
-	qic_example/bin_skype_avc_one_way-misc_writefile.$(OBJEXT) \
-	qic_example/bin_skype_avc_one_way-misc_system.$(OBJEXT)
-bin_skype_avc_one_way_OBJECTS = $(am_bin_skype_avc_one_way_OBJECTS)
-bin_skype_avc_one_way_DEPENDENCIES =
-bin_skype_avc_one_way_LINK = $(CCLD) $(bin_skype_avc_one_way_CFLAGS) \
-	$(CFLAGS) $(bin_skype_avc_one_way_LDFLAGS) $(LDFLAGS) -o $@
-am_bin_skype_avc_two_way_OBJECTS =  \
-	qic_example/bin_skype_avc_two_way-skype_avc_two_way.$(OBJEXT) \
-	qic_example/bin_skype_avc_two_way-misc_writefile.$(OBJEXT) \
-	qic_example/bin_skype_avc_two_way-misc_system.$(OBJEXT)
-bin_skype_avc_two_way_OBJECTS = $(am_bin_skype_avc_two_way_OBJECTS)
-bin_skype_avc_two_way_DEPENDENCIES =
-bin_skype_avc_two_way_LINK = $(CCLD) $(bin_skype_avc_two_way_CFLAGS) \
-	$(CFLAGS) $(bin_skype_avc_two_way_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_vp8_simulcast_OBJECTS =  \
 	qic_example/bin_vp8_simulcast-vp8_simulcast.$(OBJEXT) \
 	qic_example/bin_vp8_simulcast-simulcast_writefile.$(OBJEXT) \
@@ -223,8 +203,7 @@ SOURCES = $(libqic_sky_module_a_SOURCES) \
 	$(bin_example_avc_SOURCES) $(bin_example_control_SOURCES) \
 	$(bin_example_mjpg_SOURCES) $(bin_example_vp8_SOURCES) \
 	$(bin_example_yuv_SOURCES) $(bin_fw_check_SOURCES) \
-	$(bin_fw_downloader_SOURCES) $(bin_skype_avc_one_way_SOURCES) \
-	$(bin_skype_avc_two_way_SOURCES) $(bin_vp8_simulcast_SOURCES) \
+	$(bin_fw_downloader_SOURCES) $(bin_vp8_simulcast_SOURCES) \
 	$(bin_vp8_two_way_SOURCES)
 DIST_SOURCES = $(libqic_sky_module_a_SOURCES) \
 	$(libqic_sky_module_release_a_SOURCES) \
@@ -232,8 +211,7 @@ DIST_SOURCES = $(libqic_sky_module_a_SOURCES) \
 	$(bin_example_avc_SOURCES) $(bin_example_control_SOURCES) \
 	$(bin_example_mjpg_SOURCES) $(bin_example_vp8_SOURCES) \
 	$(bin_example_yuv_SOURCES) $(bin_fw_check_SOURCES) \
-	$(bin_fw_downloader_SOURCES) $(bin_skype_avc_one_way_SOURCES) \
-	$(bin_skype_avc_two_way_SOURCES) $(bin_vp8_simulcast_SOURCES) \
+	$(bin_fw_downloader_SOURCES) $(bin_vp8_simulcast_SOURCES) \
 	$(bin_vp8_two_way_SOURCES)
 ETAGS = etags
 CTAGS = ctags
@@ -343,23 +321,17 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+AUTOMAKE_OPTIONS = foreign
 lib_LIBRARIES = libqic_sky_module.a libqic_sky_module_release.a
 libqic_sky_module_a_SOURCES = qic_api/qic_src/H264Enum.c \
 	qic_api/qic_src/demux.c qic_api/qic_src/qic_control.c \
 	qic_api/qic_src/qic_xuctrl.c qic_api/qic_include/H264Enum.h \
 	qic_api/qic_include/demux.h qic_api/qic_include/qic_control.h \
 	qic_api/qic_include/qic_xuctrl.h qic_api/qic_include/qic_cfg.h \
-	qic_api/qic_include/qic_firmware.h \
-	qic_api/sky_src/skypeecxuparser.c \
-	qic_api/sky_include/skypeecxuparser.h \
-	qic_api/sky_include/SkypeECXU.h qic_api/sky_src/sky_xuctrl.c \
-	qic_api/sky_include/sky_xuctrl.h \
-	qic_api/sky_src/sky_parseframe.c \
-	qic_api/sky_include/sky_parseframe.h \
-	qic_api/qic_src/vp8demux.c qic_api/qic_include/vp8demux.h \
-	qic_api/qic_src/mdparse.c qic_api/qic_include/mdparse.h
-libqic_sky_module_a_CFLAGS = -O2 -g -Wall -Iqic_api/qic_include \
-	-DSKYPEAPI -DDEBUG_LOG
+	qic_api/qic_include/qic_firmware.h qic_api/qic_src/vp8demux.c \
+	qic_api/qic_include/vp8demux.h qic_api/qic_src/mdparse.c \
+	qic_api/qic_include/mdparse.h
+libqic_sky_module_a_CFLAGS = -O2 -g -Wall -DDEBUG_LOG
 libqic_sky_module_release_a_SOURCES = qic_api/qic_src/H264Enum.c \
 	qic_api/qic_src/demux.c qic_api/qic_src/qic_control.c \
 	qic_api/qic_src/qic_xuctrl.c qic_api/qic_include/H264Enum.h \
@@ -367,144 +339,61 @@ libqic_sky_module_release_a_SOURCES = qic_api/qic_src/H264Enum.c \
 	qic_api/qic_include/qic_xuctrl.h qic_api/qic_include/qic_cfg.h \
 	qic_api/qic_include/qic_firmware.h qic_api/qic_src/vp8demux.c \
 	qic_api/qic_include/vp8demux.h
-libqic_sky_module_release_a_CFLAGS = -O2 -g -Wall \
-	-Iqic_api/qic_include -DVP8API
+libqic_sky_module_release_a_CFLAGS = -O2 -g -Wall -DVP8API
 bin_avc_two_way_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_avc_two_way_LDFLAGS = -L./ 
 bin_avc_two_way_LDADD = -lrt -lqic_sky_module
-bin_avc_two_way_SOURCES = \
-	qic_example/avc_two_way.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_avc_two_way_SOURCES = qic_example/avc_two_way.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_yuv_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_yuv_LDFLAGS = -L./
 bin_example_yuv_LDADD = -lrt -lqic_sky_module
-bin_example_yuv_SOURCES = \
-	qic_example/example_yuvonly.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_example_yuv_SOURCES = qic_example/example_yuvonly.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_mjpg_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_mjpg_LDFLAGS = -L./ 
 bin_example_mjpg_LDADD = -lrt -lqic_sky_module
-bin_example_mjpg_SOURCES = \
-	qic_example/example_mjpgonly.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_example_mjpg_SOURCES = qic_example/example_mjpgonly.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_avc_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_avc_LDFLAGS = -L./
 bin_example_avc_LDADD = -lrt -lqic_sky_module 
-bin_example_avc_SOURCES = \
-	qic_example/example_avconly.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_example_avc_SOURCES = qic_example/example_avconly.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_vp8_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_vp8_LDFLAGS = -L./ 
 bin_example_vp8_LDADD = -lrt -lqic_sky_module
-bin_example_vp8_SOURCES = \
-	qic_example/example_vp8only.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_example_vp8_SOURCES = qic_example/example_vp8only.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_fw_downloader_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_fw_downloader_LDFLAGS = -L./
 bin_fw_downloader_LDADD = -lrt -lqic_sky_module
-bin_fw_downloader_SOURCES = \
-	qic_example/fw_downloader.c \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_fw_downloader_SOURCES = qic_example/fw_downloader.c qic_example/misc_system.c qic_example/misc_system.h
 bin_fw_check_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include -DUSE_FWRITE
 bin_fw_check_LDFLAGS = -L./
 bin_fw_check_LDADD = -lrt -lqic_sky_module
-bin_fw_check_SOURCES = \
-	qic_example/fw_check.c \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
-bin_skype_avc_two_way_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
-	-Iqic_api/sky_include -DUSE_FWRITE -DSKYPEAPI
-bin_skype_avc_two_way_LDFLAGS = -L./ 
-bin_skype_avc_two_way_LDADD = -lrt -lqic_sky_module
-bin_skype_avc_two_way_SOURCES = \
-	qic_example/skype_avc_two_way.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
-bin_skype_avc_one_way_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
-	-Iqic_api/sky_include -DUSE_FWRITE -DSKYPEAPI
-bin_skype_avc_one_way_LDFLAGS = -L./
-bin_skype_avc_one_way_LDADD = -lrt -lqic_sky_module  
-bin_skype_avc_one_way_SOURCES = \
-	qic_example/skype_avc_one_way.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_fw_check_SOURCES = qic_example/fw_check.c qic_example/misc_system.c qic_example/misc_system.h
 bin_vp8_two_way_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-Iqic_api/sky_include -DUSE_FWRITE
 bin_vp8_two_way_LDFLAGS = -L./ 
 bin_vp8_two_way_LDADD = -lrt -lqic_sky_module
-bin_vp8_two_way_SOURCES = \
-	qic_example/vp8_two_way.c \
-	qic_example/misc_writefile.c \
-	qic_example/misc_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_vp8_two_way_SOURCES = qic_example/vp8_two_way.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_vp8_simulcast_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_vp8_simulcast_LDFLAGS = -L./ 
 bin_vp8_simulcast_LDADD = -lrt -lqic_sky_module
-bin_vp8_simulcast_SOURCES = \
-	qic_example/vp8_simulcast.c \
-	qic_example/simulcast_writefile.c \
-	qic_example/simulcast_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_vp8_simulcast_SOURCES = qic_example/vp8_simulcast.c qic_example/simulcast_writefile.c qic_example/simulcast_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_avc_simulcast_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_avc_simulcast_LDFLAGS = -L./ 
 bin_avc_simulcast_LDADD = -lrt -lqic_sky_module
-bin_avc_simulcast_SOURCES = \
-	qic_example/avc_simulcast.c \
-	qic_example/simulcast_writefile.c \
-	qic_example/simulcast_writefile.h \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_avc_simulcast_SOURCES = qic_example/avc_simulcast.c qic_example/simulcast_writefile.c qic_example/simulcast_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_control_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_control_LDFLAGS = -L./
 bin_example_control_LDADD = -lrt -lqic_sky_module
-bin_example_control_SOURCES = \
-	qic_example/example_control.c \
-	qic_example/misc_system.c \
-	qic_example/misc_system.h
-
+bin_example_control_SOURCES = qic_example/example_control.c qic_example/misc_system.c qic_example/misc_system.h
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -607,21 +496,6 @@ qic_api/qic_src/libqic_sky_module_a-qic_control.$(OBJEXT):  \
 qic_api/qic_src/libqic_sky_module_a-qic_xuctrl.$(OBJEXT):  \
 	qic_api/qic_src/$(am__dirstamp) \
 	qic_api/qic_src/$(DEPDIR)/$(am__dirstamp)
-qic_api/sky_src/$(am__dirstamp):
-	@$(MKDIR_P) qic_api/sky_src
-	@: > qic_api/sky_src/$(am__dirstamp)
-qic_api/sky_src/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) qic_api/sky_src/$(DEPDIR)
-	@: > qic_api/sky_src/$(DEPDIR)/$(am__dirstamp)
-qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.$(OBJEXT):  \
-	qic_api/sky_src/$(am__dirstamp) \
-	qic_api/sky_src/$(DEPDIR)/$(am__dirstamp)
-qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.$(OBJEXT):  \
-	qic_api/sky_src/$(am__dirstamp) \
-	qic_api/sky_src/$(DEPDIR)/$(am__dirstamp)
-qic_api/sky_src/libqic_sky_module_a-sky_parseframe.$(OBJEXT):  \
-	qic_api/sky_src/$(am__dirstamp) \
-	qic_api/sky_src/$(DEPDIR)/$(am__dirstamp)
 qic_api/qic_src/libqic_sky_module_a-vp8demux.$(OBJEXT):  \
 	qic_api/qic_src/$(am__dirstamp) \
 	qic_api/qic_src/$(DEPDIR)/$(am__dirstamp)
@@ -796,30 +670,6 @@ qic_example/bin_fw_downloader-misc_system.$(OBJEXT):  \
 bin/fw_downloader$(EXEEXT): $(bin_fw_downloader_OBJECTS) $(bin_fw_downloader_DEPENDENCIES) $(EXTRA_bin_fw_downloader_DEPENDENCIES) bin/$(am__dirstamp)
 	@rm -f bin/fw_downloader$(EXEEXT)
 	$(bin_fw_downloader_LINK) $(bin_fw_downloader_OBJECTS) $(bin_fw_downloader_LDADD) $(LIBS)
-qic_example/bin_skype_avc_one_way-skype_avc_one_way.$(OBJEXT):  \
-	qic_example/$(am__dirstamp) \
-	qic_example/$(DEPDIR)/$(am__dirstamp)
-qic_example/bin_skype_avc_one_way-misc_writefile.$(OBJEXT):  \
-	qic_example/$(am__dirstamp) \
-	qic_example/$(DEPDIR)/$(am__dirstamp)
-qic_example/bin_skype_avc_one_way-misc_system.$(OBJEXT):  \
-	qic_example/$(am__dirstamp) \
-	qic_example/$(DEPDIR)/$(am__dirstamp)
-bin/skype_avc_one_way$(EXEEXT): $(bin_skype_avc_one_way_OBJECTS) $(bin_skype_avc_one_way_DEPENDENCIES) $(EXTRA_bin_skype_avc_one_way_DEPENDENCIES) bin/$(am__dirstamp)
-	@rm -f bin/skype_avc_one_way$(EXEEXT)
-	$(bin_skype_avc_one_way_LINK) $(bin_skype_avc_one_way_OBJECTS) $(bin_skype_avc_one_way_LDADD) $(LIBS)
-qic_example/bin_skype_avc_two_way-skype_avc_two_way.$(OBJEXT):  \
-	qic_example/$(am__dirstamp) \
-	qic_example/$(DEPDIR)/$(am__dirstamp)
-qic_example/bin_skype_avc_two_way-misc_writefile.$(OBJEXT):  \
-	qic_example/$(am__dirstamp) \
-	qic_example/$(DEPDIR)/$(am__dirstamp)
-qic_example/bin_skype_avc_two_way-misc_system.$(OBJEXT):  \
-	qic_example/$(am__dirstamp) \
-	qic_example/$(DEPDIR)/$(am__dirstamp)
-bin/skype_avc_two_way$(EXEEXT): $(bin_skype_avc_two_way_OBJECTS) $(bin_skype_avc_two_way_DEPENDENCIES) $(EXTRA_bin_skype_avc_two_way_DEPENDENCIES) bin/$(am__dirstamp)
-	@rm -f bin/skype_avc_two_way$(EXEEXT)
-	$(bin_skype_avc_two_way_LINK) $(bin_skype_avc_two_way_OBJECTS) $(bin_skype_avc_two_way_LDADD) $(LIBS)
 qic_example/bin_vp8_simulcast-vp8_simulcast.$(OBJEXT):  \
 	qic_example/$(am__dirstamp) \
 	qic_example/$(DEPDIR)/$(am__dirstamp)
@@ -858,9 +708,6 @@ mostlyclean-compile:
 	-rm -f qic_api/qic_src/libqic_sky_module_release_a-qic_control.$(OBJEXT)
 	-rm -f qic_api/qic_src/libqic_sky_module_release_a-qic_xuctrl.$(OBJEXT)
 	-rm -f qic_api/qic_src/libqic_sky_module_release_a-vp8demux.$(OBJEXT)
-	-rm -f qic_api/sky_src/libqic_sky_module_a-sky_parseframe.$(OBJEXT)
-	-rm -f qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.$(OBJEXT)
-	-rm -f qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.$(OBJEXT)
 	-rm -f qic_example/bin_avc_simulcast-avc_simulcast.$(OBJEXT)
 	-rm -f qic_example/bin_avc_simulcast-misc_system.$(OBJEXT)
 	-rm -f qic_example/bin_avc_simulcast-simulcast_writefile.$(OBJEXT)
@@ -885,12 +732,6 @@ mostlyclean-compile:
 	-rm -f qic_example/bin_fw_check-misc_system.$(OBJEXT)
 	-rm -f qic_example/bin_fw_downloader-fw_downloader.$(OBJEXT)
 	-rm -f qic_example/bin_fw_downloader-misc_system.$(OBJEXT)
-	-rm -f qic_example/bin_skype_avc_one_way-misc_system.$(OBJEXT)
-	-rm -f qic_example/bin_skype_avc_one_way-misc_writefile.$(OBJEXT)
-	-rm -f qic_example/bin_skype_avc_one_way-skype_avc_one_way.$(OBJEXT)
-	-rm -f qic_example/bin_skype_avc_two_way-misc_system.$(OBJEXT)
-	-rm -f qic_example/bin_skype_avc_two_way-misc_writefile.$(OBJEXT)
-	-rm -f qic_example/bin_skype_avc_two_way-skype_avc_two_way.$(OBJEXT)
 	-rm -f qic_example/bin_vp8_simulcast-misc_system.$(OBJEXT)
 	-rm -f qic_example/bin_vp8_simulcast-simulcast_writefile.$(OBJEXT)
 	-rm -f qic_example/bin_vp8_simulcast-vp8_simulcast.$(OBJEXT)
@@ -912,9 +753,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@qic_api/qic_src/$(DEPDIR)/libqic_sky_module_release_a-qic_control.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_api/qic_src/$(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_api/qic_src/$(DEPDIR)/libqic_sky_module_release_a-vp8demux.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_parseframe.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_xuctrl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-skypeecxuparser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_avc_simulcast-avc_simulcast.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_avc_simulcast-misc_system.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_avc_simulcast-simulcast_writefile.Po@am__quote@
@@ -939,12 +777,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_fw_check-misc_system.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_fw_downloader-fw_downloader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_fw_downloader-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_writefile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_skype_avc_one_way-skype_avc_one_way.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_writefile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_skype_avc_two_way-skype_avc_two_way.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_vp8_simulcast-misc_system.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_vp8_simulcast-simulcast_writefile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@qic_example/$(DEPDIR)/bin_vp8_simulcast-vp8_simulcast.Po@am__quote@
@@ -1023,48 +855,6 @@ qic_api/qic_src/libqic_sky_module_a-qic_xuctrl.obj: qic_api/qic_src/qic_xuctrl.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_api/qic_src/qic_xuctrl.c' object='qic_api/qic_src/libqic_sky_module_a-qic_xuctrl.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o qic_api/qic_src/libqic_sky_module_a-qic_xuctrl.obj `if test -f 'qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) 'qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/qic_api/qic_src/qic_xuctrl.c'; fi`
-
-qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.o: qic_api/sky_src/skypeecxuparser.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.o -MD -MP -MF qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-skypeecxuparser.Tpo -c -o qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.o `test -f 'qic_api/sky_src/skypeecxuparser.c' || echo '$(srcdir)/'`qic_api/sky_src/skypeecxuparser.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-skypeecxuparser.Tpo qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-skypeecxuparser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_api/sky_src/skypeecxuparser.c' object='qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.o `test -f 'qic_api/sky_src/skypeecxuparser.c' || echo '$(srcdir)/'`qic_api/sky_src/skypeecxuparser.c
-
-qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.obj: qic_api/sky_src/skypeecxuparser.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.obj -MD -MP -MF qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-skypeecxuparser.Tpo -c -o qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.obj `if test -f 'qic_api/sky_src/skypeecxuparser.c'; then $(CYGPATH_W) 'qic_api/sky_src/skypeecxuparser.c'; else $(CYGPATH_W) '$(srcdir)/qic_api/sky_src/skypeecxuparser.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-skypeecxuparser.Tpo qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-skypeecxuparser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_api/sky_src/skypeecxuparser.c' object='qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o qic_api/sky_src/libqic_sky_module_a-skypeecxuparser.obj `if test -f 'qic_api/sky_src/skypeecxuparser.c'; then $(CYGPATH_W) 'qic_api/sky_src/skypeecxuparser.c'; else $(CYGPATH_W) '$(srcdir)/qic_api/sky_src/skypeecxuparser.c'; fi`
-
-qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.o: qic_api/sky_src/sky_xuctrl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.o -MD -MP -MF qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_xuctrl.Tpo -c -o qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.o `test -f 'qic_api/sky_src/sky_xuctrl.c' || echo '$(srcdir)/'`qic_api/sky_src/sky_xuctrl.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_xuctrl.Tpo qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_xuctrl.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_api/sky_src/sky_xuctrl.c' object='qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.o `test -f 'qic_api/sky_src/sky_xuctrl.c' || echo '$(srcdir)/'`qic_api/sky_src/sky_xuctrl.c
-
-qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.obj: qic_api/sky_src/sky_xuctrl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.obj -MD -MP -MF qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_xuctrl.Tpo -c -o qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.obj `if test -f 'qic_api/sky_src/sky_xuctrl.c'; then $(CYGPATH_W) 'qic_api/sky_src/sky_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/qic_api/sky_src/sky_xuctrl.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_xuctrl.Tpo qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_xuctrl.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_api/sky_src/sky_xuctrl.c' object='qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o qic_api/sky_src/libqic_sky_module_a-sky_xuctrl.obj `if test -f 'qic_api/sky_src/sky_xuctrl.c'; then $(CYGPATH_W) 'qic_api/sky_src/sky_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/qic_api/sky_src/sky_xuctrl.c'; fi`
-
-qic_api/sky_src/libqic_sky_module_a-sky_parseframe.o: qic_api/sky_src/sky_parseframe.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT qic_api/sky_src/libqic_sky_module_a-sky_parseframe.o -MD -MP -MF qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_parseframe.Tpo -c -o qic_api/sky_src/libqic_sky_module_a-sky_parseframe.o `test -f 'qic_api/sky_src/sky_parseframe.c' || echo '$(srcdir)/'`qic_api/sky_src/sky_parseframe.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_parseframe.Tpo qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_parseframe.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_api/sky_src/sky_parseframe.c' object='qic_api/sky_src/libqic_sky_module_a-sky_parseframe.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o qic_api/sky_src/libqic_sky_module_a-sky_parseframe.o `test -f 'qic_api/sky_src/sky_parseframe.c' || echo '$(srcdir)/'`qic_api/sky_src/sky_parseframe.c
-
-qic_api/sky_src/libqic_sky_module_a-sky_parseframe.obj: qic_api/sky_src/sky_parseframe.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT qic_api/sky_src/libqic_sky_module_a-sky_parseframe.obj -MD -MP -MF qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_parseframe.Tpo -c -o qic_api/sky_src/libqic_sky_module_a-sky_parseframe.obj `if test -f 'qic_api/sky_src/sky_parseframe.c'; then $(CYGPATH_W) 'qic_api/sky_src/sky_parseframe.c'; else $(CYGPATH_W) '$(srcdir)/qic_api/sky_src/sky_parseframe.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_parseframe.Tpo qic_api/sky_src/$(DEPDIR)/libqic_sky_module_a-sky_parseframe.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_api/sky_src/sky_parseframe.c' object='qic_api/sky_src/libqic_sky_module_a-sky_parseframe.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o qic_api/sky_src/libqic_sky_module_a-sky_parseframe.obj `if test -f 'qic_api/sky_src/sky_parseframe.c'; then $(CYGPATH_W) 'qic_api/sky_src/sky_parseframe.c'; else $(CYGPATH_W) '$(srcdir)/qic_api/sky_src/sky_parseframe.c'; fi`
 
 qic_api/qic_src/libqic_sky_module_a-vp8demux.o: qic_api/qic_src/vp8demux.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT qic_api/qic_src/libqic_sky_module_a-vp8demux.o -MD -MP -MF qic_api/qic_src/$(DEPDIR)/libqic_sky_module_a-vp8demux.Tpo -c -o qic_api/qic_src/libqic_sky_module_a-vp8demux.o `test -f 'qic_api/qic_src/vp8demux.c' || echo '$(srcdir)/'`qic_api/qic_src/vp8demux.c
@@ -1500,90 +1290,6 @@ qic_example/bin_fw_downloader-misc_system.obj: qic_example/misc_system.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_fw_downloader_CFLAGS) $(CFLAGS) -c -o qic_example/bin_fw_downloader-misc_system.obj `if test -f 'qic_example/misc_system.c'; then $(CYGPATH_W) 'qic_example/misc_system.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_system.c'; fi`
 
-qic_example/bin_skype_avc_one_way-skype_avc_one_way.o: qic_example/skype_avc_one_way.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_one_way-skype_avc_one_way.o -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_one_way-skype_avc_one_way.Tpo -c -o qic_example/bin_skype_avc_one_way-skype_avc_one_way.o `test -f 'qic_example/skype_avc_one_way.c' || echo '$(srcdir)/'`qic_example/skype_avc_one_way.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_one_way-skype_avc_one_way.Tpo qic_example/$(DEPDIR)/bin_skype_avc_one_way-skype_avc_one_way.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/skype_avc_one_way.c' object='qic_example/bin_skype_avc_one_way-skype_avc_one_way.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_one_way-skype_avc_one_way.o `test -f 'qic_example/skype_avc_one_way.c' || echo '$(srcdir)/'`qic_example/skype_avc_one_way.c
-
-qic_example/bin_skype_avc_one_way-skype_avc_one_way.obj: qic_example/skype_avc_one_way.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_one_way-skype_avc_one_way.obj -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_one_way-skype_avc_one_way.Tpo -c -o qic_example/bin_skype_avc_one_way-skype_avc_one_way.obj `if test -f 'qic_example/skype_avc_one_way.c'; then $(CYGPATH_W) 'qic_example/skype_avc_one_way.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/skype_avc_one_way.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_one_way-skype_avc_one_way.Tpo qic_example/$(DEPDIR)/bin_skype_avc_one_way-skype_avc_one_way.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/skype_avc_one_way.c' object='qic_example/bin_skype_avc_one_way-skype_avc_one_way.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_one_way-skype_avc_one_way.obj `if test -f 'qic_example/skype_avc_one_way.c'; then $(CYGPATH_W) 'qic_example/skype_avc_one_way.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/skype_avc_one_way.c'; fi`
-
-qic_example/bin_skype_avc_one_way-misc_writefile.o: qic_example/misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_one_way-misc_writefile.o -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_writefile.Tpo -c -o qic_example/bin_skype_avc_one_way-misc_writefile.o `test -f 'qic_example/misc_writefile.c' || echo '$(srcdir)/'`qic_example/misc_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_writefile.Tpo qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_writefile.c' object='qic_example/bin_skype_avc_one_way-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_one_way-misc_writefile.o `test -f 'qic_example/misc_writefile.c' || echo '$(srcdir)/'`qic_example/misc_writefile.c
-
-qic_example/bin_skype_avc_one_way-misc_writefile.obj: qic_example/misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_one_way-misc_writefile.obj -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_writefile.Tpo -c -o qic_example/bin_skype_avc_one_way-misc_writefile.obj `if test -f 'qic_example/misc_writefile.c'; then $(CYGPATH_W) 'qic_example/misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_writefile.Tpo qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_writefile.c' object='qic_example/bin_skype_avc_one_way-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_one_way-misc_writefile.obj `if test -f 'qic_example/misc_writefile.c'; then $(CYGPATH_W) 'qic_example/misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_writefile.c'; fi`
-
-qic_example/bin_skype_avc_one_way-misc_system.o: qic_example/misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_one_way-misc_system.o -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_system.Tpo -c -o qic_example/bin_skype_avc_one_way-misc_system.o `test -f 'qic_example/misc_system.c' || echo '$(srcdir)/'`qic_example/misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_system.Tpo qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_system.c' object='qic_example/bin_skype_avc_one_way-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_one_way-misc_system.o `test -f 'qic_example/misc_system.c' || echo '$(srcdir)/'`qic_example/misc_system.c
-
-qic_example/bin_skype_avc_one_way-misc_system.obj: qic_example/misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_one_way-misc_system.obj -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_system.Tpo -c -o qic_example/bin_skype_avc_one_way-misc_system.obj `if test -f 'qic_example/misc_system.c'; then $(CYGPATH_W) 'qic_example/misc_system.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_system.Tpo qic_example/$(DEPDIR)/bin_skype_avc_one_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_system.c' object='qic_example/bin_skype_avc_one_way-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_one_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_one_way-misc_system.obj `if test -f 'qic_example/misc_system.c'; then $(CYGPATH_W) 'qic_example/misc_system.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_system.c'; fi`
-
-qic_example/bin_skype_avc_two_way-skype_avc_two_way.o: qic_example/skype_avc_two_way.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_two_way-skype_avc_two_way.o -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_two_way-skype_avc_two_way.Tpo -c -o qic_example/bin_skype_avc_two_way-skype_avc_two_way.o `test -f 'qic_example/skype_avc_two_way.c' || echo '$(srcdir)/'`qic_example/skype_avc_two_way.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_two_way-skype_avc_two_way.Tpo qic_example/$(DEPDIR)/bin_skype_avc_two_way-skype_avc_two_way.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/skype_avc_two_way.c' object='qic_example/bin_skype_avc_two_way-skype_avc_two_way.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_two_way-skype_avc_two_way.o `test -f 'qic_example/skype_avc_two_way.c' || echo '$(srcdir)/'`qic_example/skype_avc_two_way.c
-
-qic_example/bin_skype_avc_two_way-skype_avc_two_way.obj: qic_example/skype_avc_two_way.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_two_way-skype_avc_two_way.obj -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_two_way-skype_avc_two_way.Tpo -c -o qic_example/bin_skype_avc_two_way-skype_avc_two_way.obj `if test -f 'qic_example/skype_avc_two_way.c'; then $(CYGPATH_W) 'qic_example/skype_avc_two_way.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/skype_avc_two_way.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_two_way-skype_avc_two_way.Tpo qic_example/$(DEPDIR)/bin_skype_avc_two_way-skype_avc_two_way.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/skype_avc_two_way.c' object='qic_example/bin_skype_avc_two_way-skype_avc_two_way.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_two_way-skype_avc_two_way.obj `if test -f 'qic_example/skype_avc_two_way.c'; then $(CYGPATH_W) 'qic_example/skype_avc_two_way.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/skype_avc_two_way.c'; fi`
-
-qic_example/bin_skype_avc_two_way-misc_writefile.o: qic_example/misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_two_way-misc_writefile.o -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_writefile.Tpo -c -o qic_example/bin_skype_avc_two_way-misc_writefile.o `test -f 'qic_example/misc_writefile.c' || echo '$(srcdir)/'`qic_example/misc_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_writefile.Tpo qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_writefile.c' object='qic_example/bin_skype_avc_two_way-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_two_way-misc_writefile.o `test -f 'qic_example/misc_writefile.c' || echo '$(srcdir)/'`qic_example/misc_writefile.c
-
-qic_example/bin_skype_avc_two_way-misc_writefile.obj: qic_example/misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_two_way-misc_writefile.obj -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_writefile.Tpo -c -o qic_example/bin_skype_avc_two_way-misc_writefile.obj `if test -f 'qic_example/misc_writefile.c'; then $(CYGPATH_W) 'qic_example/misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_writefile.Tpo qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_writefile.c' object='qic_example/bin_skype_avc_two_way-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_two_way-misc_writefile.obj `if test -f 'qic_example/misc_writefile.c'; then $(CYGPATH_W) 'qic_example/misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_writefile.c'; fi`
-
-qic_example/bin_skype_avc_two_way-misc_system.o: qic_example/misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_two_way-misc_system.o -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_system.Tpo -c -o qic_example/bin_skype_avc_two_way-misc_system.o `test -f 'qic_example/misc_system.c' || echo '$(srcdir)/'`qic_example/misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_system.Tpo qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_system.c' object='qic_example/bin_skype_avc_two_way-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_two_way-misc_system.o `test -f 'qic_example/misc_system.c' || echo '$(srcdir)/'`qic_example/misc_system.c
-
-qic_example/bin_skype_avc_two_way-misc_system.obj: qic_example/misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -MT qic_example/bin_skype_avc_two_way-misc_system.obj -MD -MP -MF qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_system.Tpo -c -o qic_example/bin_skype_avc_two_way-misc_system.obj `if test -f 'qic_example/misc_system.c'; then $(CYGPATH_W) 'qic_example/misc_system.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_system.Tpo qic_example/$(DEPDIR)/bin_skype_avc_two_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='qic_example/misc_system.c' object='qic_example/bin_skype_avc_two_way-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_skype_avc_two_way_CFLAGS) $(CFLAGS) -c -o qic_example/bin_skype_avc_two_way-misc_system.obj `if test -f 'qic_example/misc_system.c'; then $(CYGPATH_W) 'qic_example/misc_system.c'; else $(CYGPATH_W) '$(srcdir)/qic_example/misc_system.c'; fi`
-
 qic_example/bin_vp8_simulcast-vp8_simulcast.o: qic_example/vp8_simulcast.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_vp8_simulcast_CFLAGS) $(CFLAGS) -MT qic_example/bin_vp8_simulcast-vp8_simulcast.o -MD -MP -MF qic_example/$(DEPDIR)/bin_vp8_simulcast-vp8_simulcast.Tpo -c -o qic_example/bin_vp8_simulcast-vp8_simulcast.o `test -f 'qic_example/vp8_simulcast.c' || echo '$(srcdir)/'`qic_example/vp8_simulcast.c
 @am__fastdepCC_TRUE@	$(am__mv) qic_example/$(DEPDIR)/bin_vp8_simulcast-vp8_simulcast.Tpo qic_example/$(DEPDIR)/bin_vp8_simulcast-vp8_simulcast.Po
@@ -1918,8 +1624,6 @@ distclean-generic:
 	-rm -f bin/$(am__dirstamp)
 	-rm -f qic_api/qic_src/$(DEPDIR)/$(am__dirstamp)
 	-rm -f qic_api/qic_src/$(am__dirstamp)
-	-rm -f qic_api/sky_src/$(DEPDIR)/$(am__dirstamp)
-	-rm -f qic_api/sky_src/$(am__dirstamp)
 	-rm -f qic_example/$(DEPDIR)/$(am__dirstamp)
 	-rm -f qic_example/$(am__dirstamp)
 
@@ -1933,7 +1637,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLIBRARIES \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf qic_api/qic_src/$(DEPDIR) qic_api/sky_src/$(DEPDIR) qic_example/$(DEPDIR)
+	-rm -rf qic_api/qic_src/$(DEPDIR) qic_example/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -1981,7 +1685,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf qic_api/qic_src/$(DEPDIR) qic_api/sky_src/$(DEPDIR) qic_example/$(DEPDIR)
+	-rm -rf qic_api/qic_src/$(DEPDIR) qic_example/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
