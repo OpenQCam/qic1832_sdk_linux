@@ -110,7 +110,6 @@ am_bin_avc_simulcast_OBJECTS =  \
 	qic_example/bin_avc_simulcast-simulcast_writefile.$(OBJEXT) \
 	qic_example/bin_avc_simulcast-misc_system.$(OBJEXT)
 bin_avc_simulcast_OBJECTS = $(am_bin_avc_simulcast_OBJECTS)
-bin_avc_simulcast_DEPENDENCIES =
 bin_avc_simulcast_LINK = $(CCLD) $(bin_avc_simulcast_CFLAGS) $(CFLAGS) \
 	$(bin_avc_simulcast_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_avc_two_way_OBJECTS =  \
@@ -118,7 +117,6 @@ am_bin_avc_two_way_OBJECTS =  \
 	qic_example/bin_avc_two_way-misc_writefile.$(OBJEXT) \
 	qic_example/bin_avc_two_way-misc_system.$(OBJEXT)
 bin_avc_two_way_OBJECTS = $(am_bin_avc_two_way_OBJECTS)
-bin_avc_two_way_DEPENDENCIES =
 bin_avc_two_way_LINK = $(CCLD) $(bin_avc_two_way_CFLAGS) $(CFLAGS) \
 	$(bin_avc_two_way_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_example_avc_OBJECTS =  \
@@ -126,14 +124,12 @@ am_bin_example_avc_OBJECTS =  \
 	qic_example/bin_example_avc-misc_writefile.$(OBJEXT) \
 	qic_example/bin_example_avc-misc_system.$(OBJEXT)
 bin_example_avc_OBJECTS = $(am_bin_example_avc_OBJECTS)
-bin_example_avc_DEPENDENCIES =
 bin_example_avc_LINK = $(CCLD) $(bin_example_avc_CFLAGS) $(CFLAGS) \
 	$(bin_example_avc_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_example_control_OBJECTS =  \
 	qic_example/bin_example_control-example_control.$(OBJEXT) \
 	qic_example/bin_example_control-misc_system.$(OBJEXT)
 bin_example_control_OBJECTS = $(am_bin_example_control_OBJECTS)
-bin_example_control_DEPENDENCIES =
 bin_example_control_LINK = $(CCLD) $(bin_example_control_CFLAGS) \
 	$(CFLAGS) $(bin_example_control_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_example_mjpg_OBJECTS =  \
@@ -141,7 +137,6 @@ am_bin_example_mjpg_OBJECTS =  \
 	qic_example/bin_example_mjpg-misc_writefile.$(OBJEXT) \
 	qic_example/bin_example_mjpg-misc_system.$(OBJEXT)
 bin_example_mjpg_OBJECTS = $(am_bin_example_mjpg_OBJECTS)
-bin_example_mjpg_DEPENDENCIES =
 bin_example_mjpg_LINK = $(CCLD) $(bin_example_mjpg_CFLAGS) $(CFLAGS) \
 	$(bin_example_mjpg_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_example_vp8_OBJECTS =  \
@@ -149,7 +144,6 @@ am_bin_example_vp8_OBJECTS =  \
 	qic_example/bin_example_vp8-misc_writefile.$(OBJEXT) \
 	qic_example/bin_example_vp8-misc_system.$(OBJEXT)
 bin_example_vp8_OBJECTS = $(am_bin_example_vp8_OBJECTS)
-bin_example_vp8_DEPENDENCIES =
 bin_example_vp8_LINK = $(CCLD) $(bin_example_vp8_CFLAGS) $(CFLAGS) \
 	$(bin_example_vp8_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_example_yuv_OBJECTS =  \
@@ -157,20 +151,17 @@ am_bin_example_yuv_OBJECTS =  \
 	qic_example/bin_example_yuv-misc_writefile.$(OBJEXT) \
 	qic_example/bin_example_yuv-misc_system.$(OBJEXT)
 bin_example_yuv_OBJECTS = $(am_bin_example_yuv_OBJECTS)
-bin_example_yuv_DEPENDENCIES =
 bin_example_yuv_LINK = $(CCLD) $(bin_example_yuv_CFLAGS) $(CFLAGS) \
 	$(bin_example_yuv_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_fw_check_OBJECTS = qic_example/bin_fw_check-fw_check.$(OBJEXT) \
 	qic_example/bin_fw_check-misc_system.$(OBJEXT)
 bin_fw_check_OBJECTS = $(am_bin_fw_check_OBJECTS)
-bin_fw_check_DEPENDENCIES =
 bin_fw_check_LINK = $(CCLD) $(bin_fw_check_CFLAGS) $(CFLAGS) \
 	$(bin_fw_check_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_fw_downloader_OBJECTS =  \
 	qic_example/bin_fw_downloader-fw_downloader.$(OBJEXT) \
 	qic_example/bin_fw_downloader-misc_system.$(OBJEXT)
 bin_fw_downloader_OBJECTS = $(am_bin_fw_downloader_OBJECTS)
-bin_fw_downloader_DEPENDENCIES =
 bin_fw_downloader_LINK = $(CCLD) $(bin_fw_downloader_CFLAGS) $(CFLAGS) \
 	$(bin_fw_downloader_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_vp8_simulcast_OBJECTS =  \
@@ -178,7 +169,6 @@ am_bin_vp8_simulcast_OBJECTS =  \
 	qic_example/bin_vp8_simulcast-simulcast_writefile.$(OBJEXT) \
 	qic_example/bin_vp8_simulcast-misc_system.$(OBJEXT)
 bin_vp8_simulcast_OBJECTS = $(am_bin_vp8_simulcast_OBJECTS)
-bin_vp8_simulcast_DEPENDENCIES =
 bin_vp8_simulcast_LINK = $(CCLD) $(bin_vp8_simulcast_CFLAGS) $(CFLAGS) \
 	$(bin_vp8_simulcast_LDFLAGS) $(LDFLAGS) -o $@
 am_bin_vp8_two_way_OBJECTS =  \
@@ -186,7 +176,6 @@ am_bin_vp8_two_way_OBJECTS =  \
 	qic_example/bin_vp8_two_way-misc_writefile.$(OBJEXT) \
 	qic_example/bin_vp8_two_way-misc_system.$(OBJEXT)
 bin_vp8_two_way_OBJECTS = $(am_bin_vp8_two_way_OBJECTS)
-bin_vp8_two_way_DEPENDENCIES =
 bin_vp8_two_way_LINK = $(CCLD) $(bin_vp8_two_way_CFLAGS) $(CFLAGS) \
 	$(bin_vp8_two_way_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -346,55 +335,66 @@ bin_avc_two_way_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_avc_two_way_LDFLAGS = -L./ 
 bin_avc_two_way_LDADD = -lrt -lqic_sky_module
+bin_avc_two_way_DEPENDENCIES = $(lib_LIBRARIES)
 bin_avc_two_way_SOURCES = qic_example/avc_two_way.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_yuv_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_yuv_LDFLAGS = -L./
 bin_example_yuv_LDADD = -lrt -lqic_sky_module
+bin_example_yuv_DEPENDENCIES = $(lib_LIBRARIES)
 bin_example_yuv_SOURCES = qic_example/example_yuvonly.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_mjpg_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_mjpg_LDFLAGS = -L./ 
 bin_example_mjpg_LDADD = -lrt -lqic_sky_module
+bin_example_mjpg_DEPENDENCIES = $(lib_LIBRARIES)
 bin_example_mjpg_SOURCES = qic_example/example_mjpgonly.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_avc_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_avc_LDFLAGS = -L./
 bin_example_avc_LDADD = -lrt -lqic_sky_module 
+bin_example_avc_DEPENDENCIES = $(lib_LIBRARIES)
 bin_example_avc_SOURCES = qic_example/example_avconly.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_vp8_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_vp8_LDFLAGS = -L./ 
 bin_example_vp8_LDADD = -lrt -lqic_sky_module
+bin_example_vp8_DEPENDENCIES = $(lib_LIBRARIES)
 bin_example_vp8_SOURCES = qic_example/example_vp8only.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_fw_downloader_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_fw_downloader_LDFLAGS = -L./
 bin_fw_downloader_LDADD = -lrt -lqic_sky_module
+bin_fw_downloader_DEPENDENCIES = $(lib_LIBRARIES)
 bin_fw_downloader_SOURCES = qic_example/fw_downloader.c qic_example/misc_system.c qic_example/misc_system.h
 bin_fw_check_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include -DUSE_FWRITE
 bin_fw_check_LDFLAGS = -L./
 bin_fw_check_LDADD = -lrt -lqic_sky_module
+bin_fw_check_DEPENDENCIES = $(lib_LIBRARIES)
 bin_fw_check_SOURCES = qic_example/fw_check.c qic_example/misc_system.c qic_example/misc_system.h
 bin_vp8_two_way_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-Iqic_api/sky_include -DUSE_FWRITE
 bin_vp8_two_way_LDFLAGS = -L./ 
 bin_vp8_two_way_LDADD = -lrt -lqic_sky_module
+bin_vp8_two_way_DEPENDENCIES = $(lib_LIBRARIES)
 bin_vp8_two_way_SOURCES = qic_example/vp8_two_way.c qic_example/misc_writefile.c qic_example/misc_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_vp8_simulcast_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_vp8_simulcast_LDFLAGS = -L./ 
 bin_vp8_simulcast_LDADD = -lrt -lqic_sky_module
+bin_vp8_simulcast_DEPENDENCIES = $(lib_LIBRARIES)
 bin_vp8_simulcast_SOURCES = qic_example/vp8_simulcast.c qic_example/simulcast_writefile.c qic_example/simulcast_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_avc_simulcast_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_avc_simulcast_LDFLAGS = -L./ 
 bin_avc_simulcast_LDADD = -lrt -lqic_sky_module
+bin_avc_simulcast_DEPENDENCIES = $(lib_LIBRARIES)
 bin_avc_simulcast_SOURCES = qic_example/avc_simulcast.c qic_example/simulcast_writefile.c qic_example/simulcast_writefile.h qic_example/misc_system.c qic_example/misc_system.h
 bin_example_control_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_example_control_LDFLAGS = -L./
 bin_example_control_LDADD = -lrt -lqic_sky_module
+bin_example_control_DEPENDENCIES = $(lib_LIBRARIES)
 bin_example_control_SOURCES = qic_example/example_control.c qic_example/misc_system.c qic_example/misc_system.h
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
