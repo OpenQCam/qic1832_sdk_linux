@@ -331,7 +331,8 @@ libqic_sky_module_a_SOURCES = qic_api/qic_src/H264Enum.c \
 	qic_api/qic_include/qic_firmware.h qic_api/qic_src/vp8demux.c \
 	qic_api/qic_include/vp8demux.h qic_api/qic_src/mdparse.c \
 	qic_api/qic_include/mdparse.h
-libqic_sky_module_a_CFLAGS = -O2 -g -Wall -DDEBUG_LOG -DQIC_OSD_API
+libqic_sky_module_a_CFLAGS = -O2 -g -Wall -DDEBUG_LOG -DQIC_OSD_API \
+	-DQIC_MPEGTS_API
 libqic_sky_module_release_a_SOURCES = qic_api/qic_src/H264Enum.c \
 	qic_api/qic_src/demux.c qic_api/qic_src/qic_control.c \
 	qic_api/qic_src/qic_xuctrl.c qic_api/qic_include/H264Enum.h \
@@ -340,7 +341,7 @@ libqic_sky_module_release_a_SOURCES = qic_api/qic_src/H264Enum.c \
 	qic_api/qic_include/qic_firmware.h qic_api/qic_src/vp8demux.c \
 	qic_api/qic_include/vp8demux.h
 libqic_sky_module_release_a_CFLAGS = -O2 -g -Wall -DVP8API \
-	-DQIC_OSD_API
+	-DQIC_OSD_API -DQIC_MPEGTS_API
 bin_avc_two_way_CFLAGS = -g -Wall -O2 -Iqic_api/qic_include \
 	-DUSE_FWRITE
 bin_avc_two_way_LDFLAGS = -L./ 
