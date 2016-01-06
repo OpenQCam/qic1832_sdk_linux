@@ -5,12 +5,12 @@ lib_LIBRARIES = libqic_sky_module.a libqic_sky_module_release.a
 libqic_sky_module_a_SOURCES = qic_api/qic_src/H264Enum.c qic_api/qic_src/demux.c qic_api/qic_src/qic_control.c qic_api/qic_src/qic_xuctrl.c qic_api/qic_include/H264Enum.h qic_api/qic_include/demux.h qic_api/qic_include/qic_control.h qic_api/qic_include/qic_xuctrl.h  qic_api/qic_include/qic_cfg.h qic_api/qic_include/qic_firmware.h  
 libqic_sky_module_a_SOURCES +=qic_api/qic_src/vp8demux.c qic_api/qic_include/vp8demux.h qic_api/qic_src/mdparse.c qic_api/qic_include/mdparse.h
 libqic_sky_module_a_CFLAGS = -O2 -g -Wall
-libqic_sky_module_a_CFLAGS += -DDEBUG_LOG
+libqic_sky_module_a_CFLAGS += -DDEBUG_LOG -DQIC_OSD_API
 
 libqic_sky_module_release_a_SOURCES = qic_api/qic_src/H264Enum.c qic_api/qic_src/demux.c qic_api/qic_src/qic_control.c qic_api/qic_src/qic_xuctrl.c qic_api/qic_include/H264Enum.h qic_api/qic_include/demux.h qic_api/qic_include/qic_control.h qic_api/qic_include/qic_xuctrl.h  qic_api/qic_include/qic_cfg.h qic_api/qic_include/qic_firmware.h  
 libqic_sky_module_release_a_SOURCES +=qic_api/qic_src/vp8demux.c qic_api/qic_include/vp8demux.h
 libqic_sky_module_release_a_CFLAGS = -O2 -g -Wall 
-libqic_sky_module_release_a_CFLAGS += -DVP8API
+libqic_sky_module_release_a_CFLAGS += -DVP8API -DQIC_OSD_API
 
 bin_PROGRAMS= bin/avc_two_way bin/example_yuv bin/example_mjpg bin/example_avc bin/fw_downloader bin/fw_check 
 bin_PROGRAMS+=bin/example_vp8 bin/vp8_two_way
