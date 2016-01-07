@@ -33,8 +33,8 @@
 #include <asm/types.h>          /* for videodev2.h */
 #include <linux/videodev2.h>
 
-#include "../qic_api/qic_include/qic_control.h"
-#include "../qic_api/qic_include/mdparse.h"
+#include "../qic_include/qic_control.h"
+#include "../qic_include/mdparse.h"
 
 
 #ifdef DMALLOC
