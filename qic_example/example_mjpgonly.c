@@ -44,14 +44,14 @@ char *debug_level[] = {"INFO", "WARN", "CRIT", "FATL", "DEAD"};
 
 void debug_log(int level, char *string) {
 
-		printf("QIC module debug_print (%s):%s", debug_level[level], string);
+    printf("QIC module debug_print (%s):%s", debug_level[level], string);
 }
 
 void frame_process(unsigned int dev_id,  out_frame_t frame) {
 
-	static unsigned int mjpeg_count = 0;
+  static unsigned int mjpeg_count = 0;
 #ifdef USE_DISPLAY
-	char* decoded_mjpeg;
+  char* decoded_mjpeg;
 #endif
 
 /* { calculate current frame rate*/
@@ -65,161 +65,166 @@ float fps;
 #endif
 /*  calculate current frame rate}*/
 
-	switch (dev_id) {
+  switch (dev_id) {
 
-		case DEV_ID_0:
-	
-			if(frame_count > 0)
-			{
+    case DEV_ID_0:
 
-			mjpeg_count++;
-			write_mjpeg(frame.frame_data,frame.frame_len);
-	
-			putchar('M');fflush(stdout);
-			}
+      if(frame_count > 0)
+      {
+
+      mjpeg_count++;
+      write_mjpeg(frame.frame_data,frame.frame_len);
+
+      putchar('M');fflush(stdout);
+      }
 /*  {calculate current frame rate*/
 #ifdef CALC_FPS
 
-	frame_num++;
+  frame_num++;
 if(frame_num>=30){
-	clock_gettime(0,&start_ts);
-	diff_sec=start_ts.tv_sec- end_ts.tv_sec;
-	diff_nsec=start_ts.tv_nsec-end_ts.tv_nsec;
-	diff_msec=(diff_sec*1000.)+(diff_nsec/1000000.);
-	fps=(frame_num*1000.)/diff_msec;
-	printf("(MJPEG) frame rate= %2.2f fps \n", fps);
+  clock_gettime(0,&start_ts);
+  diff_sec=start_ts.tv_sec- end_ts.tv_sec;
+  diff_nsec=start_ts.tv_nsec-end_ts.tv_nsec;
+  diff_msec=(diff_sec*1000.)+(diff_nsec/1000000.);
+  fps=(frame_num*1000.)/diff_msec;
+  printf("(MJPEG) frame rate= %2.2f fps \n", fps);
 
-	frame_num=0;
+  frame_num=0;
 
-	clock_gettime(0,&end_ts);
-	
+  clock_gettime(0,&end_ts);
+
 }
 #endif
-/*  calculate current frame rate}*/	
+/*  calculate current frame rate}*/
 
-			break;
+      break;
 
-	}
+  }
 
-	frame_count--;
-	if((mjpeg_count)%100 == 0)
-		printf("\n");	
+  frame_count--;
+  if((mjpeg_count)%100 == 0)
+    printf("\n");
 }
 
 
 static void usage(FILE * fp, int argc, char **argv)
 {
-	fprintf(fp,
-	"Usage: %s [options]\n\n"
-	"Options:\n"
-	"-o | --output		MJPEG output [filename]\n"
-	"-y | --MJPEGsize	MJPEG stream [width]x[height]\n"
-	"-f | --fps		Framerate\n"
-	"-c | --count		Capture Counter\n"
-	"-h | --help		Print this message\n"
-	"",
-	argv[0]);
+  fprintf(fp,
+  "Usage: %s [options]\n\n"
+  "Options:\n"
+  "-o | --output    MJPEG output [filename]\n"
+  "-n | --device node H.264/AVC device [devicenode]\n"
+  "-y | --MJPEGsize MJPEG stream [width]x[height]\n"
+  "-f | --fps   Framerate\n"
+  "-c | --count   Capture Counter\n"
+  "-h | --help    Print this message\n"
+  "",
+  argv[0]);
 }
 
 
 
-static const char short_options [] = "o:y:f:c:h";
+static const char short_options [] = "o:y:f:c:h:n:";
 
 
 static const struct option long_options [] =
 {
-	{ "output",		required_argument,	NULL,	'o' },
-	{ "MJPEG size",		required_argument,	NULL,	'y' },
-	{ "fps",		required_argument,	NULL,	'f' },
-	{ "count",		required_argument,	NULL,	'c' },
-	{ "help",		no_argument,		NULL,	'h' },
-
-	{ 0, 0, 0, 0 }
+  { "output",   required_argument,  NULL, 'o' },
+  { "MJPEG size",   required_argument,  NULL, 'y' },
+  { "fps",    required_argument,  NULL, 'f' },
+  { "count",    required_argument,  NULL, 'c' },
+  { "help",   no_argument,    NULL, 'h' },
+  { "devicenode", required_argument,  NULL, 'n' },
+  { 0, 0, 0, 0 }
 };
 
 
 
 int main(int argc,char ** argv)
-{	
-	char *separator;
-	char *sizestring = NULL;
-	char *filename = NULL;
+{
+  char *separator;
+  char *sizestring = NULL;
+  char *filename = NULL;
+  char *devicenode = NULL;
 
-	unsigned short mjpeg_width=640;
-	unsigned short  mjpeg_height = 480;
-	unsigned char u_framerate = 30;
-	qic_module *my_qic = NULL;
+  unsigned short mjpeg_width=640;
+  unsigned short  mjpeg_height = 480;
+  unsigned char u_framerate = 30;
+  qic_module *my_qic = NULL;
 
-	int ret;
+  int ret;
 
-	qic_dev_name_s video_name;
+  qic_dev_name_s video_name;
 
-	if (getuid() != 0){
-		printf("please run as root\n");
-		exit(0);
-	}
+  if (getuid() != 0){
+    printf("please run as root\n");
+    exit(0);
+  }
 
-	memset(&video_name,0, sizeof(video_name));
-	if(qic_enum_device_formats(&video_name)){
-		printf("Error!! Not supported video device\n");
-		return 1;
-	}
-	printf("encdoing video=%s, raw video=%s\n",video_name.dev_avc, video_name.dev_yuv);
+  memset(&video_name,0, sizeof(video_name));
+  if(qic_enum_device_formats(&video_name)){
+    printf("Error!! Not supported video device\n");
+    return 1;
+  }
+  printf("encdoing video=%s, raw video=%s\n",video_name.dev_avc, video_name.dev_yuv);
 
-	for (;;)
-	{
-		int index;
-		int c;
+  for (;;)
+  {
+    int index;
+    int c;
 
-		c = getopt_long(argc, argv,
-		                short_options, long_options,
-		                &index);
+    c = getopt_long(argc, argv,
+                    short_options, long_options,
+                    &index);
 
-		if (-1 == c)
-			break;
+    if (-1 == c)
+      break;
 
-		switch (c)
-		{
+    switch (c)
+    {
 
-		case 0: /* getopt_long() flag */
-			break;
+    case 0: /* getopt_long() flag */
+      break;
 
 
-		case 'o':
-			filename = optarg;
-			break;
-			
-	        case 'y':
-			sizestring = strdup(optarg);
-			mjpeg_width = strtoul(sizestring, &separator, 10);
-			if (*separator != 'x') {
-				printf("Error in size use -s widthxheight\n");
-				exit(1);
-			} else {
-				++separator;
-				mjpeg_height = strtoul(separator, &separator, 10);
-				if (*separator != 0)
-					printf("hmm.. dont like that!! trying this height\n");
-			}
-			break;
-			
-		case 'f':
-			u_framerate = atoi(optarg);
-			break;
+    case 'o':
+      filename = optarg;
+      break;
+    case 'n':
+      devicenode = optarg;
+      printf("i got n %s\n", devicenode);
+      break;
+    case 'y':
+      sizestring = strdup(optarg);
+      mjpeg_width = strtoul(sizestring, &separator, 10);
+      if (*separator != 'x') {
+        printf("Error in size use -s widthxheight\n");
+        exit(1);
+      } else {
+        ++separator;
+        mjpeg_height = strtoul(separator, &separator, 10);
+        if (*separator != 0)
+          printf("hmm.. dont like that!! trying this height\n");
+      }
+      break;
 
-		case 'c':
-			frame_count= atoi(optarg);
-			break;
+    case 'f':
+      u_framerate = atoi(optarg);
+      break;
 
-		case 'h':
-			usage(stdout, argc, argv);
-			exit(EXIT_SUCCESS);
-			
-		default:
-			usage(stderr, argc, argv);
-			exit(EXIT_FAILURE);
-		}
-	}
+    case 'c':
+      frame_count= atoi(optarg);
+      break;
+
+    case 'h':
+      usage(stdout, argc, argv);
+      exit(EXIT_SUCCESS);
+
+    default:
+      usage(stderr, argc, argv);
+      exit(EXIT_FAILURE);
+    }
+  }
 
 
 /************************************************
@@ -228,61 +233,63 @@ int main(int argc,char ** argv)
  * two devices, /dev/video0 as YUV raw
  *
  *************************************************/
-	my_qic = qic_initialize(1);
+  my_qic = qic_initialize(1);
 
-	if (my_qic == NULL) {
-		printf("qic_initialize error\n");
-		return 1;
-	}
+  if (my_qic == NULL) {
+    printf("qic_initialize error\n");
+    return 1;
+  }
 
 
-	
+
 /************************************************
  *
  * step 2: set the parameters and commit the settings
  * need to setup two call back functions, debug_print & frame_output
  *
  *************************************************/
-	/* call back functions */
-	my_qic->debug_print = &debug_log;
-	my_qic->frame_output2 = &frame_process;
+  /* call back functions */
+  my_qic->debug_print = &debug_log;
+  my_qic->frame_output2 = &frame_process;
 
-	/*  set scheduler */
-	my_qic->high_prio = 0;
+  /*  set scheduler */
+  my_qic->high_prio = 0;
 
-    if(strlen( video_name.dev_yuv)>0)
-		my_qic->cam[0].dev_name =  video_name.dev_yuv;
-    else	
-		my_qic->cam[0].dev_name = "/dev/video0";
+    if(strlen( video_name.dev_yuv)>0 && devicenode == NULL)
+      my_qic->cam[0].dev_name =  video_name.dev_yuv;
+    else if(devicenode!=NULL)
+      my_qic->cam[0].dev_name = devicenode;
+    else
+      my_qic->cam[0].dev_name = "/dev/video0";
 
-	my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG; 
-	my_qic->cam[0].width = mjpeg_width;
-	my_qic->cam[0].height = mjpeg_height;
-	my_qic->cam[0].framerate= u_framerate;
-	my_qic->cam[0].is_bind = 0; /* 2-way output from single QIC module */
-	my_qic->cam[0].num_mmap_buffer = 6; /*  less memory */
-
-
-	/* commit and init the video dev */
-	ret = qic_config_commit();
-	if (ret) {
-		printf("qic_config_commit error\n");
-		return 1;
-	}
+  my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG;
+  my_qic->cam[0].width = mjpeg_width;
+  my_qic->cam[0].height = mjpeg_height;
+  my_qic->cam[0].framerate= u_framerate;
+  my_qic->cam[0].is_bind = 0; /* 2-way output from single QIC module */
+  my_qic->cam[0].num_mmap_buffer = 6; /*  less memory */
 
 
-	
+  /* commit and init the video dev */
+  ret = qic_config_commit();
+  if (ret) {
+    printf("qic_config_commit error\n");
+    return 1;
+  }
+
+
+
 /************************************************
  *
  * step 3: config print debug can be called at any time
  *
  *************************************************/
-	char *log_str = NULL;
-	log_str = qic_print_config_param(DEV_ID_0); /* print both interface config */
-	printf("%s", log_str);
+  char *log_str = NULL;
+  log_str = qic_print_config_param(DEV_ID_0); /* print both interface config */
+  printf("%s", log_str);
 
-	/* open file for dump */
-	open_file_dump(filename);
+  /* open file for dump */
+  open_file_dump(filename);
 
 
 /************************************************
@@ -290,11 +297,11 @@ int main(int argc,char ** argv)
  * step 4: activate the camera before capture frames
  *
  *************************************************/
-	ret = qic_start_capture(DEV_ID_0); /* activate both video0 & video1 */
-	if (ret) {
-		printf("qic_start_capture error\n");
-		return 1;
-	}
+  ret = qic_start_capture(DEV_ID_0); /* activate both video0 & video1 */
+  if (ret) {
+    printf("qic_start_capture error\n");
+    return 1;
+  }
 
 /************************************************
  *
@@ -302,57 +309,57 @@ int main(int argc,char ** argv)
  *             multiplex with other i/o
  *
  *************************************************/
-	int fd0 = qic_get_fd_from_devid(DEV_ID_0);
-	int max_fd = fd0+1;
+  int fd0 = qic_get_fd_from_devid(DEV_ID_0);
+  int max_fd = fd0+1;
 
-	/* custom select function for capture frames without pthread */
-	fd_set fds;
-	
-	struct timeval tv;
-	int r;
+  /* custom select function for capture frames without pthread */
+  fd_set fds;
 
-//	unsigned int test_value=0;
+  struct timeval tv;
+  int r;
 
-	while (frame_count > 0) {
+//  unsigned int test_value=0;
 
-		FD_ZERO(&fds);
-		FD_SET(fd0, &fds);
+  while (frame_count > 0) {
 
-		/* Timeout. */
-		tv.tv_sec = 5;
-		tv.tv_usec = 0;
+    FD_ZERO(&fds);
+    FD_SET(fd0, &fds);
 
-		r = select(max_fd, &fds, NULL, NULL, &tv);
-		
-		if (-1 == r) {
-			if (EINTR == errno)
-				continue;
-		
-			printf("select error %d, %s\n", errno, strerror(errno));
-			exit(1);
-		}
-		
-		if (0 == r) {
-			printf("select timeout\n");
-			exit(1);
-		}
+    /* Timeout. */
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
 
-		if (FD_ISSET(fd0, &fds)) {
-			ret = qic_getframe2(DEV_ID_0);
+    r = select(max_fd, &fds, NULL, NULL, &tv);
 
-			if (ret) {
-				printf("qic_getframe error\n");
-				return 1;
-			}
+    if (-1 == r) {
+      if (EINTR == errno)
+        continue;
 
-		}
+      printf("select error %d, %s\n", errno, strerror(errno));
+      exit(1);
+    }
 
-	}
+    if (0 == r) {
+      printf("select timeout\n");
+      exit(1);
+    }
 
-	/* print the mem usage */
-	char *mem_info = NULL;
-	mem_info = mem_usage_info();
-	printf("%s", mem_info);
+    if (FD_ISSET(fd0, &fds)) {
+      ret = qic_getframe2(DEV_ID_0);
+
+      if (ret) {
+        printf("qic_getframe error\n");
+        return 1;
+      }
+
+    }
+
+  }
+
+  /* print the mem usage */
+  char *mem_info = NULL;
+  mem_info = mem_usage_info();
+  printf("%s", mem_info);
 
 
 /************************************************
@@ -360,26 +367,26 @@ int main(int argc,char ** argv)
  * step 6: stop the camera
  *
  *************************************************/
-	ret = qic_stop_capture(DEV_ID_0); /* deactivate both video0 & video1 */
-	if (ret) {
-		printf("qic_stop_capture error\n");
-		return 1;
-	}
+  ret = qic_stop_capture(DEV_ID_0); /* deactivate both video0 & video1 */
+  if (ret) {
+    printf("qic_stop_capture error\n");
+    return 1;
+  }
 
-	
+
 /************************************************
  *
  * step 7: release all fd and malloc(s) before exit
   *
  *************************************************/
-	ret = qic_release();
-	if (ret) {
-		printf("qic_release error\n");
-		return 1;
-	}
+  ret = qic_release();
+  if (ret) {
+    printf("qic_release error\n");
+    return 1;
+  }
 
 
-	close_file();
+  close_file();
 
-	return 0;
+  return 0;
 }
