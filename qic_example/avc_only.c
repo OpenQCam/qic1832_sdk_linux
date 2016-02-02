@@ -108,6 +108,7 @@ static void usage(FILE * fp, int argc, char **argv)
             "Usage: %s [options]\n\n"
             "Options:\n"
             "-o | --output		H.264/AVC output [filename]\n"
+            "-n | --device node H.264/AVC device [devicenode]\n"
             "-s | --AVCsize		H.264/AVC stream [width]x[height]\n"
             "-f | --fps		Framerate\n"
             "-b | --bitrate	        Bitrate\n"
@@ -121,7 +122,7 @@ static void usage(FILE * fp, int argc, char **argv)
 
 
 
-static const char short_options [] = "o:s:f:b:g:c:hd";
+static const char short_options [] = "o:s:f:b:g:c:dh:n:";
 
 
 static const struct option long_options [] =
@@ -134,7 +135,7 @@ static const struct option long_options [] =
     { "count",		required_argument,	NULL,	'c' },
     { "demux",		no_argument,	NULL,	'd' },
     { "help",		no_argument,		NULL,	'h' },
-
+    { "devicenode", required_argument,  NULL, 'n' },
     { 0, 0, 0, 0 }
 };
 
@@ -144,6 +145,7 @@ int main(int argc,char ** argv)
     char *separator;
     char *sizestring = NULL;
     char *filename = NULL;
+    char *devicenode = NULL;
 
     unsigned short avc_width = 1280;
     unsigned short avc_height = 720;
@@ -186,10 +188,15 @@ int main(int argc,char ** argv)
         case 0: /* getopt_long() flag */
             break;
 
-
         case 'o':
             filename = optarg;
             break;
+            
+        case 'n':
+            //devicenode = argv[index-1];
+            devicenode = optarg;
+            printf("i got n %s\n", devicenode);
+            break;            
 
         case 's':
             sizestring = strdup(optarg);
@@ -271,10 +278,10 @@ int main(int argc,char ** argv)
     my_qic->high_prio = 0;
 
     /*set /dev/video1 as device 1 (H.264/AVC) */
-    if(strlen( video_name.dev_avc)>0)
+    if(strlen( video_name.dev_avc)>0 && devicenode==NULL)
         my_qic->cam[0].dev_name =  video_name.dev_avc;
-    else
-        my_qic->cam[0].dev_name ="/dev/video1";
+    else if(devicenode!=NULL)
+        my_qic->cam[0].dev_name =devicenode;
     my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG;
     my_qic->cam[0].bitrate = u_bitrate;
     my_qic->cam[0].width = avc_width;

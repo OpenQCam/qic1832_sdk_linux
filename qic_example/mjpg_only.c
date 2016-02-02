@@ -95,6 +95,7 @@ static void usage(FILE * fp, int argc, char **argv)
             "Usage: %s [options]\n\n"
             "Options:\n"
             "-o | --output		MJPEG output [filename]\n"
+            "-n | --device node H.264/AVC device [devicenode]\n"
             "-y | --MJPEGsize	MJPEG stream [width]x[height]\n"
             "-f | --fps		Framerate\n"
             "-c | --count		Capture Counter\n"
@@ -112,6 +113,7 @@ static const struct option long_options [] =
     { "fps",		required_argument,	NULL,	'f' },
     { "count",		required_argument,	NULL,	'c' },
     { "help",		no_argument,		NULL,	'h' },
+    { "devicenode", required_argument,  NULL, 'n' },
     { 0, 0, 0, 0 }
 };
 
@@ -120,6 +122,7 @@ int main(int argc,char ** argv)
     char *separator;
     char *sizestring = NULL;
     char *filename = NULL;
+    char *devicenode = NULL;
 
     unsigned short mjpeg_width=640;
     unsigned short  mjpeg_height = 480;
@@ -159,6 +162,11 @@ int main(int argc,char ** argv)
 
         case 'o':
             filename = optarg;
+            break;
+            
+        case 'n':
+            devicenode = optarg;
+            printf("i got n %s\n", devicenode);
             break;
 
         case 'y':
@@ -220,10 +228,10 @@ int main(int argc,char ** argv)
     /*  set scheduler */
     my_qic->high_prio = 0;
 
-    if(strlen( video_name.dev_yuv)>0)
+    if(strlen( video_name.dev_yuv)>0 && devicenode == NULL)
         my_qic->cam[0].dev_name =  video_name.dev_yuv;
-    else
-        my_qic->cam[0].dev_name = "/dev/video0";
+    else if(devicenode!=NULL)
+        my_qic->cam[0].dev_name = devicenode;
 
     my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG;
     my_qic->cam[0].width = mjpeg_width;

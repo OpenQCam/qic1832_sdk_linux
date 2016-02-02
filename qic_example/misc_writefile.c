@@ -24,6 +24,7 @@
 #ifdef USE_FWRITE
 /*FILE *file = NULL;*/
 FILE *file_264 = NULL;
+FILE *file_ts  = NULL;
 FILE *file_yuv = NULL;
 FILE *file_mjpeg = NULL;
 FILE *file_ivf = NULL;
@@ -31,6 +32,7 @@ FILE *file_log = NULL;
 #else
 /*int file = -1;*/
 int file_264 = -1;
+int file_ts = -1;
 int file_yuv= -1;
 int file_mjpeg = -1;
 int file_ivf = -1;
@@ -123,11 +125,22 @@ void write_avc (char* data, int length)
         if( -1 == fwrite(data, length, 1, file_264))
             errno_exit("write_file_error");
     }
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    unsigned long current_ts=((tv.tv_sec*1000)+(tv.tv_usec/1000));
+    if (file_ts != NULL) {
+        if( fprintf(file_ts, "%d %lu\n",length, current_ts) < 0 )
+        errno_exit("write_file_error");
+    }
 #else
     if (file_264 != -1) {
         if( -1 == write(file_264, data, length))
             errno_exit("write_file_error");
     }
+    //TODO write with "write" function
+    /*if (file_ts != NULL) {
+
+    }*/
 #endif
 }
 
@@ -201,6 +214,13 @@ void close_file(void)
         fclose(file_264);
         file_264 = NULL;
     }
+    
+    if (file_ts != NULL) {
+        fflush(file_ts);
+        fclose(file_ts);
+        file_ts = NULL;
+    }
+    
     if (file_yuv != NULL) {
         fflush(file_yuv);
         fclose(file_yuv);
@@ -230,6 +250,13 @@ void close_file(void)
         close(file_264);
         file_264 = -1;
     }
+    
+    if (file_ts != -1) {
+        fsync(file_ts);
+        close(file_ts);
+        file_ts = -1;
+    }
+    
     if (file_yuv != -1) {
         fsync(file_yuv);
         close(file_yuv);
@@ -259,18 +286,21 @@ void close_file(void)
 void open_file_dump(char* filename)
 {
     char avc_name[128] = {0};
+    char ts_name[128]  = {0};
     char yuv_name[128] = {0};
     char mjpeg_name[128] = {0};
     char ivf_name[128] = {0};
 
     if (filename != NULL) {
         snprintf(avc_name, 128, "%s.264", filename);
+        snprintf(ts_name, 128, "%s.len", filename);
         snprintf(yuv_name, 128, "%s.yuv", filename);
         snprintf(mjpeg_name, 128, "%s.mjpg", filename);
         snprintf(ivf_name, 128, "%s.ivf", filename);
 #ifdef USE_FWRITE
         /*file = fopen (filename, "w");*/
         file_264 = fopen (avc_name, "w");
+        file_ts = fopen (ts_name, "w");
         file_yuv = fopen (yuv_name, "w");
         file_mjpeg = fopen (mjpeg_name, "w");
         file_ivf = fopen (ivf_name, "w");
@@ -278,6 +308,7 @@ void open_file_dump(char* filename)
 #else
         /*file = open(filename, O_CREAT|O_WRONLY|O_NONBLOCK, S_IRWXU|S_IRWXG|S_IRWXO);*/
         file_264 = open(avc_name, O_CREAT|O_WRONLY|O_NONBLOCK, S_IRWXU|S_IRWXG|S_IRWXO);
+        file_ts = open(ts_name, O_CREAT|O_WRONLY|O_NONBLOCK, S_IRWXU|S_IRWXG|S_IRWXO);
         file_yuv = open(yuv_name, O_CREAT|O_WRONLY|O_NONBLOCK, S_IRWXU|S_IRWXG|S_IRWXO);
         file_mjpeg = open(mjpeg_name, O_CREAT|O_WRONLY|O_NONBLOCK, S_IRWXU|S_IRWXG|S_IRWXO);
         file_ivf = open(ivf_name, O_CREAT|O_WRONLY|O_NONBLOCK, S_IRWXU|S_IRWXG|S_IRWXO);
