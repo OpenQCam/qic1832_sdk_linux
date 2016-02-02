@@ -562,7 +562,7 @@ PACKAGE_STRING='qic1822_sdk_release r343'
 PACKAGE_BUGREPORT=''
 PACKAGE_URL=''
 
-ac_unique_file="example_yuvonly.c"
+ac_unique_file="yuv_only.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

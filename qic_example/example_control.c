@@ -22,9 +22,8 @@
 #define _GNU_SOURCE
 #include <getopt.h>
 
-#include "qic_control.h"
+#include "qic_include_all.h"
 #include "misc_writefile.h"
-#include "misc_system.h"
 
 #ifdef DMALLOC
 #include <dmalloc.h>
@@ -132,7 +131,7 @@ int SetControl(int id, __uint64_t val, int bAuto)
         }
         if((signed short)val<0)
         {
-          pan=(~(signed short)val)+0x8001;
+            pan=(~(signed short)val)+0x8001;
         }
         else
             pan = (signed short)val;
@@ -153,10 +152,10 @@ int SetControl(int id, __uint64_t val, int bAuto)
         }
         if((signed short)val<0)
         {
-          tilt=(~(signed short)val)+0x8001;
+            tilt=(~(signed short)val)+0x8001;
         }
         else
-          tilt = (signed short)val;
+            tilt = (signed short)val;
         qic_ret = QicSetPanTilt(pan, tilt);
         if(qic_ret)
         {
@@ -631,7 +630,8 @@ void ListControls(void)
 enum cmd_t{
     CMD_SET,
     CMD_GET,
-    CMD_LIST
+    CMD_LIST,
+    CMD_RESET
 };
 
 static void usage(FILE * fp, int argc, char **argv)
@@ -643,6 +643,7 @@ static void usage(FILE * fp, int argc, char **argv)
             "-s | --set-control 'id val [auto/manual]'  Set current control to val, if there's option auto/manuel, 1:auto, 0:manual.\n"
             "-g | --get-control id                      Get current control value. \n"
             "-l | --list-controls                       List all supported controls. \n"
+            "-r | --reset                               reset QIC1832. \n"
             "-h | --help                                Show this menu. \n"
             "\n"
             "Example\n"
@@ -654,7 +655,7 @@ static void usage(FILE * fp, int argc, char **argv)
             argv[0]);
 }
 
-static const char short_options [] = "d:s:g:lh";
+static const char short_options [] = "d:s:g:lrh";
 
 static const struct option long_options [] =
 {
@@ -662,22 +663,23 @@ static const struct option long_options [] =
     { "set-control",    required_argument,	NULL,	's' },
     { "get-control",    required_argument,	NULL,	'g' },
     { "list-controls",  no_argument,        NULL,	'l' },
+    { "reset",          no_argument,        NULL,	'r' },
     { "help",           no_argument,		NULL,	'h' },
     { 0, 0, 0, 0 }
 };
 
 static void debug_log(int level, char *string) {
-        printf("QIC debug_print:%s", string);
+    printf("QIC debug_print:%s", string);
 }
 
 int main(int argc,char ** argv)
 {
     printf("Example code to control QIC1832 Parameter \n\r");
 
-//    if (getuid() != 0){
-//        printf("please run as root\n");
-//        exit(0);
-//    }
+    //    if (getuid() != 0){
+    //        printf("please run as root\n");
+    //        exit(0);
+    //    }
 
     // 1. Check input argument
     int device_index = 0;
@@ -747,6 +749,10 @@ int main(int argc,char ** argv)
             command = CMD_LIST;
             break;
 
+        case 'r':
+            command = CMD_RESET;
+            break;
+
         case 'h':
             usage(stdout, argc, argv);
             exit(EXIT_SUCCESS);
@@ -802,6 +808,11 @@ int main(int argc,char ** argv)
     case CMD_LIST:
         ListControls();
         break;
+
+    case CMD_RESET:
+        printf("QIC Device reset \n");
+        QicReset();
+        break;
     }
 
     // Release qic before exit
@@ -809,4 +820,3 @@ int main(int argc,char ** argv)
 
     return 0;
 }
-

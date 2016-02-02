@@ -1,87 +1,117 @@
 AUTOMAKE_OPTIONS= foreign
 
-lib_LIBRARIES = libqic_sky_module.a libqic_sky_module_release.a
+lib_LIBRARIES = libqic.a libqic_release.a
 
-libqic_sky_module_a_SOURCES = ../qic_api/qic_src/H264Enum.c ../qic_api/qic_src/demux.c ../qic_api/qic_src/qic_control.c ../qic_api/qic_src/qic_xuctrl.c ../qic_api/qic_include/H264Enum.h ../qic_api/qic_include/demux.h ../qic_api/qic_include/qic_control.h ../qic_api/qic_include/qic_xuctrl.h  ../qic_api/qic_include/qic_cfg.h ../qic_api/qic_include/qic_firmware.h  
-libqic_sky_module_a_SOURCES +=../qic_api/qic_src/vp8demux.c ../qic_api/qic_include/vp8demux.h ../qic_api/qic_src/mdparse.c ../qic_api/qic_include/mdparse.h
-libqic_sky_module_a_CFLAGS = -O2 -g -Wall
-libqic_sky_module_a_CFLAGS += -DDEBUG_LOG
+libqic_a_SOURCES = ../qic_api/qic_include/qic_cfg.h ../qic_api/qic_include/qic_firmware.h
+libqic_a_SOURCES +=../qic_api/qic_src/demux_h264.c ../qic_api/qic_include/demux_h264.h
+libqic_a_SOURCES +=../qic_api/qic_src/demux_vp8.c ../qic_api/qic_include/demux_vp8.h   
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_common_define.c ../qic_api/qic_include/qic_api_common_define.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_fw_update.c ../qic_api/qic_include/qic_api_fw_update.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_md.c ../qic_api/qic_include/qic_api_md.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_misc.c ../qic_api/qic_include/qic_api_misc.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_osd.c ../qic_api/qic_include/qic_api_osd.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_stream.c ../qic_api/qic_include/qic_api_stream.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_v4l2_ctpu.c ../qic_api/qic_include/qic_api_v4l2_ctpu.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_api_video.c ../qic_api/qic_include/qic_api_video.h
+libqic_a_SOURCES +=../qic_api/qic_src/qic_utility_for_demo.c ../qic_api/qic_include/qic_utility_for_demo.h  
+libqic_a_SOURCES +=../qic_api/qic_src/qic_xuctrl.c ../qic_api/qic_include/qic_xuctrl.h
+libqic_a_CFLAGS = -O2 -g -Wall
+libqic_a_CFLAGS += -DDEBUG_LOG
 
-libqic_sky_module_release_a_SOURCES = ../qic_api/qic_src/H264Enum.c ../qic_api/qic_src/demux.c ../qic_api/qic_src/qic_control.c ../qic_api/qic_src/qic_xuctrl.c ../qic_api/qic_include/H264Enum.h ../qic_api/qic_include/demux.h ../qic_api/qic_include/qic_control.h ../qic_api/qic_include/qic_xuctrl.h  ../qic_api/qic_include/qic_cfg.h ../qic_api/qic_include/qic_firmware.h  
-libqic_sky_module_release_a_SOURCES +=../qic_api/qic_src/vp8demux.c ../qic_api/qic_include/vp8demux.h
-libqic_sky_module_release_a_CFLAGS = -O2 -g -Wall 
-libqic_sky_module_release_a_CFLAGS += -DVP8API
+libqic_release_a_SOURCES = ../qic_api/qic_include/qic_cfg.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/demux_h264.c ../qic_api/qic_include/demux_h264.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/demux_vp8.c ../qic_api/qic_include/demux_vp8.h   
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_common_define.c ../qic_api/qic_include/qic_api_common_define.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_fw_update.c ../qic_api/qic_include/qic_api_fw_update.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_md.c ../qic_api/qic_include/qic_api_md.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_misc.c ../qic_api/qic_include/qic_api_misc.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_osd.c ../qic_api/qic_include/qic_api_osd.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_stream.c ../qic_api/qic_include/qic_api_stream.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_v4l2_ctpu.c ../qic_api/qic_include/qic_api_v4l2_ctpu.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_api_video.c ../qic_api/qic_include/qic_api_video.h
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_utility_for_demo.c ../qic_api/qic_include/qic_utility_for_demo.h  
+libqic_release_a_SOURCES +=../qic_api/qic_src/qic_xuctrl.c ../qic_api/qic_include/qic_xuctrl.h
+libqic_release_a_CFLAGS = -O2 -g -Wall 
+libqic_release_a_CFLAGS += -DVP8API
 
-bin_PROGRAMS= avc_two_way example_yuv example_mjpg example_avc fw_downloader fw_check 
-bin_PROGRAMS+=example_vp8 vp8_two_way
+bin_PROGRAMS= yuv_only mjpg_only avc_only vp8_only 
+bin_PROGRAMS+=avc_two_way vp8_two_way
 bin_PROGRAMS+=avc_simulcast vp8_simulcast
-bin_PROGRAMS+=example_control
+bin_PROGRAMS+=example_control example_fw_update example_fw_check 
+
+yuv_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
+yuv_only_CFLAGS += -DUSE_FWRITE
+yuv_only_LDFLAGS = -L./
+yuv_only_LDADD = -lrt -lqic
+yuv_only_SOURCES = yuv_only.c
+yuv_only_SOURCES += misc_writefile.c misc_writefile.h
+
+mjpg_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
+mjpg_only_CFLAGS += -DUSE_FWRITE
+mjpg_only_LDFLAGS = -L./ 
+mjpg_only_LDADD = -lrt -lqic
+mjpg_only_SOURCES = mjpg_only.c
+mjpg_only_SOURCES += misc_writefile.c misc_writefile.h
+
+avc_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
+avc_only_CFLAGS += -DUSE_FWRITE
+avc_only_LDFLAGS = -L./
+avc_only_LDADD = -lrt -lqic
+avc_only_SOURCES = avc_only.c
+avc_only_SOURCES += misc_writefile.c misc_writefile.h
+
+vp8_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
+vp8_only_CFLAGS += -DUSE_FWRITE
+vp8_only_LDFLAGS = -L./ 
+vp8_only_LDADD = -lrt -lqic
+vp8_only_SOURCES = vp8_only.c
+vp8_only_SOURCES += misc_writefile.c misc_writefile.h
 
 avc_two_way_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
 avc_two_way_CFLAGS += -DUSE_FWRITE  
 avc_two_way_LDFLAGS = -L./ 
-avc_two_way_LDADD = -lrt -lqic_sky_module
-avc_two_way_SOURCES =avc_two_way.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-
-example_yuv_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
-example_yuv_CFLAGS += -DUSE_FWRITE
-example_yuv_LDFLAGS = -L./
-example_yuv_LDADD = -lrt -lqic_sky_module
-example_yuv_SOURCES = example_yuvonly.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-
-example_mjpg_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
-example_mjpg_CFLAGS += -DUSE_FWRITE
-example_mjpg_LDFLAGS = -L./ 
-example_mjpg_LDADD = -lrt -lqic_sky_module
-example_mjpg_SOURCES = example_mjpgonly.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-
-example_avc_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
-example_avc_CFLAGS += -DUSE_FWRITE
-example_avc_LDFLAGS = -L./
-example_avc_LDADD = -lrt -lqic_sky_module 
-example_avc_SOURCES = example_avconly.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-
-example_vp8_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
-example_vp8_CFLAGS += -DUSE_FWRITE
-example_vp8_LDFLAGS = -L./ 
-example_vp8_LDADD = -lrt -lqic_sky_module
-example_vp8_SOURCES = example_vp8only.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-
-fw_downloader_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
-fw_downloader_CFLAGS += -DUSE_FWRITE
-fw_downloader_LDFLAGS = -L./
-fw_downloader_LDADD = -lrt -lqic_sky_module
-fw_downloader_SOURCES = fw_downloader.c misc_system.c misc_system.h
-
-fw_check_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
-fw_check_CFLAGS += -DUSE_FWRITE
-fw_check_LDFLAGS = -L./
-fw_check_LDADD = -lrt -lqic_sky_module
-fw_check_SOURCES = fw_check.c misc_system.c misc_system.h
-
-vp8_two_way_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include -I../qic_api/sky_include
-vp8_two_way_CFLAGS += -DUSE_FWRITE
-vp8_two_way_LDFLAGS = -L./ 
-vp8_two_way_LDADD = -lrt -lqic_sky_module
-vp8_two_way_SOURCES = vp8_two_way.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-
-vp8_simulcast_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
-vp8_simulcast_CFLAGS += -DUSE_FWRITE
-vp8_simulcast_LDFLAGS = -L./ 
-vp8_simulcast_LDADD = -lrt -lqic_sky_module
-vp8_simulcast_SOURCES = vp8_simulcast.c simulcast_writefile.c simulcast_writefile.h misc_system.c misc_system.h
+avc_two_way_LDADD = -lrt -lqic
+avc_two_way_SOURCES = avc_two_way.c
+avc_two_way_SOURCES += misc_writefile.c misc_writefile.h
 
 avc_simulcast_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
 avc_simulcast_CFLAGS += -DUSE_FWRITE
 avc_simulcast_LDFLAGS = -L./ 
-avc_simulcast_LDADD = -lrt -lqic_sky_module
-avc_simulcast_SOURCES = avc_simulcast.c simulcast_writefile.c simulcast_writefile.h misc_system.c misc_system.h
+avc_simulcast_LDADD = -lrt -lqic
+avc_simulcast_SOURCES = avc_simulcast.c
+avc_simulcast_SOURCES += misc_writefile_simulcast.c misc_writefile_simulcast.h
+
+vp8_two_way_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include -I../qic_api/sky_include
+vp8_two_way_CFLAGS += -DUSE_FWRITE
+vp8_two_way_LDFLAGS = -L./ 
+vp8_two_way_LDADD = -lrt -lqic
+vp8_two_way_SOURCES = vp8_two_way.c
+vp8_two_way_SOURCES += misc_writefile.c misc_writefile.h
+
+vp8_simulcast_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include 
+vp8_simulcast_CFLAGS += -DUSE_FWRITE
+vp8_simulcast_LDFLAGS = -L./ 
+vp8_simulcast_LDADD = -lrt -lqic
+vp8_simulcast_SOURCES = vp8_simulcast.c
+vp8_simulcast_SOURCES += misc_writefile_simulcast.c misc_writefile_simulcast.h
 
 example_control_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
 example_control_CFLAGS += -DUSE_FWRITE
 example_control_LDFLAGS = -L./
-example_control_LDADD = -lrt -lqic_sky_module
-example_control_SOURCES = example_control.c misc_system.c misc_system.h
+example_control_LDADD = -lrt -lqic
+example_control_SOURCES = example_control.c
+
+example_fw_update_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
+example_fw_update_CFLAGS += -DUSE_FWRITE
+example_fw_update_LDFLAGS = -L./
+example_fw_update_LDADD = -lrt -lqic
+example_fw_update_SOURCES = example_fw_update.c
+
+example_fw_check_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include
+example_fw_check_CFLAGS += -DUSE_FWRITE
+example_fw_check_LDFLAGS = -L./
+example_fw_check_LDADD = -lrt -lqic
+example_fw_check_SOURCES = example_fw_check.c
 
 exampledir=qic_example
 distdir=$(PACKAGE)-$(VERSION)/$(exampledir)

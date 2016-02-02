@@ -33,11 +33,11 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = avc_two_way$(EXEEXT) example_yuv$(EXEEXT) \
-	example_mjpg$(EXEEXT) example_avc$(EXEEXT) \
-	fw_downloader$(EXEEXT) fw_check$(EXEEXT) example_vp8$(EXEEXT) \
-	vp8_two_way$(EXEEXT) avc_simulcast$(EXEEXT) \
-	vp8_simulcast$(EXEEXT) example_control$(EXEEXT)
+bin_PROGRAMS = yuv_only$(EXEEXT) mjpg_only$(EXEEXT) avc_only$(EXEEXT) \
+	vp8_only$(EXEEXT) avc_two_way$(EXEEXT) vp8_two_way$(EXEEXT) \
+	avc_simulcast$(EXEEXT) vp8_simulcast$(EXEEXT) \
+	example_control$(EXEEXT) example_fw_update$(EXEEXT) \
+	example_fw_check$(EXEEXT)
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -84,102 +84,102 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)"
 LIBRARIES = $(lib_LIBRARIES)
 AR = ar
 ARFLAGS = cru
-libqic_sky_module_a_AR = $(AR) $(ARFLAGS)
-libqic_sky_module_a_LIBADD =
-am_libqic_sky_module_a_OBJECTS =  \
-	libqic_sky_module_a-H264Enum.$(OBJEXT) \
-	libqic_sky_module_a-demux.$(OBJEXT) \
-	libqic_sky_module_a-qic_control.$(OBJEXT) \
-	libqic_sky_module_a-qic_xuctrl.$(OBJEXT) \
-	libqic_sky_module_a-vp8demux.$(OBJEXT) \
-	libqic_sky_module_a-mdparse.$(OBJEXT)
-libqic_sky_module_a_OBJECTS = $(am_libqic_sky_module_a_OBJECTS)
-libqic_sky_module_release_a_AR = $(AR) $(ARFLAGS)
-libqic_sky_module_release_a_LIBADD =
-am_libqic_sky_module_release_a_OBJECTS =  \
-	libqic_sky_module_release_a-H264Enum.$(OBJEXT) \
-	libqic_sky_module_release_a-demux.$(OBJEXT) \
-	libqic_sky_module_release_a-qic_control.$(OBJEXT) \
-	libqic_sky_module_release_a-qic_xuctrl.$(OBJEXT) \
-	libqic_sky_module_release_a-vp8demux.$(OBJEXT)
-libqic_sky_module_release_a_OBJECTS =  \
-	$(am_libqic_sky_module_release_a_OBJECTS)
+libqic_a_AR = $(AR) $(ARFLAGS)
+libqic_a_LIBADD =
+am_libqic_a_OBJECTS = libqic_a-demux_h264.$(OBJEXT) \
+	libqic_a-demux_vp8.$(OBJEXT) \
+	libqic_a-qic_api_common_define.$(OBJEXT) \
+	libqic_a-qic_api_fw_update.$(OBJEXT) \
+	libqic_a-qic_api_md.$(OBJEXT) libqic_a-qic_api_misc.$(OBJEXT) \
+	libqic_a-qic_api_osd.$(OBJEXT) \
+	libqic_a-qic_api_stream.$(OBJEXT) \
+	libqic_a-qic_api_v4l2_ctpu.$(OBJEXT) \
+	libqic_a-qic_api_video.$(OBJEXT) \
+	libqic_a-qic_utility_for_demo.$(OBJEXT) \
+	libqic_a-qic_xuctrl.$(OBJEXT)
+libqic_a_OBJECTS = $(am_libqic_a_OBJECTS)
+libqic_release_a_AR = $(AR) $(ARFLAGS)
+libqic_release_a_LIBADD =
+am_libqic_release_a_OBJECTS = libqic_release_a-demux_h264.$(OBJEXT) \
+	libqic_release_a-demux_vp8.$(OBJEXT) \
+	libqic_release_a-qic_api_common_define.$(OBJEXT) \
+	libqic_release_a-qic_api_fw_update.$(OBJEXT) \
+	libqic_release_a-qic_api_md.$(OBJEXT) \
+	libqic_release_a-qic_api_misc.$(OBJEXT) \
+	libqic_release_a-qic_api_osd.$(OBJEXT) \
+	libqic_release_a-qic_api_stream.$(OBJEXT) \
+	libqic_release_a-qic_api_v4l2_ctpu.$(OBJEXT) \
+	libqic_release_a-qic_api_video.$(OBJEXT) \
+	libqic_release_a-qic_utility_for_demo.$(OBJEXT) \
+	libqic_release_a-qic_xuctrl.$(OBJEXT)
+libqic_release_a_OBJECTS = $(am_libqic_release_a_OBJECTS)
 PROGRAMS = $(bin_PROGRAMS)
+am_avc_only_OBJECTS = avc_only-avc_only.$(OBJEXT) \
+	avc_only-misc_writefile.$(OBJEXT)
+avc_only_OBJECTS = $(am_avc_only_OBJECTS)
+avc_only_DEPENDENCIES =
+avc_only_LINK = $(CCLD) $(avc_only_CFLAGS) $(CFLAGS) \
+	$(avc_only_LDFLAGS) $(LDFLAGS) -o $@
 am_avc_simulcast_OBJECTS = avc_simulcast-avc_simulcast.$(OBJEXT) \
-	avc_simulcast-simulcast_writefile.$(OBJEXT) \
-	avc_simulcast-misc_system.$(OBJEXT)
+	avc_simulcast-misc_writefile_simulcast.$(OBJEXT)
 avc_simulcast_OBJECTS = $(am_avc_simulcast_OBJECTS)
 avc_simulcast_DEPENDENCIES =
 avc_simulcast_LINK = $(CCLD) $(avc_simulcast_CFLAGS) $(CFLAGS) \
 	$(avc_simulcast_LDFLAGS) $(LDFLAGS) -o $@
 am_avc_two_way_OBJECTS = avc_two_way-avc_two_way.$(OBJEXT) \
-	avc_two_way-misc_writefile.$(OBJEXT) \
-	avc_two_way-misc_system.$(OBJEXT)
+	avc_two_way-misc_writefile.$(OBJEXT)
 avc_two_way_OBJECTS = $(am_avc_two_way_OBJECTS)
 avc_two_way_DEPENDENCIES =
 avc_two_way_LINK = $(CCLD) $(avc_two_way_CFLAGS) $(CFLAGS) \
 	$(avc_two_way_LDFLAGS) $(LDFLAGS) -o $@
-am_example_avc_OBJECTS = example_avc-example_avconly.$(OBJEXT) \
-	example_avc-misc_writefile.$(OBJEXT) \
-	example_avc-misc_system.$(OBJEXT)
-example_avc_OBJECTS = $(am_example_avc_OBJECTS)
-example_avc_DEPENDENCIES =
-example_avc_LINK = $(CCLD) $(example_avc_CFLAGS) $(CFLAGS) \
-	$(example_avc_LDFLAGS) $(LDFLAGS) -o $@
 am_example_control_OBJECTS =  \
-	example_control-example_control.$(OBJEXT) \
-	example_control-misc_system.$(OBJEXT)
+	example_control-example_control.$(OBJEXT)
 example_control_OBJECTS = $(am_example_control_OBJECTS)
 example_control_DEPENDENCIES =
 example_control_LINK = $(CCLD) $(example_control_CFLAGS) $(CFLAGS) \
 	$(example_control_LDFLAGS) $(LDFLAGS) -o $@
-am_example_mjpg_OBJECTS = example_mjpg-example_mjpgonly.$(OBJEXT) \
-	example_mjpg-misc_writefile.$(OBJEXT) \
-	example_mjpg-misc_system.$(OBJEXT)
-example_mjpg_OBJECTS = $(am_example_mjpg_OBJECTS)
-example_mjpg_DEPENDENCIES =
-example_mjpg_LINK = $(CCLD) $(example_mjpg_CFLAGS) $(CFLAGS) \
-	$(example_mjpg_LDFLAGS) $(LDFLAGS) -o $@
-am_example_vp8_OBJECTS = example_vp8-example_vp8only.$(OBJEXT) \
-	example_vp8-misc_writefile.$(OBJEXT) \
-	example_vp8-misc_system.$(OBJEXT)
-example_vp8_OBJECTS = $(am_example_vp8_OBJECTS)
-example_vp8_DEPENDENCIES =
-example_vp8_LINK = $(CCLD) $(example_vp8_CFLAGS) $(CFLAGS) \
-	$(example_vp8_LDFLAGS) $(LDFLAGS) -o $@
-am_example_yuv_OBJECTS = example_yuv-example_yuvonly.$(OBJEXT) \
-	example_yuv-misc_writefile.$(OBJEXT) \
-	example_yuv-misc_system.$(OBJEXT)
-example_yuv_OBJECTS = $(am_example_yuv_OBJECTS)
-example_yuv_DEPENDENCIES =
-example_yuv_LINK = $(CCLD) $(example_yuv_CFLAGS) $(CFLAGS) \
-	$(example_yuv_LDFLAGS) $(LDFLAGS) -o $@
-am_fw_check_OBJECTS = fw_check-fw_check.$(OBJEXT) \
-	fw_check-misc_system.$(OBJEXT)
-fw_check_OBJECTS = $(am_fw_check_OBJECTS)
-fw_check_DEPENDENCIES =
-fw_check_LINK = $(CCLD) $(fw_check_CFLAGS) $(CFLAGS) \
-	$(fw_check_LDFLAGS) $(LDFLAGS) -o $@
-am_fw_downloader_OBJECTS = fw_downloader-fw_downloader.$(OBJEXT) \
-	fw_downloader-misc_system.$(OBJEXT)
-fw_downloader_OBJECTS = $(am_fw_downloader_OBJECTS)
-fw_downloader_DEPENDENCIES =
-fw_downloader_LINK = $(CCLD) $(fw_downloader_CFLAGS) $(CFLAGS) \
-	$(fw_downloader_LDFLAGS) $(LDFLAGS) -o $@
+am_example_fw_check_OBJECTS =  \
+	example_fw_check-example_fw_check.$(OBJEXT)
+example_fw_check_OBJECTS = $(am_example_fw_check_OBJECTS)
+example_fw_check_DEPENDENCIES =
+example_fw_check_LINK = $(CCLD) $(example_fw_check_CFLAGS) $(CFLAGS) \
+	$(example_fw_check_LDFLAGS) $(LDFLAGS) -o $@
+am_example_fw_update_OBJECTS =  \
+	example_fw_update-example_fw_update.$(OBJEXT)
+example_fw_update_OBJECTS = $(am_example_fw_update_OBJECTS)
+example_fw_update_DEPENDENCIES =
+example_fw_update_LINK = $(CCLD) $(example_fw_update_CFLAGS) $(CFLAGS) \
+	$(example_fw_update_LDFLAGS) $(LDFLAGS) -o $@
+am_mjpg_only_OBJECTS = mjpg_only-mjpg_only.$(OBJEXT) \
+	mjpg_only-misc_writefile.$(OBJEXT)
+mjpg_only_OBJECTS = $(am_mjpg_only_OBJECTS)
+mjpg_only_DEPENDENCIES =
+mjpg_only_LINK = $(CCLD) $(mjpg_only_CFLAGS) $(CFLAGS) \
+	$(mjpg_only_LDFLAGS) $(LDFLAGS) -o $@
+am_vp8_only_OBJECTS = vp8_only-vp8_only.$(OBJEXT) \
+	vp8_only-misc_writefile.$(OBJEXT)
+vp8_only_OBJECTS = $(am_vp8_only_OBJECTS)
+vp8_only_DEPENDENCIES =
+vp8_only_LINK = $(CCLD) $(vp8_only_CFLAGS) $(CFLAGS) \
+	$(vp8_only_LDFLAGS) $(LDFLAGS) -o $@
 am_vp8_simulcast_OBJECTS = vp8_simulcast-vp8_simulcast.$(OBJEXT) \
-	vp8_simulcast-simulcast_writefile.$(OBJEXT) \
-	vp8_simulcast-misc_system.$(OBJEXT)
+	vp8_simulcast-misc_writefile_simulcast.$(OBJEXT)
 vp8_simulcast_OBJECTS = $(am_vp8_simulcast_OBJECTS)
 vp8_simulcast_DEPENDENCIES =
 vp8_simulcast_LINK = $(CCLD) $(vp8_simulcast_CFLAGS) $(CFLAGS) \
 	$(vp8_simulcast_LDFLAGS) $(LDFLAGS) -o $@
 am_vp8_two_way_OBJECTS = vp8_two_way-vp8_two_way.$(OBJEXT) \
-	vp8_two_way-misc_writefile.$(OBJEXT) \
-	vp8_two_way-misc_system.$(OBJEXT)
+	vp8_two_way-misc_writefile.$(OBJEXT)
 vp8_two_way_OBJECTS = $(am_vp8_two_way_OBJECTS)
 vp8_two_way_DEPENDENCIES =
 vp8_two_way_LINK = $(CCLD) $(vp8_two_way_CFLAGS) $(CFLAGS) \
 	$(vp8_two_way_LDFLAGS) $(LDFLAGS) -o $@
+am_yuv_only_OBJECTS = yuv_only-yuv_only.$(OBJEXT) \
+	yuv_only-misc_writefile.$(OBJEXT)
+yuv_only_OBJECTS = $(am_yuv_only_OBJECTS)
+yuv_only_DEPENDENCIES =
+yuv_only_LINK = $(CCLD) $(yuv_only_CFLAGS) $(CFLAGS) \
+	$(yuv_only_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -188,22 +188,20 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libqic_sky_module_a_SOURCES) \
-	$(libqic_sky_module_release_a_SOURCES) \
-	$(avc_simulcast_SOURCES) $(avc_two_way_SOURCES) \
-	$(example_avc_SOURCES) $(example_control_SOURCES) \
-	$(example_mjpg_SOURCES) $(example_vp8_SOURCES) \
-	$(example_yuv_SOURCES) $(fw_check_SOURCES) \
-	$(fw_downloader_SOURCES) $(vp8_simulcast_SOURCES) \
-	$(vp8_two_way_SOURCES)
-DIST_SOURCES = $(libqic_sky_module_a_SOURCES) \
-	$(libqic_sky_module_release_a_SOURCES) \
-	$(avc_simulcast_SOURCES) $(avc_two_way_SOURCES) \
-	$(example_avc_SOURCES) $(example_control_SOURCES) \
-	$(example_mjpg_SOURCES) $(example_vp8_SOURCES) \
-	$(example_yuv_SOURCES) $(fw_check_SOURCES) \
-	$(fw_downloader_SOURCES) $(vp8_simulcast_SOURCES) \
-	$(vp8_two_way_SOURCES)
+SOURCES = $(libqic_a_SOURCES) $(libqic_release_a_SOURCES) \
+	$(avc_only_SOURCES) $(avc_simulcast_SOURCES) \
+	$(avc_two_way_SOURCES) $(example_control_SOURCES) \
+	$(example_fw_check_SOURCES) $(example_fw_update_SOURCES) \
+	$(mjpg_only_SOURCES) $(vp8_only_SOURCES) \
+	$(vp8_simulcast_SOURCES) $(vp8_two_way_SOURCES) \
+	$(yuv_only_SOURCES)
+DIST_SOURCES = $(libqic_a_SOURCES) $(libqic_release_a_SOURCES) \
+	$(avc_only_SOURCES) $(avc_simulcast_SOURCES) \
+	$(avc_two_way_SOURCES) $(example_control_SOURCES) \
+	$(example_fw_check_SOURCES) $(example_fw_update_SOURCES) \
+	$(mjpg_only_SOURCES) $(vp8_only_SOURCES) \
+	$(vp8_simulcast_SOURCES) $(vp8_two_way_SOURCES) \
+	$(yuv_only_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -312,86 +310,113 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-lib_LIBRARIES = libqic_sky_module.a libqic_sky_module_release.a
-libqic_sky_module_a_SOURCES = ../qic_api/qic_src/H264Enum.c \
-	../qic_api/qic_src/demux.c ../qic_api/qic_src/qic_control.c \
-	../qic_api/qic_src/qic_xuctrl.c \
-	../qic_api/qic_include/H264Enum.h \
-	../qic_api/qic_include/demux.h \
-	../qic_api/qic_include/qic_control.h \
-	../qic_api/qic_include/qic_xuctrl.h \
-	../qic_api/qic_include/qic_cfg.h \
+lib_LIBRARIES = libqic.a libqic_release.a
+libqic_a_SOURCES = ../qic_api/qic_include/qic_cfg.h \
 	../qic_api/qic_include/qic_firmware.h \
-	../qic_api/qic_src/vp8demux.c \
-	../qic_api/qic_include/vp8demux.h ../qic_api/qic_src/mdparse.c \
-	../qic_api/qic_include/mdparse.h
-libqic_sky_module_a_CFLAGS = -O2 -g -Wall -DDEBUG_LOG
-libqic_sky_module_release_a_SOURCES = ../qic_api/qic_src/H264Enum.c \
-	../qic_api/qic_src/demux.c ../qic_api/qic_src/qic_control.c \
+	../qic_api/qic_src/demux_h264.c \
+	../qic_api/qic_include/demux_h264.h \
+	../qic_api/qic_src/demux_vp8.c \
+	../qic_api/qic_include/demux_vp8.h \
+	../qic_api/qic_src/qic_api_common_define.c \
+	../qic_api/qic_include/qic_api_common_define.h \
+	../qic_api/qic_src/qic_api_fw_update.c \
+	../qic_api/qic_include/qic_api_fw_update.h \
+	../qic_api/qic_src/qic_api_md.c \
+	../qic_api/qic_include/qic_api_md.h \
+	../qic_api/qic_src/qic_api_misc.c \
+	../qic_api/qic_include/qic_api_misc.h \
+	../qic_api/qic_src/qic_api_osd.c \
+	../qic_api/qic_include/qic_api_osd.h \
+	../qic_api/qic_src/qic_api_stream.c \
+	../qic_api/qic_include/qic_api_stream.h \
+	../qic_api/qic_src/qic_api_v4l2_ctpu.c \
+	../qic_api/qic_include/qic_api_v4l2_ctpu.h \
+	../qic_api/qic_src/qic_api_video.c \
+	../qic_api/qic_include/qic_api_video.h \
+	../qic_api/qic_src/qic_utility_for_demo.c \
+	../qic_api/qic_include/qic_utility_for_demo.h \
 	../qic_api/qic_src/qic_xuctrl.c \
-	../qic_api/qic_include/H264Enum.h \
-	../qic_api/qic_include/demux.h \
-	../qic_api/qic_include/qic_control.h \
-	../qic_api/qic_include/qic_xuctrl.h \
-	../qic_api/qic_include/qic_cfg.h \
-	../qic_api/qic_include/qic_firmware.h \
-	../qic_api/qic_src/vp8demux.c \
-	../qic_api/qic_include/vp8demux.h
-libqic_sky_module_release_a_CFLAGS = -O2 -g -Wall -DVP8API
+	../qic_api/qic_include/qic_xuctrl.h
+libqic_a_CFLAGS = -O2 -g -Wall -DDEBUG_LOG
+libqic_release_a_SOURCES = ../qic_api/qic_include/qic_cfg.h \
+	../qic_api/qic_src/demux_h264.c \
+	../qic_api/qic_include/demux_h264.h \
+	../qic_api/qic_src/demux_vp8.c \
+	../qic_api/qic_include/demux_vp8.h \
+	../qic_api/qic_src/qic_api_common_define.c \
+	../qic_api/qic_include/qic_api_common_define.h \
+	../qic_api/qic_src/qic_api_fw_update.c \
+	../qic_api/qic_include/qic_api_fw_update.h \
+	../qic_api/qic_src/qic_api_md.c \
+	../qic_api/qic_include/qic_api_md.h \
+	../qic_api/qic_src/qic_api_misc.c \
+	../qic_api/qic_include/qic_api_misc.h \
+	../qic_api/qic_src/qic_api_osd.c \
+	../qic_api/qic_include/qic_api_osd.h \
+	../qic_api/qic_src/qic_api_stream.c \
+	../qic_api/qic_include/qic_api_stream.h \
+	../qic_api/qic_src/qic_api_v4l2_ctpu.c \
+	../qic_api/qic_include/qic_api_v4l2_ctpu.h \
+	../qic_api/qic_src/qic_api_video.c \
+	../qic_api/qic_include/qic_api_video.h \
+	../qic_api/qic_src/qic_utility_for_demo.c \
+	../qic_api/qic_include/qic_utility_for_demo.h \
+	../qic_api/qic_src/qic_xuctrl.c \
+	../qic_api/qic_include/qic_xuctrl.h
+libqic_release_a_CFLAGS = -O2 -g -Wall -DVP8API
+yuv_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include -DUSE_FWRITE
+yuv_only_LDFLAGS = -L./
+yuv_only_LDADD = -lrt -lqic
+yuv_only_SOURCES = yuv_only.c misc_writefile.c misc_writefile.h
+mjpg_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include -DUSE_FWRITE
+mjpg_only_LDFLAGS = -L./ 
+mjpg_only_LDADD = -lrt -lqic
+mjpg_only_SOURCES = mjpg_only.c misc_writefile.c misc_writefile.h
+avc_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include -DUSE_FWRITE
+avc_only_LDFLAGS = -L./
+avc_only_LDADD = -lrt -lqic
+avc_only_SOURCES = avc_only.c misc_writefile.c misc_writefile.h
+vp8_only_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include -DUSE_FWRITE
+vp8_only_LDFLAGS = -L./ 
+vp8_only_LDADD = -lrt -lqic
+vp8_only_SOURCES = vp8_only.c misc_writefile.c misc_writefile.h
 avc_two_way_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
 	-DUSE_FWRITE
 avc_two_way_LDFLAGS = -L./ 
-avc_two_way_LDADD = -lrt -lqic_sky_module
-avc_two_way_SOURCES = avc_two_way.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-example_yuv_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
-	-DUSE_FWRITE
-example_yuv_LDFLAGS = -L./
-example_yuv_LDADD = -lrt -lqic_sky_module
-example_yuv_SOURCES = example_yuvonly.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-example_mjpg_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
-	-DUSE_FWRITE
-example_mjpg_LDFLAGS = -L./ 
-example_mjpg_LDADD = -lrt -lqic_sky_module
-example_mjpg_SOURCES = example_mjpgonly.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-example_avc_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
-	-DUSE_FWRITE
-example_avc_LDFLAGS = -L./
-example_avc_LDADD = -lrt -lqic_sky_module 
-example_avc_SOURCES = example_avconly.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-example_vp8_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
-	-DUSE_FWRITE
-example_vp8_LDFLAGS = -L./ 
-example_vp8_LDADD = -lrt -lqic_sky_module
-example_vp8_SOURCES = example_vp8only.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-fw_downloader_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
-	-DUSE_FWRITE
-fw_downloader_LDFLAGS = -L./
-fw_downloader_LDADD = -lrt -lqic_sky_module
-fw_downloader_SOURCES = fw_downloader.c misc_system.c misc_system.h
-fw_check_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include -DUSE_FWRITE
-fw_check_LDFLAGS = -L./
-fw_check_LDADD = -lrt -lqic_sky_module
-fw_check_SOURCES = fw_check.c misc_system.c misc_system.h
-vp8_two_way_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
-	-I../qic_api/sky_include -DUSE_FWRITE
-vp8_two_way_LDFLAGS = -L./ 
-vp8_two_way_LDADD = -lrt -lqic_sky_module
-vp8_two_way_SOURCES = vp8_two_way.c misc_writefile.c misc_writefile.h misc_system.c misc_system.h
-vp8_simulcast_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
-	-DUSE_FWRITE
-vp8_simulcast_LDFLAGS = -L./ 
-vp8_simulcast_LDADD = -lrt -lqic_sky_module
-vp8_simulcast_SOURCES = vp8_simulcast.c simulcast_writefile.c simulcast_writefile.h misc_system.c misc_system.h
+avc_two_way_LDADD = -lrt -lqic
+avc_two_way_SOURCES = avc_two_way.c misc_writefile.c misc_writefile.h
 avc_simulcast_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
 	-DUSE_FWRITE
 avc_simulcast_LDFLAGS = -L./ 
-avc_simulcast_LDADD = -lrt -lqic_sky_module
-avc_simulcast_SOURCES = avc_simulcast.c simulcast_writefile.c simulcast_writefile.h misc_system.c misc_system.h
+avc_simulcast_LDADD = -lrt -lqic
+avc_simulcast_SOURCES = avc_simulcast.c misc_writefile_simulcast.c \
+	misc_writefile_simulcast.h
+vp8_two_way_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
+	-I../qic_api/sky_include -DUSE_FWRITE
+vp8_two_way_LDFLAGS = -L./ 
+vp8_two_way_LDADD = -lrt -lqic
+vp8_two_way_SOURCES = vp8_two_way.c misc_writefile.c misc_writefile.h
+vp8_simulcast_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
+	-DUSE_FWRITE
+vp8_simulcast_LDFLAGS = -L./ 
+vp8_simulcast_LDADD = -lrt -lqic
+vp8_simulcast_SOURCES = vp8_simulcast.c misc_writefile_simulcast.c \
+	misc_writefile_simulcast.h
 example_control_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
 	-DUSE_FWRITE
 example_control_LDFLAGS = -L./
-example_control_LDADD = -lrt -lqic_sky_module
-example_control_SOURCES = example_control.c misc_system.c misc_system.h
+example_control_LDADD = -lrt -lqic
+example_control_SOURCES = example_control.c
+example_fw_update_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
+	-DUSE_FWRITE
+example_fw_update_LDFLAGS = -L./
+example_fw_update_LDADD = -lrt -lqic
+example_fw_update_SOURCES = example_fw_update.c
+example_fw_check_CFLAGS = -g -Wall -O2 -I../qic_api/qic_include \
+	-DUSE_FWRITE
+example_fw_check_LDFLAGS = -L./
+example_fw_check_LDADD = -lrt -lqic
+example_fw_check_SOURCES = example_fw_check.c
 exampledir = qic_example
 distdir = $(PACKAGE)-$(VERSION)/$(exampledir)
 tardir1 = $(PACKAGE)-$(VERSION)
@@ -485,14 +510,14 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-libqic_sky_module.a: $(libqic_sky_module_a_OBJECTS) $(libqic_sky_module_a_DEPENDENCIES) $(EXTRA_libqic_sky_module_a_DEPENDENCIES) 
-	-rm -f libqic_sky_module.a
-	$(libqic_sky_module_a_AR) libqic_sky_module.a $(libqic_sky_module_a_OBJECTS) $(libqic_sky_module_a_LIBADD)
-	$(RANLIB) libqic_sky_module.a
-libqic_sky_module_release.a: $(libqic_sky_module_release_a_OBJECTS) $(libqic_sky_module_release_a_DEPENDENCIES) $(EXTRA_libqic_sky_module_release_a_DEPENDENCIES) 
-	-rm -f libqic_sky_module_release.a
-	$(libqic_sky_module_release_a_AR) libqic_sky_module_release.a $(libqic_sky_module_release_a_OBJECTS) $(libqic_sky_module_release_a_LIBADD)
-	$(RANLIB) libqic_sky_module_release.a
+libqic.a: $(libqic_a_OBJECTS) $(libqic_a_DEPENDENCIES) $(EXTRA_libqic_a_DEPENDENCIES) 
+	-rm -f libqic.a
+	$(libqic_a_AR) libqic.a $(libqic_a_OBJECTS) $(libqic_a_LIBADD)
+	$(RANLIB) libqic.a
+libqic_release.a: $(libqic_release_a_OBJECTS) $(libqic_release_a_DEPENDENCIES) $(EXTRA_libqic_release_a_DEPENDENCIES) 
+	-rm -f libqic_release.a
+	$(libqic_release_a_AR) libqic_release.a $(libqic_release_a_OBJECTS) $(libqic_release_a_LIBADD)
+	$(RANLIB) libqic_release.a
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -530,39 +555,39 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+avc_only$(EXEEXT): $(avc_only_OBJECTS) $(avc_only_DEPENDENCIES) $(EXTRA_avc_only_DEPENDENCIES) 
+	@rm -f avc_only$(EXEEXT)
+	$(avc_only_LINK) $(avc_only_OBJECTS) $(avc_only_LDADD) $(LIBS)
 avc_simulcast$(EXEEXT): $(avc_simulcast_OBJECTS) $(avc_simulcast_DEPENDENCIES) $(EXTRA_avc_simulcast_DEPENDENCIES) 
 	@rm -f avc_simulcast$(EXEEXT)
 	$(avc_simulcast_LINK) $(avc_simulcast_OBJECTS) $(avc_simulcast_LDADD) $(LIBS)
 avc_two_way$(EXEEXT): $(avc_two_way_OBJECTS) $(avc_two_way_DEPENDENCIES) $(EXTRA_avc_two_way_DEPENDENCIES) 
 	@rm -f avc_two_way$(EXEEXT)
 	$(avc_two_way_LINK) $(avc_two_way_OBJECTS) $(avc_two_way_LDADD) $(LIBS)
-example_avc$(EXEEXT): $(example_avc_OBJECTS) $(example_avc_DEPENDENCIES) $(EXTRA_example_avc_DEPENDENCIES) 
-	@rm -f example_avc$(EXEEXT)
-	$(example_avc_LINK) $(example_avc_OBJECTS) $(example_avc_LDADD) $(LIBS)
 example_control$(EXEEXT): $(example_control_OBJECTS) $(example_control_DEPENDENCIES) $(EXTRA_example_control_DEPENDENCIES) 
 	@rm -f example_control$(EXEEXT)
 	$(example_control_LINK) $(example_control_OBJECTS) $(example_control_LDADD) $(LIBS)
-example_mjpg$(EXEEXT): $(example_mjpg_OBJECTS) $(example_mjpg_DEPENDENCIES) $(EXTRA_example_mjpg_DEPENDENCIES) 
-	@rm -f example_mjpg$(EXEEXT)
-	$(example_mjpg_LINK) $(example_mjpg_OBJECTS) $(example_mjpg_LDADD) $(LIBS)
-example_vp8$(EXEEXT): $(example_vp8_OBJECTS) $(example_vp8_DEPENDENCIES) $(EXTRA_example_vp8_DEPENDENCIES) 
-	@rm -f example_vp8$(EXEEXT)
-	$(example_vp8_LINK) $(example_vp8_OBJECTS) $(example_vp8_LDADD) $(LIBS)
-example_yuv$(EXEEXT): $(example_yuv_OBJECTS) $(example_yuv_DEPENDENCIES) $(EXTRA_example_yuv_DEPENDENCIES) 
-	@rm -f example_yuv$(EXEEXT)
-	$(example_yuv_LINK) $(example_yuv_OBJECTS) $(example_yuv_LDADD) $(LIBS)
-fw_check$(EXEEXT): $(fw_check_OBJECTS) $(fw_check_DEPENDENCIES) $(EXTRA_fw_check_DEPENDENCIES) 
-	@rm -f fw_check$(EXEEXT)
-	$(fw_check_LINK) $(fw_check_OBJECTS) $(fw_check_LDADD) $(LIBS)
-fw_downloader$(EXEEXT): $(fw_downloader_OBJECTS) $(fw_downloader_DEPENDENCIES) $(EXTRA_fw_downloader_DEPENDENCIES) 
-	@rm -f fw_downloader$(EXEEXT)
-	$(fw_downloader_LINK) $(fw_downloader_OBJECTS) $(fw_downloader_LDADD) $(LIBS)
+example_fw_check$(EXEEXT): $(example_fw_check_OBJECTS) $(example_fw_check_DEPENDENCIES) $(EXTRA_example_fw_check_DEPENDENCIES) 
+	@rm -f example_fw_check$(EXEEXT)
+	$(example_fw_check_LINK) $(example_fw_check_OBJECTS) $(example_fw_check_LDADD) $(LIBS)
+example_fw_update$(EXEEXT): $(example_fw_update_OBJECTS) $(example_fw_update_DEPENDENCIES) $(EXTRA_example_fw_update_DEPENDENCIES) 
+	@rm -f example_fw_update$(EXEEXT)
+	$(example_fw_update_LINK) $(example_fw_update_OBJECTS) $(example_fw_update_LDADD) $(LIBS)
+mjpg_only$(EXEEXT): $(mjpg_only_OBJECTS) $(mjpg_only_DEPENDENCIES) $(EXTRA_mjpg_only_DEPENDENCIES) 
+	@rm -f mjpg_only$(EXEEXT)
+	$(mjpg_only_LINK) $(mjpg_only_OBJECTS) $(mjpg_only_LDADD) $(LIBS)
+vp8_only$(EXEEXT): $(vp8_only_OBJECTS) $(vp8_only_DEPENDENCIES) $(EXTRA_vp8_only_DEPENDENCIES) 
+	@rm -f vp8_only$(EXEEXT)
+	$(vp8_only_LINK) $(vp8_only_OBJECTS) $(vp8_only_LDADD) $(LIBS)
 vp8_simulcast$(EXEEXT): $(vp8_simulcast_OBJECTS) $(vp8_simulcast_DEPENDENCIES) $(EXTRA_vp8_simulcast_DEPENDENCIES) 
 	@rm -f vp8_simulcast$(EXEEXT)
 	$(vp8_simulcast_LINK) $(vp8_simulcast_OBJECTS) $(vp8_simulcast_LDADD) $(LIBS)
 vp8_two_way$(EXEEXT): $(vp8_two_way_OBJECTS) $(vp8_two_way_DEPENDENCIES) $(EXTRA_vp8_two_way_DEPENDENCIES) 
 	@rm -f vp8_two_way$(EXEEXT)
 	$(vp8_two_way_LINK) $(vp8_two_way_OBJECTS) $(vp8_two_way_LDADD) $(LIBS)
+yuv_only$(EXEEXT): $(yuv_only_OBJECTS) $(yuv_only_DEPENDENCIES) $(EXTRA_yuv_only_DEPENDENCIES) 
+	@rm -f yuv_only$(EXEEXT)
+	$(yuv_only_LINK) $(yuv_only_OBJECTS) $(yuv_only_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -570,47 +595,49 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_only-avc_only.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_only-misc_writefile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_simulcast-avc_simulcast.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_simulcast-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_simulcast-simulcast_writefile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_simulcast-misc_writefile_simulcast.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_two_way-avc_two_way.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_two_way-misc_system.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/avc_two_way-misc_writefile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_avc-example_avconly.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_avc-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_avc-misc_writefile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_control-example_control.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_control-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_mjpg-example_mjpgonly.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_mjpg-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_mjpg-misc_writefile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_vp8-example_vp8only.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_vp8-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_vp8-misc_writefile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_yuv-example_yuvonly.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_yuv-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_yuv-misc_writefile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fw_check-fw_check.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fw_check-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fw_downloader-fw_downloader.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fw_downloader-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_a-H264Enum.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_a-demux.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_a-mdparse.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_a-qic_control.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_a-qic_xuctrl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_a-vp8demux.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_release_a-H264Enum.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_release_a-demux.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_release_a-qic_control.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_sky_module_release_a-vp8demux.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_simulcast-misc_system.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_simulcast-simulcast_writefile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_fw_check-example_fw_check.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/example_fw_update-example_fw_update.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-demux_h264.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-demux_vp8.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_common_define.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_fw_update.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_md.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_misc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_osd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_stream.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_v4l2_ctpu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_api_video.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_utility_for_demo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_a-qic_xuctrl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-demux_h264.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-demux_vp8.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_common_define.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_fw_update.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_md.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_misc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_osd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_stream.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_v4l2_ctpu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_api_video.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_utility_for_demo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libqic_release_a-qic_xuctrl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mjpg_only-misc_writefile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mjpg_only-mjpg_only.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_only-misc_writefile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_only-vp8_only.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_simulcast-misc_writefile_simulcast.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_simulcast-vp8_simulcast.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_two_way-misc_system.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_two_way-misc_writefile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vp8_two_way-vp8_two_way.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/yuv_only-misc_writefile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/yuv_only-yuv_only.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -626,159 +653,369 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
-libqic_sky_module_a-H264Enum.o: ../qic_api/qic_src/H264Enum.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-H264Enum.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-H264Enum.Tpo -c -o libqic_sky_module_a-H264Enum.o `test -f '../qic_api/qic_src/H264Enum.c' || echo '$(srcdir)/'`../qic_api/qic_src/H264Enum.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-H264Enum.Tpo $(DEPDIR)/libqic_sky_module_a-H264Enum.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/H264Enum.c' object='libqic_sky_module_a-H264Enum.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-demux_h264.o: ../qic_api/qic_src/demux_h264.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-demux_h264.o -MD -MP -MF $(DEPDIR)/libqic_a-demux_h264.Tpo -c -o libqic_a-demux_h264.o `test -f '../qic_api/qic_src/demux_h264.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_h264.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-demux_h264.Tpo $(DEPDIR)/libqic_a-demux_h264.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_h264.c' object='libqic_a-demux_h264.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-H264Enum.o `test -f '../qic_api/qic_src/H264Enum.c' || echo '$(srcdir)/'`../qic_api/qic_src/H264Enum.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-demux_h264.o `test -f '../qic_api/qic_src/demux_h264.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_h264.c
 
-libqic_sky_module_a-H264Enum.obj: ../qic_api/qic_src/H264Enum.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-H264Enum.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-H264Enum.Tpo -c -o libqic_sky_module_a-H264Enum.obj `if test -f '../qic_api/qic_src/H264Enum.c'; then $(CYGPATH_W) '../qic_api/qic_src/H264Enum.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/H264Enum.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-H264Enum.Tpo $(DEPDIR)/libqic_sky_module_a-H264Enum.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/H264Enum.c' object='libqic_sky_module_a-H264Enum.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-demux_h264.obj: ../qic_api/qic_src/demux_h264.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-demux_h264.obj -MD -MP -MF $(DEPDIR)/libqic_a-demux_h264.Tpo -c -o libqic_a-demux_h264.obj `if test -f '../qic_api/qic_src/demux_h264.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_h264.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_h264.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-demux_h264.Tpo $(DEPDIR)/libqic_a-demux_h264.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_h264.c' object='libqic_a-demux_h264.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-H264Enum.obj `if test -f '../qic_api/qic_src/H264Enum.c'; then $(CYGPATH_W) '../qic_api/qic_src/H264Enum.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/H264Enum.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-demux_h264.obj `if test -f '../qic_api/qic_src/demux_h264.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_h264.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_h264.c'; fi`
 
-libqic_sky_module_a-demux.o: ../qic_api/qic_src/demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-demux.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-demux.Tpo -c -o libqic_sky_module_a-demux.o `test -f '../qic_api/qic_src/demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-demux.Tpo $(DEPDIR)/libqic_sky_module_a-demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux.c' object='libqic_sky_module_a-demux.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-demux_vp8.o: ../qic_api/qic_src/demux_vp8.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-demux_vp8.o -MD -MP -MF $(DEPDIR)/libqic_a-demux_vp8.Tpo -c -o libqic_a-demux_vp8.o `test -f '../qic_api/qic_src/demux_vp8.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_vp8.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-demux_vp8.Tpo $(DEPDIR)/libqic_a-demux_vp8.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_vp8.c' object='libqic_a-demux_vp8.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-demux.o `test -f '../qic_api/qic_src/demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-demux_vp8.o `test -f '../qic_api/qic_src/demux_vp8.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_vp8.c
 
-libqic_sky_module_a-demux.obj: ../qic_api/qic_src/demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-demux.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-demux.Tpo -c -o libqic_sky_module_a-demux.obj `if test -f '../qic_api/qic_src/demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-demux.Tpo $(DEPDIR)/libqic_sky_module_a-demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux.c' object='libqic_sky_module_a-demux.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-demux_vp8.obj: ../qic_api/qic_src/demux_vp8.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-demux_vp8.obj -MD -MP -MF $(DEPDIR)/libqic_a-demux_vp8.Tpo -c -o libqic_a-demux_vp8.obj `if test -f '../qic_api/qic_src/demux_vp8.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_vp8.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_vp8.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-demux_vp8.Tpo $(DEPDIR)/libqic_a-demux_vp8.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_vp8.c' object='libqic_a-demux_vp8.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-demux.obj `if test -f '../qic_api/qic_src/demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-demux_vp8.obj `if test -f '../qic_api/qic_src/demux_vp8.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_vp8.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_vp8.c'; fi`
 
-libqic_sky_module_a-qic_control.o: ../qic_api/qic_src/qic_control.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-qic_control.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-qic_control.Tpo -c -o libqic_sky_module_a-qic_control.o `test -f '../qic_api/qic_src/qic_control.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_control.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-qic_control.Tpo $(DEPDIR)/libqic_sky_module_a-qic_control.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_control.c' object='libqic_sky_module_a-qic_control.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_common_define.o: ../qic_api/qic_src/qic_api_common_define.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_common_define.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_common_define.Tpo -c -o libqic_a-qic_api_common_define.o `test -f '../qic_api/qic_src/qic_api_common_define.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_common_define.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_common_define.Tpo $(DEPDIR)/libqic_a-qic_api_common_define.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_common_define.c' object='libqic_a-qic_api_common_define.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-qic_control.o `test -f '../qic_api/qic_src/qic_control.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_control.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_common_define.o `test -f '../qic_api/qic_src/qic_api_common_define.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_common_define.c
 
-libqic_sky_module_a-qic_control.obj: ../qic_api/qic_src/qic_control.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-qic_control.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-qic_control.Tpo -c -o libqic_sky_module_a-qic_control.obj `if test -f '../qic_api/qic_src/qic_control.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_control.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_control.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-qic_control.Tpo $(DEPDIR)/libqic_sky_module_a-qic_control.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_control.c' object='libqic_sky_module_a-qic_control.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_common_define.obj: ../qic_api/qic_src/qic_api_common_define.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_common_define.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_common_define.Tpo -c -o libqic_a-qic_api_common_define.obj `if test -f '../qic_api/qic_src/qic_api_common_define.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_common_define.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_common_define.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_common_define.Tpo $(DEPDIR)/libqic_a-qic_api_common_define.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_common_define.c' object='libqic_a-qic_api_common_define.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-qic_control.obj `if test -f '../qic_api/qic_src/qic_control.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_control.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_control.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_common_define.obj `if test -f '../qic_api/qic_src/qic_api_common_define.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_common_define.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_common_define.c'; fi`
 
-libqic_sky_module_a-qic_xuctrl.o: ../qic_api/qic_src/qic_xuctrl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-qic_xuctrl.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-qic_xuctrl.Tpo -c -o libqic_sky_module_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_sky_module_a-qic_xuctrl.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_sky_module_a-qic_xuctrl.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_fw_update.o: ../qic_api/qic_src/qic_api_fw_update.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_fw_update.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_fw_update.Tpo -c -o libqic_a-qic_api_fw_update.o `test -f '../qic_api/qic_src/qic_api_fw_update.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_fw_update.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_fw_update.Tpo $(DEPDIR)/libqic_a-qic_api_fw_update.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_fw_update.c' object='libqic_a-qic_api_fw_update.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_fw_update.o `test -f '../qic_api/qic_src/qic_api_fw_update.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_fw_update.c
 
-libqic_sky_module_a-qic_xuctrl.obj: ../qic_api/qic_src/qic_xuctrl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-qic_xuctrl.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-qic_xuctrl.Tpo -c -o libqic_sky_module_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_sky_module_a-qic_xuctrl.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_sky_module_a-qic_xuctrl.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_fw_update.obj: ../qic_api/qic_src/qic_api_fw_update.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_fw_update.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_fw_update.Tpo -c -o libqic_a-qic_api_fw_update.obj `if test -f '../qic_api/qic_src/qic_api_fw_update.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_fw_update.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_fw_update.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_fw_update.Tpo $(DEPDIR)/libqic_a-qic_api_fw_update.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_fw_update.c' object='libqic_a-qic_api_fw_update.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_fw_update.obj `if test -f '../qic_api/qic_src/qic_api_fw_update.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_fw_update.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_fw_update.c'; fi`
 
-libqic_sky_module_a-vp8demux.o: ../qic_api/qic_src/vp8demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-vp8demux.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-vp8demux.Tpo -c -o libqic_sky_module_a-vp8demux.o `test -f '../qic_api/qic_src/vp8demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/vp8demux.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-vp8demux.Tpo $(DEPDIR)/libqic_sky_module_a-vp8demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/vp8demux.c' object='libqic_sky_module_a-vp8demux.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_md.o: ../qic_api/qic_src/qic_api_md.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_md.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_md.Tpo -c -o libqic_a-qic_api_md.o `test -f '../qic_api/qic_src/qic_api_md.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_md.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_md.Tpo $(DEPDIR)/libqic_a-qic_api_md.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_md.c' object='libqic_a-qic_api_md.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-vp8demux.o `test -f '../qic_api/qic_src/vp8demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/vp8demux.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_md.o `test -f '../qic_api/qic_src/qic_api_md.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_md.c
 
-libqic_sky_module_a-vp8demux.obj: ../qic_api/qic_src/vp8demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-vp8demux.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-vp8demux.Tpo -c -o libqic_sky_module_a-vp8demux.obj `if test -f '../qic_api/qic_src/vp8demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/vp8demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/vp8demux.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-vp8demux.Tpo $(DEPDIR)/libqic_sky_module_a-vp8demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/vp8demux.c' object='libqic_sky_module_a-vp8demux.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_md.obj: ../qic_api/qic_src/qic_api_md.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_md.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_md.Tpo -c -o libqic_a-qic_api_md.obj `if test -f '../qic_api/qic_src/qic_api_md.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_md.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_md.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_md.Tpo $(DEPDIR)/libqic_a-qic_api_md.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_md.c' object='libqic_a-qic_api_md.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-vp8demux.obj `if test -f '../qic_api/qic_src/vp8demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/vp8demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/vp8demux.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_md.obj `if test -f '../qic_api/qic_src/qic_api_md.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_md.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_md.c'; fi`
 
-libqic_sky_module_a-mdparse.o: ../qic_api/qic_src/mdparse.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-mdparse.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-mdparse.Tpo -c -o libqic_sky_module_a-mdparse.o `test -f '../qic_api/qic_src/mdparse.c' || echo '$(srcdir)/'`../qic_api/qic_src/mdparse.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-mdparse.Tpo $(DEPDIR)/libqic_sky_module_a-mdparse.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/mdparse.c' object='libqic_sky_module_a-mdparse.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_misc.o: ../qic_api/qic_src/qic_api_misc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_misc.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_misc.Tpo -c -o libqic_a-qic_api_misc.o `test -f '../qic_api/qic_src/qic_api_misc.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_misc.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_misc.Tpo $(DEPDIR)/libqic_a-qic_api_misc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_misc.c' object='libqic_a-qic_api_misc.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-mdparse.o `test -f '../qic_api/qic_src/mdparse.c' || echo '$(srcdir)/'`../qic_api/qic_src/mdparse.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_misc.o `test -f '../qic_api/qic_src/qic_api_misc.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_misc.c
 
-libqic_sky_module_a-mdparse.obj: ../qic_api/qic_src/mdparse.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_a-mdparse.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_a-mdparse.Tpo -c -o libqic_sky_module_a-mdparse.obj `if test -f '../qic_api/qic_src/mdparse.c'; then $(CYGPATH_W) '../qic_api/qic_src/mdparse.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/mdparse.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_a-mdparse.Tpo $(DEPDIR)/libqic_sky_module_a-mdparse.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/mdparse.c' object='libqic_sky_module_a-mdparse.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_misc.obj: ../qic_api/qic_src/qic_api_misc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_misc.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_misc.Tpo -c -o libqic_a-qic_api_misc.obj `if test -f '../qic_api/qic_src/qic_api_misc.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_misc.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_misc.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_misc.Tpo $(DEPDIR)/libqic_a-qic_api_misc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_misc.c' object='libqic_a-qic_api_misc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_a-mdparse.obj `if test -f '../qic_api/qic_src/mdparse.c'; then $(CYGPATH_W) '../qic_api/qic_src/mdparse.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/mdparse.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_misc.obj `if test -f '../qic_api/qic_src/qic_api_misc.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_misc.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_misc.c'; fi`
 
-libqic_sky_module_release_a-H264Enum.o: ../qic_api/qic_src/H264Enum.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-H264Enum.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-H264Enum.Tpo -c -o libqic_sky_module_release_a-H264Enum.o `test -f '../qic_api/qic_src/H264Enum.c' || echo '$(srcdir)/'`../qic_api/qic_src/H264Enum.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-H264Enum.Tpo $(DEPDIR)/libqic_sky_module_release_a-H264Enum.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/H264Enum.c' object='libqic_sky_module_release_a-H264Enum.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_osd.o: ../qic_api/qic_src/qic_api_osd.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_osd.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_osd.Tpo -c -o libqic_a-qic_api_osd.o `test -f '../qic_api/qic_src/qic_api_osd.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_osd.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_osd.Tpo $(DEPDIR)/libqic_a-qic_api_osd.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_osd.c' object='libqic_a-qic_api_osd.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-H264Enum.o `test -f '../qic_api/qic_src/H264Enum.c' || echo '$(srcdir)/'`../qic_api/qic_src/H264Enum.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_osd.o `test -f '../qic_api/qic_src/qic_api_osd.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_osd.c
 
-libqic_sky_module_release_a-H264Enum.obj: ../qic_api/qic_src/H264Enum.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-H264Enum.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-H264Enum.Tpo -c -o libqic_sky_module_release_a-H264Enum.obj `if test -f '../qic_api/qic_src/H264Enum.c'; then $(CYGPATH_W) '../qic_api/qic_src/H264Enum.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/H264Enum.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-H264Enum.Tpo $(DEPDIR)/libqic_sky_module_release_a-H264Enum.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/H264Enum.c' object='libqic_sky_module_release_a-H264Enum.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_osd.obj: ../qic_api/qic_src/qic_api_osd.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_osd.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_osd.Tpo -c -o libqic_a-qic_api_osd.obj `if test -f '../qic_api/qic_src/qic_api_osd.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_osd.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_osd.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_osd.Tpo $(DEPDIR)/libqic_a-qic_api_osd.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_osd.c' object='libqic_a-qic_api_osd.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-H264Enum.obj `if test -f '../qic_api/qic_src/H264Enum.c'; then $(CYGPATH_W) '../qic_api/qic_src/H264Enum.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/H264Enum.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_osd.obj `if test -f '../qic_api/qic_src/qic_api_osd.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_osd.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_osd.c'; fi`
 
-libqic_sky_module_release_a-demux.o: ../qic_api/qic_src/demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-demux.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-demux.Tpo -c -o libqic_sky_module_release_a-demux.o `test -f '../qic_api/qic_src/demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-demux.Tpo $(DEPDIR)/libqic_sky_module_release_a-demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux.c' object='libqic_sky_module_release_a-demux.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_stream.o: ../qic_api/qic_src/qic_api_stream.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_stream.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_stream.Tpo -c -o libqic_a-qic_api_stream.o `test -f '../qic_api/qic_src/qic_api_stream.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_stream.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_stream.Tpo $(DEPDIR)/libqic_a-qic_api_stream.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_stream.c' object='libqic_a-qic_api_stream.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-demux.o `test -f '../qic_api/qic_src/demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_stream.o `test -f '../qic_api/qic_src/qic_api_stream.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_stream.c
 
-libqic_sky_module_release_a-demux.obj: ../qic_api/qic_src/demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-demux.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-demux.Tpo -c -o libqic_sky_module_release_a-demux.obj `if test -f '../qic_api/qic_src/demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-demux.Tpo $(DEPDIR)/libqic_sky_module_release_a-demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux.c' object='libqic_sky_module_release_a-demux.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_stream.obj: ../qic_api/qic_src/qic_api_stream.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_stream.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_stream.Tpo -c -o libqic_a-qic_api_stream.obj `if test -f '../qic_api/qic_src/qic_api_stream.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_stream.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_stream.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_stream.Tpo $(DEPDIR)/libqic_a-qic_api_stream.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_stream.c' object='libqic_a-qic_api_stream.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-demux.obj `if test -f '../qic_api/qic_src/demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_stream.obj `if test -f '../qic_api/qic_src/qic_api_stream.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_stream.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_stream.c'; fi`
 
-libqic_sky_module_release_a-qic_control.o: ../qic_api/qic_src/qic_control.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-qic_control.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-qic_control.Tpo -c -o libqic_sky_module_release_a-qic_control.o `test -f '../qic_api/qic_src/qic_control.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_control.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-qic_control.Tpo $(DEPDIR)/libqic_sky_module_release_a-qic_control.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_control.c' object='libqic_sky_module_release_a-qic_control.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_v4l2_ctpu.o: ../qic_api/qic_src/qic_api_v4l2_ctpu.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_v4l2_ctpu.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_v4l2_ctpu.Tpo -c -o libqic_a-qic_api_v4l2_ctpu.o `test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_v4l2_ctpu.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_v4l2_ctpu.Tpo $(DEPDIR)/libqic_a-qic_api_v4l2_ctpu.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_v4l2_ctpu.c' object='libqic_a-qic_api_v4l2_ctpu.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-qic_control.o `test -f '../qic_api/qic_src/qic_control.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_control.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_v4l2_ctpu.o `test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_v4l2_ctpu.c
 
-libqic_sky_module_release_a-qic_control.obj: ../qic_api/qic_src/qic_control.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-qic_control.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-qic_control.Tpo -c -o libqic_sky_module_release_a-qic_control.obj `if test -f '../qic_api/qic_src/qic_control.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_control.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_control.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-qic_control.Tpo $(DEPDIR)/libqic_sky_module_release_a-qic_control.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_control.c' object='libqic_sky_module_release_a-qic_control.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_v4l2_ctpu.obj: ../qic_api/qic_src/qic_api_v4l2_ctpu.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_v4l2_ctpu.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_v4l2_ctpu.Tpo -c -o libqic_a-qic_api_v4l2_ctpu.obj `if test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_v4l2_ctpu.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_v4l2_ctpu.Tpo $(DEPDIR)/libqic_a-qic_api_v4l2_ctpu.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_v4l2_ctpu.c' object='libqic_a-qic_api_v4l2_ctpu.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-qic_control.obj `if test -f '../qic_api/qic_src/qic_control.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_control.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_control.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_v4l2_ctpu.obj `if test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_v4l2_ctpu.c'; fi`
 
-libqic_sky_module_release_a-qic_xuctrl.o: ../qic_api/qic_src/qic_xuctrl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-qic_xuctrl.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Tpo -c -o libqic_sky_module_release_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_sky_module_release_a-qic_xuctrl.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_video.o: ../qic_api/qic_src/qic_api_video.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_video.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_video.Tpo -c -o libqic_a-qic_api_video.o `test -f '../qic_api/qic_src/qic_api_video.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_video.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_video.Tpo $(DEPDIR)/libqic_a-qic_api_video.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_video.c' object='libqic_a-qic_api_video.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_video.o `test -f '../qic_api/qic_src/qic_api_video.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_video.c
 
-libqic_sky_module_release_a-qic_xuctrl.obj: ../qic_api/qic_src/qic_xuctrl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-qic_xuctrl.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Tpo -c -o libqic_sky_module_release_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_sky_module_release_a-qic_xuctrl.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_sky_module_release_a-qic_xuctrl.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_api_video.obj: ../qic_api/qic_src/qic_api_video.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_api_video.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_api_video.Tpo -c -o libqic_a-qic_api_video.obj `if test -f '../qic_api/qic_src/qic_api_video.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_video.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_video.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_api_video.Tpo $(DEPDIR)/libqic_a-qic_api_video.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_video.c' object='libqic_a-qic_api_video.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_api_video.obj `if test -f '../qic_api/qic_src/qic_api_video.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_video.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_video.c'; fi`
 
-libqic_sky_module_release_a-vp8demux.o: ../qic_api/qic_src/vp8demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-vp8demux.o -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-vp8demux.Tpo -c -o libqic_sky_module_release_a-vp8demux.o `test -f '../qic_api/qic_src/vp8demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/vp8demux.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-vp8demux.Tpo $(DEPDIR)/libqic_sky_module_release_a-vp8demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/vp8demux.c' object='libqic_sky_module_release_a-vp8demux.o' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_utility_for_demo.o: ../qic_api/qic_src/qic_utility_for_demo.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_utility_for_demo.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_utility_for_demo.Tpo -c -o libqic_a-qic_utility_for_demo.o `test -f '../qic_api/qic_src/qic_utility_for_demo.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_utility_for_demo.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_utility_for_demo.Tpo $(DEPDIR)/libqic_a-qic_utility_for_demo.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_utility_for_demo.c' object='libqic_a-qic_utility_for_demo.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-vp8demux.o `test -f '../qic_api/qic_src/vp8demux.c' || echo '$(srcdir)/'`../qic_api/qic_src/vp8demux.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_utility_for_demo.o `test -f '../qic_api/qic_src/qic_utility_for_demo.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_utility_for_demo.c
 
-libqic_sky_module_release_a-vp8demux.obj: ../qic_api/qic_src/vp8demux.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -MT libqic_sky_module_release_a-vp8demux.obj -MD -MP -MF $(DEPDIR)/libqic_sky_module_release_a-vp8demux.Tpo -c -o libqic_sky_module_release_a-vp8demux.obj `if test -f '../qic_api/qic_src/vp8demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/vp8demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/vp8demux.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_sky_module_release_a-vp8demux.Tpo $(DEPDIR)/libqic_sky_module_release_a-vp8demux.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/vp8demux.c' object='libqic_sky_module_release_a-vp8demux.obj' libtool=no @AMDEPBACKSLASH@
+libqic_a-qic_utility_for_demo.obj: ../qic_api/qic_src/qic_utility_for_demo.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_utility_for_demo.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_utility_for_demo.Tpo -c -o libqic_a-qic_utility_for_demo.obj `if test -f '../qic_api/qic_src/qic_utility_for_demo.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_utility_for_demo.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_utility_for_demo.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_utility_for_demo.Tpo $(DEPDIR)/libqic_a-qic_utility_for_demo.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_utility_for_demo.c' object='libqic_a-qic_utility_for_demo.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_sky_module_release_a_CFLAGS) $(CFLAGS) -c -o libqic_sky_module_release_a-vp8demux.obj `if test -f '../qic_api/qic_src/vp8demux.c'; then $(CYGPATH_W) '../qic_api/qic_src/vp8demux.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/vp8demux.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_utility_for_demo.obj `if test -f '../qic_api/qic_src/qic_utility_for_demo.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_utility_for_demo.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_utility_for_demo.c'; fi`
+
+libqic_a-qic_xuctrl.o: ../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_xuctrl.o -MD -MP -MF $(DEPDIR)/libqic_a-qic_xuctrl.Tpo -c -o libqic_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_a-qic_xuctrl.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_a-qic_xuctrl.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
+
+libqic_a-qic_xuctrl.obj: ../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -MT libqic_a-qic_xuctrl.obj -MD -MP -MF $(DEPDIR)/libqic_a-qic_xuctrl.Tpo -c -o libqic_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_a-qic_xuctrl.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_a-qic_xuctrl.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_a_CFLAGS) $(CFLAGS) -c -o libqic_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
+
+libqic_release_a-demux_h264.o: ../qic_api/qic_src/demux_h264.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-demux_h264.o -MD -MP -MF $(DEPDIR)/libqic_release_a-demux_h264.Tpo -c -o libqic_release_a-demux_h264.o `test -f '../qic_api/qic_src/demux_h264.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_h264.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-demux_h264.Tpo $(DEPDIR)/libqic_release_a-demux_h264.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_h264.c' object='libqic_release_a-demux_h264.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-demux_h264.o `test -f '../qic_api/qic_src/demux_h264.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_h264.c
+
+libqic_release_a-demux_h264.obj: ../qic_api/qic_src/demux_h264.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-demux_h264.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-demux_h264.Tpo -c -o libqic_release_a-demux_h264.obj `if test -f '../qic_api/qic_src/demux_h264.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_h264.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_h264.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-demux_h264.Tpo $(DEPDIR)/libqic_release_a-demux_h264.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_h264.c' object='libqic_release_a-demux_h264.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-demux_h264.obj `if test -f '../qic_api/qic_src/demux_h264.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_h264.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_h264.c'; fi`
+
+libqic_release_a-demux_vp8.o: ../qic_api/qic_src/demux_vp8.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-demux_vp8.o -MD -MP -MF $(DEPDIR)/libqic_release_a-demux_vp8.Tpo -c -o libqic_release_a-demux_vp8.o `test -f '../qic_api/qic_src/demux_vp8.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_vp8.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-demux_vp8.Tpo $(DEPDIR)/libqic_release_a-demux_vp8.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_vp8.c' object='libqic_release_a-demux_vp8.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-demux_vp8.o `test -f '../qic_api/qic_src/demux_vp8.c' || echo '$(srcdir)/'`../qic_api/qic_src/demux_vp8.c
+
+libqic_release_a-demux_vp8.obj: ../qic_api/qic_src/demux_vp8.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-demux_vp8.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-demux_vp8.Tpo -c -o libqic_release_a-demux_vp8.obj `if test -f '../qic_api/qic_src/demux_vp8.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_vp8.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_vp8.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-demux_vp8.Tpo $(DEPDIR)/libqic_release_a-demux_vp8.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/demux_vp8.c' object='libqic_release_a-demux_vp8.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-demux_vp8.obj `if test -f '../qic_api/qic_src/demux_vp8.c'; then $(CYGPATH_W) '../qic_api/qic_src/demux_vp8.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/demux_vp8.c'; fi`
+
+libqic_release_a-qic_api_common_define.o: ../qic_api/qic_src/qic_api_common_define.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_common_define.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_common_define.Tpo -c -o libqic_release_a-qic_api_common_define.o `test -f '../qic_api/qic_src/qic_api_common_define.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_common_define.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_common_define.Tpo $(DEPDIR)/libqic_release_a-qic_api_common_define.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_common_define.c' object='libqic_release_a-qic_api_common_define.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_common_define.o `test -f '../qic_api/qic_src/qic_api_common_define.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_common_define.c
+
+libqic_release_a-qic_api_common_define.obj: ../qic_api/qic_src/qic_api_common_define.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_common_define.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_common_define.Tpo -c -o libqic_release_a-qic_api_common_define.obj `if test -f '../qic_api/qic_src/qic_api_common_define.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_common_define.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_common_define.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_common_define.Tpo $(DEPDIR)/libqic_release_a-qic_api_common_define.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_common_define.c' object='libqic_release_a-qic_api_common_define.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_common_define.obj `if test -f '../qic_api/qic_src/qic_api_common_define.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_common_define.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_common_define.c'; fi`
+
+libqic_release_a-qic_api_fw_update.o: ../qic_api/qic_src/qic_api_fw_update.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_fw_update.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_fw_update.Tpo -c -o libqic_release_a-qic_api_fw_update.o `test -f '../qic_api/qic_src/qic_api_fw_update.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_fw_update.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_fw_update.Tpo $(DEPDIR)/libqic_release_a-qic_api_fw_update.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_fw_update.c' object='libqic_release_a-qic_api_fw_update.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_fw_update.o `test -f '../qic_api/qic_src/qic_api_fw_update.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_fw_update.c
+
+libqic_release_a-qic_api_fw_update.obj: ../qic_api/qic_src/qic_api_fw_update.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_fw_update.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_fw_update.Tpo -c -o libqic_release_a-qic_api_fw_update.obj `if test -f '../qic_api/qic_src/qic_api_fw_update.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_fw_update.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_fw_update.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_fw_update.Tpo $(DEPDIR)/libqic_release_a-qic_api_fw_update.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_fw_update.c' object='libqic_release_a-qic_api_fw_update.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_fw_update.obj `if test -f '../qic_api/qic_src/qic_api_fw_update.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_fw_update.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_fw_update.c'; fi`
+
+libqic_release_a-qic_api_md.o: ../qic_api/qic_src/qic_api_md.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_md.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_md.Tpo -c -o libqic_release_a-qic_api_md.o `test -f '../qic_api/qic_src/qic_api_md.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_md.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_md.Tpo $(DEPDIR)/libqic_release_a-qic_api_md.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_md.c' object='libqic_release_a-qic_api_md.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_md.o `test -f '../qic_api/qic_src/qic_api_md.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_md.c
+
+libqic_release_a-qic_api_md.obj: ../qic_api/qic_src/qic_api_md.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_md.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_md.Tpo -c -o libqic_release_a-qic_api_md.obj `if test -f '../qic_api/qic_src/qic_api_md.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_md.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_md.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_md.Tpo $(DEPDIR)/libqic_release_a-qic_api_md.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_md.c' object='libqic_release_a-qic_api_md.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_md.obj `if test -f '../qic_api/qic_src/qic_api_md.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_md.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_md.c'; fi`
+
+libqic_release_a-qic_api_misc.o: ../qic_api/qic_src/qic_api_misc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_misc.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_misc.Tpo -c -o libqic_release_a-qic_api_misc.o `test -f '../qic_api/qic_src/qic_api_misc.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_misc.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_misc.Tpo $(DEPDIR)/libqic_release_a-qic_api_misc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_misc.c' object='libqic_release_a-qic_api_misc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_misc.o `test -f '../qic_api/qic_src/qic_api_misc.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_misc.c
+
+libqic_release_a-qic_api_misc.obj: ../qic_api/qic_src/qic_api_misc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_misc.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_misc.Tpo -c -o libqic_release_a-qic_api_misc.obj `if test -f '../qic_api/qic_src/qic_api_misc.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_misc.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_misc.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_misc.Tpo $(DEPDIR)/libqic_release_a-qic_api_misc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_misc.c' object='libqic_release_a-qic_api_misc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_misc.obj `if test -f '../qic_api/qic_src/qic_api_misc.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_misc.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_misc.c'; fi`
+
+libqic_release_a-qic_api_osd.o: ../qic_api/qic_src/qic_api_osd.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_osd.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_osd.Tpo -c -o libqic_release_a-qic_api_osd.o `test -f '../qic_api/qic_src/qic_api_osd.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_osd.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_osd.Tpo $(DEPDIR)/libqic_release_a-qic_api_osd.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_osd.c' object='libqic_release_a-qic_api_osd.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_osd.o `test -f '../qic_api/qic_src/qic_api_osd.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_osd.c
+
+libqic_release_a-qic_api_osd.obj: ../qic_api/qic_src/qic_api_osd.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_osd.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_osd.Tpo -c -o libqic_release_a-qic_api_osd.obj `if test -f '../qic_api/qic_src/qic_api_osd.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_osd.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_osd.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_osd.Tpo $(DEPDIR)/libqic_release_a-qic_api_osd.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_osd.c' object='libqic_release_a-qic_api_osd.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_osd.obj `if test -f '../qic_api/qic_src/qic_api_osd.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_osd.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_osd.c'; fi`
+
+libqic_release_a-qic_api_stream.o: ../qic_api/qic_src/qic_api_stream.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_stream.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_stream.Tpo -c -o libqic_release_a-qic_api_stream.o `test -f '../qic_api/qic_src/qic_api_stream.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_stream.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_stream.Tpo $(DEPDIR)/libqic_release_a-qic_api_stream.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_stream.c' object='libqic_release_a-qic_api_stream.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_stream.o `test -f '../qic_api/qic_src/qic_api_stream.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_stream.c
+
+libqic_release_a-qic_api_stream.obj: ../qic_api/qic_src/qic_api_stream.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_stream.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_stream.Tpo -c -o libqic_release_a-qic_api_stream.obj `if test -f '../qic_api/qic_src/qic_api_stream.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_stream.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_stream.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_stream.Tpo $(DEPDIR)/libqic_release_a-qic_api_stream.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_stream.c' object='libqic_release_a-qic_api_stream.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_stream.obj `if test -f '../qic_api/qic_src/qic_api_stream.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_stream.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_stream.c'; fi`
+
+libqic_release_a-qic_api_v4l2_ctpu.o: ../qic_api/qic_src/qic_api_v4l2_ctpu.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_v4l2_ctpu.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_v4l2_ctpu.Tpo -c -o libqic_release_a-qic_api_v4l2_ctpu.o `test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_v4l2_ctpu.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_v4l2_ctpu.Tpo $(DEPDIR)/libqic_release_a-qic_api_v4l2_ctpu.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_v4l2_ctpu.c' object='libqic_release_a-qic_api_v4l2_ctpu.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_v4l2_ctpu.o `test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_v4l2_ctpu.c
+
+libqic_release_a-qic_api_v4l2_ctpu.obj: ../qic_api/qic_src/qic_api_v4l2_ctpu.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_v4l2_ctpu.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_v4l2_ctpu.Tpo -c -o libqic_release_a-qic_api_v4l2_ctpu.obj `if test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_v4l2_ctpu.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_v4l2_ctpu.Tpo $(DEPDIR)/libqic_release_a-qic_api_v4l2_ctpu.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_v4l2_ctpu.c' object='libqic_release_a-qic_api_v4l2_ctpu.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_v4l2_ctpu.obj `if test -f '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_v4l2_ctpu.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_v4l2_ctpu.c'; fi`
+
+libqic_release_a-qic_api_video.o: ../qic_api/qic_src/qic_api_video.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_video.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_video.Tpo -c -o libqic_release_a-qic_api_video.o `test -f '../qic_api/qic_src/qic_api_video.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_video.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_video.Tpo $(DEPDIR)/libqic_release_a-qic_api_video.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_video.c' object='libqic_release_a-qic_api_video.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_video.o `test -f '../qic_api/qic_src/qic_api_video.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_api_video.c
+
+libqic_release_a-qic_api_video.obj: ../qic_api/qic_src/qic_api_video.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_api_video.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_api_video.Tpo -c -o libqic_release_a-qic_api_video.obj `if test -f '../qic_api/qic_src/qic_api_video.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_video.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_video.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_api_video.Tpo $(DEPDIR)/libqic_release_a-qic_api_video.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_api_video.c' object='libqic_release_a-qic_api_video.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_api_video.obj `if test -f '../qic_api/qic_src/qic_api_video.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_api_video.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_api_video.c'; fi`
+
+libqic_release_a-qic_utility_for_demo.o: ../qic_api/qic_src/qic_utility_for_demo.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_utility_for_demo.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_utility_for_demo.Tpo -c -o libqic_release_a-qic_utility_for_demo.o `test -f '../qic_api/qic_src/qic_utility_for_demo.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_utility_for_demo.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_utility_for_demo.Tpo $(DEPDIR)/libqic_release_a-qic_utility_for_demo.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_utility_for_demo.c' object='libqic_release_a-qic_utility_for_demo.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_utility_for_demo.o `test -f '../qic_api/qic_src/qic_utility_for_demo.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_utility_for_demo.c
+
+libqic_release_a-qic_utility_for_demo.obj: ../qic_api/qic_src/qic_utility_for_demo.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_utility_for_demo.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_utility_for_demo.Tpo -c -o libqic_release_a-qic_utility_for_demo.obj `if test -f '../qic_api/qic_src/qic_utility_for_demo.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_utility_for_demo.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_utility_for_demo.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_utility_for_demo.Tpo $(DEPDIR)/libqic_release_a-qic_utility_for_demo.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_utility_for_demo.c' object='libqic_release_a-qic_utility_for_demo.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_utility_for_demo.obj `if test -f '../qic_api/qic_src/qic_utility_for_demo.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_utility_for_demo.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_utility_for_demo.c'; fi`
+
+libqic_release_a-qic_xuctrl.o: ../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_xuctrl.o -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_xuctrl.Tpo -c -o libqic_release_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_release_a-qic_xuctrl.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_release_a-qic_xuctrl.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_xuctrl.o `test -f '../qic_api/qic_src/qic_xuctrl.c' || echo '$(srcdir)/'`../qic_api/qic_src/qic_xuctrl.c
+
+libqic_release_a-qic_xuctrl.obj: ../qic_api/qic_src/qic_xuctrl.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -MT libqic_release_a-qic_xuctrl.obj -MD -MP -MF $(DEPDIR)/libqic_release_a-qic_xuctrl.Tpo -c -o libqic_release_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libqic_release_a-qic_xuctrl.Tpo $(DEPDIR)/libqic_release_a-qic_xuctrl.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../qic_api/qic_src/qic_xuctrl.c' object='libqic_release_a-qic_xuctrl.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqic_release_a_CFLAGS) $(CFLAGS) -c -o libqic_release_a-qic_xuctrl.obj `if test -f '../qic_api/qic_src/qic_xuctrl.c'; then $(CYGPATH_W) '../qic_api/qic_src/qic_xuctrl.c'; else $(CYGPATH_W) '$(srcdir)/../qic_api/qic_src/qic_xuctrl.c'; fi`
+
+avc_only-avc_only.o: avc_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -MT avc_only-avc_only.o -MD -MP -MF $(DEPDIR)/avc_only-avc_only.Tpo -c -o avc_only-avc_only.o `test -f 'avc_only.c' || echo '$(srcdir)/'`avc_only.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_only-avc_only.Tpo $(DEPDIR)/avc_only-avc_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='avc_only.c' object='avc_only-avc_only.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -c -o avc_only-avc_only.o `test -f 'avc_only.c' || echo '$(srcdir)/'`avc_only.c
+
+avc_only-avc_only.obj: avc_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -MT avc_only-avc_only.obj -MD -MP -MF $(DEPDIR)/avc_only-avc_only.Tpo -c -o avc_only-avc_only.obj `if test -f 'avc_only.c'; then $(CYGPATH_W) 'avc_only.c'; else $(CYGPATH_W) '$(srcdir)/avc_only.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_only-avc_only.Tpo $(DEPDIR)/avc_only-avc_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='avc_only.c' object='avc_only-avc_only.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -c -o avc_only-avc_only.obj `if test -f 'avc_only.c'; then $(CYGPATH_W) 'avc_only.c'; else $(CYGPATH_W) '$(srcdir)/avc_only.c'; fi`
+
+avc_only-misc_writefile.o: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -MT avc_only-misc_writefile.o -MD -MP -MF $(DEPDIR)/avc_only-misc_writefile.Tpo -c -o avc_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_only-misc_writefile.Tpo $(DEPDIR)/avc_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='avc_only-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -c -o avc_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+
+avc_only-misc_writefile.obj: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -MT avc_only-misc_writefile.obj -MD -MP -MF $(DEPDIR)/avc_only-misc_writefile.Tpo -c -o avc_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_only-misc_writefile.Tpo $(DEPDIR)/avc_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='avc_only-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_only_CFLAGS) $(CFLAGS) -c -o avc_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
 
 avc_simulcast-avc_simulcast.o: avc_simulcast.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -MT avc_simulcast-avc_simulcast.o -MD -MP -MF $(DEPDIR)/avc_simulcast-avc_simulcast.Tpo -c -o avc_simulcast-avc_simulcast.o `test -f 'avc_simulcast.c' || echo '$(srcdir)/'`avc_simulcast.c
@@ -794,33 +1031,19 @@ avc_simulcast-avc_simulcast.obj: avc_simulcast.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -c -o avc_simulcast-avc_simulcast.obj `if test -f 'avc_simulcast.c'; then $(CYGPATH_W) 'avc_simulcast.c'; else $(CYGPATH_W) '$(srcdir)/avc_simulcast.c'; fi`
 
-avc_simulcast-simulcast_writefile.o: simulcast_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -MT avc_simulcast-simulcast_writefile.o -MD -MP -MF $(DEPDIR)/avc_simulcast-simulcast_writefile.Tpo -c -o avc_simulcast-simulcast_writefile.o `test -f 'simulcast_writefile.c' || echo '$(srcdir)/'`simulcast_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_simulcast-simulcast_writefile.Tpo $(DEPDIR)/avc_simulcast-simulcast_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='simulcast_writefile.c' object='avc_simulcast-simulcast_writefile.o' libtool=no @AMDEPBACKSLASH@
+avc_simulcast-misc_writefile_simulcast.o: misc_writefile_simulcast.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -MT avc_simulcast-misc_writefile_simulcast.o -MD -MP -MF $(DEPDIR)/avc_simulcast-misc_writefile_simulcast.Tpo -c -o avc_simulcast-misc_writefile_simulcast.o `test -f 'misc_writefile_simulcast.c' || echo '$(srcdir)/'`misc_writefile_simulcast.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_simulcast-misc_writefile_simulcast.Tpo $(DEPDIR)/avc_simulcast-misc_writefile_simulcast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile_simulcast.c' object='avc_simulcast-misc_writefile_simulcast.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -c -o avc_simulcast-simulcast_writefile.o `test -f 'simulcast_writefile.c' || echo '$(srcdir)/'`simulcast_writefile.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -c -o avc_simulcast-misc_writefile_simulcast.o `test -f 'misc_writefile_simulcast.c' || echo '$(srcdir)/'`misc_writefile_simulcast.c
 
-avc_simulcast-simulcast_writefile.obj: simulcast_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -MT avc_simulcast-simulcast_writefile.obj -MD -MP -MF $(DEPDIR)/avc_simulcast-simulcast_writefile.Tpo -c -o avc_simulcast-simulcast_writefile.obj `if test -f 'simulcast_writefile.c'; then $(CYGPATH_W) 'simulcast_writefile.c'; else $(CYGPATH_W) '$(srcdir)/simulcast_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_simulcast-simulcast_writefile.Tpo $(DEPDIR)/avc_simulcast-simulcast_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='simulcast_writefile.c' object='avc_simulcast-simulcast_writefile.obj' libtool=no @AMDEPBACKSLASH@
+avc_simulcast-misc_writefile_simulcast.obj: misc_writefile_simulcast.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -MT avc_simulcast-misc_writefile_simulcast.obj -MD -MP -MF $(DEPDIR)/avc_simulcast-misc_writefile_simulcast.Tpo -c -o avc_simulcast-misc_writefile_simulcast.obj `if test -f 'misc_writefile_simulcast.c'; then $(CYGPATH_W) 'misc_writefile_simulcast.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile_simulcast.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_simulcast-misc_writefile_simulcast.Tpo $(DEPDIR)/avc_simulcast-misc_writefile_simulcast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile_simulcast.c' object='avc_simulcast-misc_writefile_simulcast.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -c -o avc_simulcast-simulcast_writefile.obj `if test -f 'simulcast_writefile.c'; then $(CYGPATH_W) 'simulcast_writefile.c'; else $(CYGPATH_W) '$(srcdir)/simulcast_writefile.c'; fi`
-
-avc_simulcast-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -MT avc_simulcast-misc_system.o -MD -MP -MF $(DEPDIR)/avc_simulcast-misc_system.Tpo -c -o avc_simulcast-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_simulcast-misc_system.Tpo $(DEPDIR)/avc_simulcast-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='avc_simulcast-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -c -o avc_simulcast-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-avc_simulcast-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -MT avc_simulcast-misc_system.obj -MD -MP -MF $(DEPDIR)/avc_simulcast-misc_system.Tpo -c -o avc_simulcast-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_simulcast-misc_system.Tpo $(DEPDIR)/avc_simulcast-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='avc_simulcast-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -c -o avc_simulcast-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_simulcast_CFLAGS) $(CFLAGS) -c -o avc_simulcast-misc_writefile_simulcast.obj `if test -f 'misc_writefile_simulcast.c'; then $(CYGPATH_W) 'misc_writefile_simulcast.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile_simulcast.c'; fi`
 
 avc_two_way-avc_two_way.o: avc_two_way.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_two_way_CFLAGS) $(CFLAGS) -MT avc_two_way-avc_two_way.o -MD -MP -MF $(DEPDIR)/avc_two_way-avc_two_way.Tpo -c -o avc_two_way-avc_two_way.o `test -f 'avc_two_way.c' || echo '$(srcdir)/'`avc_two_way.c
@@ -850,62 +1073,6 @@ avc_two_way-misc_writefile.obj: misc_writefile.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_two_way_CFLAGS) $(CFLAGS) -c -o avc_two_way-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
 
-avc_two_way-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_two_way_CFLAGS) $(CFLAGS) -MT avc_two_way-misc_system.o -MD -MP -MF $(DEPDIR)/avc_two_way-misc_system.Tpo -c -o avc_two_way-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_two_way-misc_system.Tpo $(DEPDIR)/avc_two_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='avc_two_way-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_two_way_CFLAGS) $(CFLAGS) -c -o avc_two_way-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-avc_two_way-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_two_way_CFLAGS) $(CFLAGS) -MT avc_two_way-misc_system.obj -MD -MP -MF $(DEPDIR)/avc_two_way-misc_system.Tpo -c -o avc_two_way-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/avc_two_way-misc_system.Tpo $(DEPDIR)/avc_two_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='avc_two_way-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(avc_two_way_CFLAGS) $(CFLAGS) -c -o avc_two_way-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-
-example_avc-example_avconly.o: example_avconly.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -MT example_avc-example_avconly.o -MD -MP -MF $(DEPDIR)/example_avc-example_avconly.Tpo -c -o example_avc-example_avconly.o `test -f 'example_avconly.c' || echo '$(srcdir)/'`example_avconly.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_avc-example_avconly.Tpo $(DEPDIR)/example_avc-example_avconly.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_avconly.c' object='example_avc-example_avconly.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -c -o example_avc-example_avconly.o `test -f 'example_avconly.c' || echo '$(srcdir)/'`example_avconly.c
-
-example_avc-example_avconly.obj: example_avconly.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -MT example_avc-example_avconly.obj -MD -MP -MF $(DEPDIR)/example_avc-example_avconly.Tpo -c -o example_avc-example_avconly.obj `if test -f 'example_avconly.c'; then $(CYGPATH_W) 'example_avconly.c'; else $(CYGPATH_W) '$(srcdir)/example_avconly.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_avc-example_avconly.Tpo $(DEPDIR)/example_avc-example_avconly.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_avconly.c' object='example_avc-example_avconly.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -c -o example_avc-example_avconly.obj `if test -f 'example_avconly.c'; then $(CYGPATH_W) 'example_avconly.c'; else $(CYGPATH_W) '$(srcdir)/example_avconly.c'; fi`
-
-example_avc-misc_writefile.o: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -MT example_avc-misc_writefile.o -MD -MP -MF $(DEPDIR)/example_avc-misc_writefile.Tpo -c -o example_avc-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_avc-misc_writefile.Tpo $(DEPDIR)/example_avc-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_avc-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -c -o example_avc-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
-
-example_avc-misc_writefile.obj: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -MT example_avc-misc_writefile.obj -MD -MP -MF $(DEPDIR)/example_avc-misc_writefile.Tpo -c -o example_avc-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_avc-misc_writefile.Tpo $(DEPDIR)/example_avc-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_avc-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -c -o example_avc-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
-
-example_avc-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -MT example_avc-misc_system.o -MD -MP -MF $(DEPDIR)/example_avc-misc_system.Tpo -c -o example_avc-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_avc-misc_system.Tpo $(DEPDIR)/example_avc-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_avc-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -c -o example_avc-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-example_avc-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -MT example_avc-misc_system.obj -MD -MP -MF $(DEPDIR)/example_avc-misc_system.Tpo -c -o example_avc-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_avc-misc_system.Tpo $(DEPDIR)/example_avc-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_avc-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_avc_CFLAGS) $(CFLAGS) -c -o example_avc-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-
 example_control-example_control.o: example_control.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_control_CFLAGS) $(CFLAGS) -MT example_control-example_control.o -MD -MP -MF $(DEPDIR)/example_control-example_control.Tpo -c -o example_control-example_control.o `test -f 'example_control.c' || echo '$(srcdir)/'`example_control.c
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_control-example_control.Tpo $(DEPDIR)/example_control-example_control.Po
@@ -920,201 +1087,89 @@ example_control-example_control.obj: example_control.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_control_CFLAGS) $(CFLAGS) -c -o example_control-example_control.obj `if test -f 'example_control.c'; then $(CYGPATH_W) 'example_control.c'; else $(CYGPATH_W) '$(srcdir)/example_control.c'; fi`
 
-example_control-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_control_CFLAGS) $(CFLAGS) -MT example_control-misc_system.o -MD -MP -MF $(DEPDIR)/example_control-misc_system.Tpo -c -o example_control-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_control-misc_system.Tpo $(DEPDIR)/example_control-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_control-misc_system.o' libtool=no @AMDEPBACKSLASH@
+example_fw_check-example_fw_check.o: example_fw_check.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_check_CFLAGS) $(CFLAGS) -MT example_fw_check-example_fw_check.o -MD -MP -MF $(DEPDIR)/example_fw_check-example_fw_check.Tpo -c -o example_fw_check-example_fw_check.o `test -f 'example_fw_check.c' || echo '$(srcdir)/'`example_fw_check.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_fw_check-example_fw_check.Tpo $(DEPDIR)/example_fw_check-example_fw_check.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_fw_check.c' object='example_fw_check-example_fw_check.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_control_CFLAGS) $(CFLAGS) -c -o example_control-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_check_CFLAGS) $(CFLAGS) -c -o example_fw_check-example_fw_check.o `test -f 'example_fw_check.c' || echo '$(srcdir)/'`example_fw_check.c
 
-example_control-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_control_CFLAGS) $(CFLAGS) -MT example_control-misc_system.obj -MD -MP -MF $(DEPDIR)/example_control-misc_system.Tpo -c -o example_control-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_control-misc_system.Tpo $(DEPDIR)/example_control-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_control-misc_system.obj' libtool=no @AMDEPBACKSLASH@
+example_fw_check-example_fw_check.obj: example_fw_check.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_check_CFLAGS) $(CFLAGS) -MT example_fw_check-example_fw_check.obj -MD -MP -MF $(DEPDIR)/example_fw_check-example_fw_check.Tpo -c -o example_fw_check-example_fw_check.obj `if test -f 'example_fw_check.c'; then $(CYGPATH_W) 'example_fw_check.c'; else $(CYGPATH_W) '$(srcdir)/example_fw_check.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_fw_check-example_fw_check.Tpo $(DEPDIR)/example_fw_check-example_fw_check.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_fw_check.c' object='example_fw_check-example_fw_check.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_control_CFLAGS) $(CFLAGS) -c -o example_control-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_check_CFLAGS) $(CFLAGS) -c -o example_fw_check-example_fw_check.obj `if test -f 'example_fw_check.c'; then $(CYGPATH_W) 'example_fw_check.c'; else $(CYGPATH_W) '$(srcdir)/example_fw_check.c'; fi`
 
-example_mjpg-example_mjpgonly.o: example_mjpgonly.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -MT example_mjpg-example_mjpgonly.o -MD -MP -MF $(DEPDIR)/example_mjpg-example_mjpgonly.Tpo -c -o example_mjpg-example_mjpgonly.o `test -f 'example_mjpgonly.c' || echo '$(srcdir)/'`example_mjpgonly.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_mjpg-example_mjpgonly.Tpo $(DEPDIR)/example_mjpg-example_mjpgonly.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_mjpgonly.c' object='example_mjpg-example_mjpgonly.o' libtool=no @AMDEPBACKSLASH@
+example_fw_update-example_fw_update.o: example_fw_update.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_update_CFLAGS) $(CFLAGS) -MT example_fw_update-example_fw_update.o -MD -MP -MF $(DEPDIR)/example_fw_update-example_fw_update.Tpo -c -o example_fw_update-example_fw_update.o `test -f 'example_fw_update.c' || echo '$(srcdir)/'`example_fw_update.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_fw_update-example_fw_update.Tpo $(DEPDIR)/example_fw_update-example_fw_update.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_fw_update.c' object='example_fw_update-example_fw_update.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -c -o example_mjpg-example_mjpgonly.o `test -f 'example_mjpgonly.c' || echo '$(srcdir)/'`example_mjpgonly.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_update_CFLAGS) $(CFLAGS) -c -o example_fw_update-example_fw_update.o `test -f 'example_fw_update.c' || echo '$(srcdir)/'`example_fw_update.c
 
-example_mjpg-example_mjpgonly.obj: example_mjpgonly.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -MT example_mjpg-example_mjpgonly.obj -MD -MP -MF $(DEPDIR)/example_mjpg-example_mjpgonly.Tpo -c -o example_mjpg-example_mjpgonly.obj `if test -f 'example_mjpgonly.c'; then $(CYGPATH_W) 'example_mjpgonly.c'; else $(CYGPATH_W) '$(srcdir)/example_mjpgonly.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_mjpg-example_mjpgonly.Tpo $(DEPDIR)/example_mjpg-example_mjpgonly.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_mjpgonly.c' object='example_mjpg-example_mjpgonly.obj' libtool=no @AMDEPBACKSLASH@
+example_fw_update-example_fw_update.obj: example_fw_update.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_update_CFLAGS) $(CFLAGS) -MT example_fw_update-example_fw_update.obj -MD -MP -MF $(DEPDIR)/example_fw_update-example_fw_update.Tpo -c -o example_fw_update-example_fw_update.obj `if test -f 'example_fw_update.c'; then $(CYGPATH_W) 'example_fw_update.c'; else $(CYGPATH_W) '$(srcdir)/example_fw_update.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_fw_update-example_fw_update.Tpo $(DEPDIR)/example_fw_update-example_fw_update.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_fw_update.c' object='example_fw_update-example_fw_update.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -c -o example_mjpg-example_mjpgonly.obj `if test -f 'example_mjpgonly.c'; then $(CYGPATH_W) 'example_mjpgonly.c'; else $(CYGPATH_W) '$(srcdir)/example_mjpgonly.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_fw_update_CFLAGS) $(CFLAGS) -c -o example_fw_update-example_fw_update.obj `if test -f 'example_fw_update.c'; then $(CYGPATH_W) 'example_fw_update.c'; else $(CYGPATH_W) '$(srcdir)/example_fw_update.c'; fi`
 
-example_mjpg-misc_writefile.o: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -MT example_mjpg-misc_writefile.o -MD -MP -MF $(DEPDIR)/example_mjpg-misc_writefile.Tpo -c -o example_mjpg-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_mjpg-misc_writefile.Tpo $(DEPDIR)/example_mjpg-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_mjpg-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
+mjpg_only-mjpg_only.o: mjpg_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -MT mjpg_only-mjpg_only.o -MD -MP -MF $(DEPDIR)/mjpg_only-mjpg_only.Tpo -c -o mjpg_only-mjpg_only.o `test -f 'mjpg_only.c' || echo '$(srcdir)/'`mjpg_only.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/mjpg_only-mjpg_only.Tpo $(DEPDIR)/mjpg_only-mjpg_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mjpg_only.c' object='mjpg_only-mjpg_only.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -c -o example_mjpg-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -c -o mjpg_only-mjpg_only.o `test -f 'mjpg_only.c' || echo '$(srcdir)/'`mjpg_only.c
 
-example_mjpg-misc_writefile.obj: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -MT example_mjpg-misc_writefile.obj -MD -MP -MF $(DEPDIR)/example_mjpg-misc_writefile.Tpo -c -o example_mjpg-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_mjpg-misc_writefile.Tpo $(DEPDIR)/example_mjpg-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_mjpg-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
+mjpg_only-mjpg_only.obj: mjpg_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -MT mjpg_only-mjpg_only.obj -MD -MP -MF $(DEPDIR)/mjpg_only-mjpg_only.Tpo -c -o mjpg_only-mjpg_only.obj `if test -f 'mjpg_only.c'; then $(CYGPATH_W) 'mjpg_only.c'; else $(CYGPATH_W) '$(srcdir)/mjpg_only.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/mjpg_only-mjpg_only.Tpo $(DEPDIR)/mjpg_only-mjpg_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mjpg_only.c' object='mjpg_only-mjpg_only.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -c -o example_mjpg-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -c -o mjpg_only-mjpg_only.obj `if test -f 'mjpg_only.c'; then $(CYGPATH_W) 'mjpg_only.c'; else $(CYGPATH_W) '$(srcdir)/mjpg_only.c'; fi`
 
-example_mjpg-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -MT example_mjpg-misc_system.o -MD -MP -MF $(DEPDIR)/example_mjpg-misc_system.Tpo -c -o example_mjpg-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_mjpg-misc_system.Tpo $(DEPDIR)/example_mjpg-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_mjpg-misc_system.o' libtool=no @AMDEPBACKSLASH@
+mjpg_only-misc_writefile.o: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -MT mjpg_only-misc_writefile.o -MD -MP -MF $(DEPDIR)/mjpg_only-misc_writefile.Tpo -c -o mjpg_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/mjpg_only-misc_writefile.Tpo $(DEPDIR)/mjpg_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='mjpg_only-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -c -o example_mjpg-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -c -o mjpg_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
 
-example_mjpg-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -MT example_mjpg-misc_system.obj -MD -MP -MF $(DEPDIR)/example_mjpg-misc_system.Tpo -c -o example_mjpg-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_mjpg-misc_system.Tpo $(DEPDIR)/example_mjpg-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_mjpg-misc_system.obj' libtool=no @AMDEPBACKSLASH@
+mjpg_only-misc_writefile.obj: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -MT mjpg_only-misc_writefile.obj -MD -MP -MF $(DEPDIR)/mjpg_only-misc_writefile.Tpo -c -o mjpg_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/mjpg_only-misc_writefile.Tpo $(DEPDIR)/mjpg_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='mjpg_only-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_mjpg_CFLAGS) $(CFLAGS) -c -o example_mjpg-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(mjpg_only_CFLAGS) $(CFLAGS) -c -o mjpg_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
 
-example_vp8-example_vp8only.o: example_vp8only.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -MT example_vp8-example_vp8only.o -MD -MP -MF $(DEPDIR)/example_vp8-example_vp8only.Tpo -c -o example_vp8-example_vp8only.o `test -f 'example_vp8only.c' || echo '$(srcdir)/'`example_vp8only.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_vp8-example_vp8only.Tpo $(DEPDIR)/example_vp8-example_vp8only.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_vp8only.c' object='example_vp8-example_vp8only.o' libtool=no @AMDEPBACKSLASH@
+vp8_only-vp8_only.o: vp8_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -MT vp8_only-vp8_only.o -MD -MP -MF $(DEPDIR)/vp8_only-vp8_only.Tpo -c -o vp8_only-vp8_only.o `test -f 'vp8_only.c' || echo '$(srcdir)/'`vp8_only.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_only-vp8_only.Tpo $(DEPDIR)/vp8_only-vp8_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='vp8_only.c' object='vp8_only-vp8_only.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -c -o example_vp8-example_vp8only.o `test -f 'example_vp8only.c' || echo '$(srcdir)/'`example_vp8only.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -c -o vp8_only-vp8_only.o `test -f 'vp8_only.c' || echo '$(srcdir)/'`vp8_only.c
 
-example_vp8-example_vp8only.obj: example_vp8only.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -MT example_vp8-example_vp8only.obj -MD -MP -MF $(DEPDIR)/example_vp8-example_vp8only.Tpo -c -o example_vp8-example_vp8only.obj `if test -f 'example_vp8only.c'; then $(CYGPATH_W) 'example_vp8only.c'; else $(CYGPATH_W) '$(srcdir)/example_vp8only.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_vp8-example_vp8only.Tpo $(DEPDIR)/example_vp8-example_vp8only.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_vp8only.c' object='example_vp8-example_vp8only.obj' libtool=no @AMDEPBACKSLASH@
+vp8_only-vp8_only.obj: vp8_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -MT vp8_only-vp8_only.obj -MD -MP -MF $(DEPDIR)/vp8_only-vp8_only.Tpo -c -o vp8_only-vp8_only.obj `if test -f 'vp8_only.c'; then $(CYGPATH_W) 'vp8_only.c'; else $(CYGPATH_W) '$(srcdir)/vp8_only.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_only-vp8_only.Tpo $(DEPDIR)/vp8_only-vp8_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='vp8_only.c' object='vp8_only-vp8_only.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -c -o example_vp8-example_vp8only.obj `if test -f 'example_vp8only.c'; then $(CYGPATH_W) 'example_vp8only.c'; else $(CYGPATH_W) '$(srcdir)/example_vp8only.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -c -o vp8_only-vp8_only.obj `if test -f 'vp8_only.c'; then $(CYGPATH_W) 'vp8_only.c'; else $(CYGPATH_W) '$(srcdir)/vp8_only.c'; fi`
 
-example_vp8-misc_writefile.o: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -MT example_vp8-misc_writefile.o -MD -MP -MF $(DEPDIR)/example_vp8-misc_writefile.Tpo -c -o example_vp8-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_vp8-misc_writefile.Tpo $(DEPDIR)/example_vp8-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_vp8-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
+vp8_only-misc_writefile.o: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -MT vp8_only-misc_writefile.o -MD -MP -MF $(DEPDIR)/vp8_only-misc_writefile.Tpo -c -o vp8_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_only-misc_writefile.Tpo $(DEPDIR)/vp8_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='vp8_only-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -c -o example_vp8-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -c -o vp8_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
 
-example_vp8-misc_writefile.obj: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -MT example_vp8-misc_writefile.obj -MD -MP -MF $(DEPDIR)/example_vp8-misc_writefile.Tpo -c -o example_vp8-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_vp8-misc_writefile.Tpo $(DEPDIR)/example_vp8-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_vp8-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
+vp8_only-misc_writefile.obj: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -MT vp8_only-misc_writefile.obj -MD -MP -MF $(DEPDIR)/vp8_only-misc_writefile.Tpo -c -o vp8_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_only-misc_writefile.Tpo $(DEPDIR)/vp8_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='vp8_only-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -c -o example_vp8-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
-
-example_vp8-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -MT example_vp8-misc_system.o -MD -MP -MF $(DEPDIR)/example_vp8-misc_system.Tpo -c -o example_vp8-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_vp8-misc_system.Tpo $(DEPDIR)/example_vp8-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_vp8-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -c -o example_vp8-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-example_vp8-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -MT example_vp8-misc_system.obj -MD -MP -MF $(DEPDIR)/example_vp8-misc_system.Tpo -c -o example_vp8-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_vp8-misc_system.Tpo $(DEPDIR)/example_vp8-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_vp8-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_vp8_CFLAGS) $(CFLAGS) -c -o example_vp8-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-
-example_yuv-example_yuvonly.o: example_yuvonly.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -MT example_yuv-example_yuvonly.o -MD -MP -MF $(DEPDIR)/example_yuv-example_yuvonly.Tpo -c -o example_yuv-example_yuvonly.o `test -f 'example_yuvonly.c' || echo '$(srcdir)/'`example_yuvonly.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_yuv-example_yuvonly.Tpo $(DEPDIR)/example_yuv-example_yuvonly.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_yuvonly.c' object='example_yuv-example_yuvonly.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -c -o example_yuv-example_yuvonly.o `test -f 'example_yuvonly.c' || echo '$(srcdir)/'`example_yuvonly.c
-
-example_yuv-example_yuvonly.obj: example_yuvonly.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -MT example_yuv-example_yuvonly.obj -MD -MP -MF $(DEPDIR)/example_yuv-example_yuvonly.Tpo -c -o example_yuv-example_yuvonly.obj `if test -f 'example_yuvonly.c'; then $(CYGPATH_W) 'example_yuvonly.c'; else $(CYGPATH_W) '$(srcdir)/example_yuvonly.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_yuv-example_yuvonly.Tpo $(DEPDIR)/example_yuv-example_yuvonly.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example_yuvonly.c' object='example_yuv-example_yuvonly.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -c -o example_yuv-example_yuvonly.obj `if test -f 'example_yuvonly.c'; then $(CYGPATH_W) 'example_yuvonly.c'; else $(CYGPATH_W) '$(srcdir)/example_yuvonly.c'; fi`
-
-example_yuv-misc_writefile.o: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -MT example_yuv-misc_writefile.o -MD -MP -MF $(DEPDIR)/example_yuv-misc_writefile.Tpo -c -o example_yuv-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_yuv-misc_writefile.Tpo $(DEPDIR)/example_yuv-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_yuv-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -c -o example_yuv-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
-
-example_yuv-misc_writefile.obj: misc_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -MT example_yuv-misc_writefile.obj -MD -MP -MF $(DEPDIR)/example_yuv-misc_writefile.Tpo -c -o example_yuv-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_yuv-misc_writefile.Tpo $(DEPDIR)/example_yuv-misc_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='example_yuv-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -c -o example_yuv-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
-
-example_yuv-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -MT example_yuv-misc_system.o -MD -MP -MF $(DEPDIR)/example_yuv-misc_system.Tpo -c -o example_yuv-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_yuv-misc_system.Tpo $(DEPDIR)/example_yuv-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_yuv-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -c -o example_yuv-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-example_yuv-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -MT example_yuv-misc_system.obj -MD -MP -MF $(DEPDIR)/example_yuv-misc_system.Tpo -c -o example_yuv-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/example_yuv-misc_system.Tpo $(DEPDIR)/example_yuv-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='example_yuv-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(example_yuv_CFLAGS) $(CFLAGS) -c -o example_yuv-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-
-fw_check-fw_check.o: fw_check.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -MT fw_check-fw_check.o -MD -MP -MF $(DEPDIR)/fw_check-fw_check.Tpo -c -o fw_check-fw_check.o `test -f 'fw_check.c' || echo '$(srcdir)/'`fw_check.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_check-fw_check.Tpo $(DEPDIR)/fw_check-fw_check.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fw_check.c' object='fw_check-fw_check.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -c -o fw_check-fw_check.o `test -f 'fw_check.c' || echo '$(srcdir)/'`fw_check.c
-
-fw_check-fw_check.obj: fw_check.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -MT fw_check-fw_check.obj -MD -MP -MF $(DEPDIR)/fw_check-fw_check.Tpo -c -o fw_check-fw_check.obj `if test -f 'fw_check.c'; then $(CYGPATH_W) 'fw_check.c'; else $(CYGPATH_W) '$(srcdir)/fw_check.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_check-fw_check.Tpo $(DEPDIR)/fw_check-fw_check.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fw_check.c' object='fw_check-fw_check.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -c -o fw_check-fw_check.obj `if test -f 'fw_check.c'; then $(CYGPATH_W) 'fw_check.c'; else $(CYGPATH_W) '$(srcdir)/fw_check.c'; fi`
-
-fw_check-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -MT fw_check-misc_system.o -MD -MP -MF $(DEPDIR)/fw_check-misc_system.Tpo -c -o fw_check-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_check-misc_system.Tpo $(DEPDIR)/fw_check-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='fw_check-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -c -o fw_check-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-fw_check-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -MT fw_check-misc_system.obj -MD -MP -MF $(DEPDIR)/fw_check-misc_system.Tpo -c -o fw_check-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_check-misc_system.Tpo $(DEPDIR)/fw_check-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='fw_check-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_check_CFLAGS) $(CFLAGS) -c -o fw_check-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-
-fw_downloader-fw_downloader.o: fw_downloader.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -MT fw_downloader-fw_downloader.o -MD -MP -MF $(DEPDIR)/fw_downloader-fw_downloader.Tpo -c -o fw_downloader-fw_downloader.o `test -f 'fw_downloader.c' || echo '$(srcdir)/'`fw_downloader.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_downloader-fw_downloader.Tpo $(DEPDIR)/fw_downloader-fw_downloader.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fw_downloader.c' object='fw_downloader-fw_downloader.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -c -o fw_downloader-fw_downloader.o `test -f 'fw_downloader.c' || echo '$(srcdir)/'`fw_downloader.c
-
-fw_downloader-fw_downloader.obj: fw_downloader.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -MT fw_downloader-fw_downloader.obj -MD -MP -MF $(DEPDIR)/fw_downloader-fw_downloader.Tpo -c -o fw_downloader-fw_downloader.obj `if test -f 'fw_downloader.c'; then $(CYGPATH_W) 'fw_downloader.c'; else $(CYGPATH_W) '$(srcdir)/fw_downloader.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_downloader-fw_downloader.Tpo $(DEPDIR)/fw_downloader-fw_downloader.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='fw_downloader.c' object='fw_downloader-fw_downloader.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -c -o fw_downloader-fw_downloader.obj `if test -f 'fw_downloader.c'; then $(CYGPATH_W) 'fw_downloader.c'; else $(CYGPATH_W) '$(srcdir)/fw_downloader.c'; fi`
-
-fw_downloader-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -MT fw_downloader-misc_system.o -MD -MP -MF $(DEPDIR)/fw_downloader-misc_system.Tpo -c -o fw_downloader-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_downloader-misc_system.Tpo $(DEPDIR)/fw_downloader-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='fw_downloader-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -c -o fw_downloader-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-fw_downloader-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -MT fw_downloader-misc_system.obj -MD -MP -MF $(DEPDIR)/fw_downloader-misc_system.Tpo -c -o fw_downloader-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/fw_downloader-misc_system.Tpo $(DEPDIR)/fw_downloader-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='fw_downloader-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fw_downloader_CFLAGS) $(CFLAGS) -c -o fw_downloader-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_only_CFLAGS) $(CFLAGS) -c -o vp8_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
 
 vp8_simulcast-vp8_simulcast.o: vp8_simulcast.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -MT vp8_simulcast-vp8_simulcast.o -MD -MP -MF $(DEPDIR)/vp8_simulcast-vp8_simulcast.Tpo -c -o vp8_simulcast-vp8_simulcast.o `test -f 'vp8_simulcast.c' || echo '$(srcdir)/'`vp8_simulcast.c
@@ -1130,33 +1185,19 @@ vp8_simulcast-vp8_simulcast.obj: vp8_simulcast.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -c -o vp8_simulcast-vp8_simulcast.obj `if test -f 'vp8_simulcast.c'; then $(CYGPATH_W) 'vp8_simulcast.c'; else $(CYGPATH_W) '$(srcdir)/vp8_simulcast.c'; fi`
 
-vp8_simulcast-simulcast_writefile.o: simulcast_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -MT vp8_simulcast-simulcast_writefile.o -MD -MP -MF $(DEPDIR)/vp8_simulcast-simulcast_writefile.Tpo -c -o vp8_simulcast-simulcast_writefile.o `test -f 'simulcast_writefile.c' || echo '$(srcdir)/'`simulcast_writefile.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_simulcast-simulcast_writefile.Tpo $(DEPDIR)/vp8_simulcast-simulcast_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='simulcast_writefile.c' object='vp8_simulcast-simulcast_writefile.o' libtool=no @AMDEPBACKSLASH@
+vp8_simulcast-misc_writefile_simulcast.o: misc_writefile_simulcast.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -MT vp8_simulcast-misc_writefile_simulcast.o -MD -MP -MF $(DEPDIR)/vp8_simulcast-misc_writefile_simulcast.Tpo -c -o vp8_simulcast-misc_writefile_simulcast.o `test -f 'misc_writefile_simulcast.c' || echo '$(srcdir)/'`misc_writefile_simulcast.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_simulcast-misc_writefile_simulcast.Tpo $(DEPDIR)/vp8_simulcast-misc_writefile_simulcast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile_simulcast.c' object='vp8_simulcast-misc_writefile_simulcast.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -c -o vp8_simulcast-simulcast_writefile.o `test -f 'simulcast_writefile.c' || echo '$(srcdir)/'`simulcast_writefile.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -c -o vp8_simulcast-misc_writefile_simulcast.o `test -f 'misc_writefile_simulcast.c' || echo '$(srcdir)/'`misc_writefile_simulcast.c
 
-vp8_simulcast-simulcast_writefile.obj: simulcast_writefile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -MT vp8_simulcast-simulcast_writefile.obj -MD -MP -MF $(DEPDIR)/vp8_simulcast-simulcast_writefile.Tpo -c -o vp8_simulcast-simulcast_writefile.obj `if test -f 'simulcast_writefile.c'; then $(CYGPATH_W) 'simulcast_writefile.c'; else $(CYGPATH_W) '$(srcdir)/simulcast_writefile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_simulcast-simulcast_writefile.Tpo $(DEPDIR)/vp8_simulcast-simulcast_writefile.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='simulcast_writefile.c' object='vp8_simulcast-simulcast_writefile.obj' libtool=no @AMDEPBACKSLASH@
+vp8_simulcast-misc_writefile_simulcast.obj: misc_writefile_simulcast.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -MT vp8_simulcast-misc_writefile_simulcast.obj -MD -MP -MF $(DEPDIR)/vp8_simulcast-misc_writefile_simulcast.Tpo -c -o vp8_simulcast-misc_writefile_simulcast.obj `if test -f 'misc_writefile_simulcast.c'; then $(CYGPATH_W) 'misc_writefile_simulcast.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile_simulcast.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_simulcast-misc_writefile_simulcast.Tpo $(DEPDIR)/vp8_simulcast-misc_writefile_simulcast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile_simulcast.c' object='vp8_simulcast-misc_writefile_simulcast.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -c -o vp8_simulcast-simulcast_writefile.obj `if test -f 'simulcast_writefile.c'; then $(CYGPATH_W) 'simulcast_writefile.c'; else $(CYGPATH_W) '$(srcdir)/simulcast_writefile.c'; fi`
-
-vp8_simulcast-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -MT vp8_simulcast-misc_system.o -MD -MP -MF $(DEPDIR)/vp8_simulcast-misc_system.Tpo -c -o vp8_simulcast-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_simulcast-misc_system.Tpo $(DEPDIR)/vp8_simulcast-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='vp8_simulcast-misc_system.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -c -o vp8_simulcast-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-
-vp8_simulcast-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -MT vp8_simulcast-misc_system.obj -MD -MP -MF $(DEPDIR)/vp8_simulcast-misc_system.Tpo -c -o vp8_simulcast-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_simulcast-misc_system.Tpo $(DEPDIR)/vp8_simulcast-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='vp8_simulcast-misc_system.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -c -o vp8_simulcast-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_simulcast_CFLAGS) $(CFLAGS) -c -o vp8_simulcast-misc_writefile_simulcast.obj `if test -f 'misc_writefile_simulcast.c'; then $(CYGPATH_W) 'misc_writefile_simulcast.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile_simulcast.c'; fi`
 
 vp8_two_way-vp8_two_way.o: vp8_two_way.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_two_way_CFLAGS) $(CFLAGS) -MT vp8_two_way-vp8_two_way.o -MD -MP -MF $(DEPDIR)/vp8_two_way-vp8_two_way.Tpo -c -o vp8_two_way-vp8_two_way.o `test -f 'vp8_two_way.c' || echo '$(srcdir)/'`vp8_two_way.c
@@ -1186,19 +1227,33 @@ vp8_two_way-misc_writefile.obj: misc_writefile.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_two_way_CFLAGS) $(CFLAGS) -c -o vp8_two_way-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
 
-vp8_two_way-misc_system.o: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_two_way_CFLAGS) $(CFLAGS) -MT vp8_two_way-misc_system.o -MD -MP -MF $(DEPDIR)/vp8_two_way-misc_system.Tpo -c -o vp8_two_way-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_two_way-misc_system.Tpo $(DEPDIR)/vp8_two_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='vp8_two_way-misc_system.o' libtool=no @AMDEPBACKSLASH@
+yuv_only-yuv_only.o: yuv_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -MT yuv_only-yuv_only.o -MD -MP -MF $(DEPDIR)/yuv_only-yuv_only.Tpo -c -o yuv_only-yuv_only.o `test -f 'yuv_only.c' || echo '$(srcdir)/'`yuv_only.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/yuv_only-yuv_only.Tpo $(DEPDIR)/yuv_only-yuv_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='yuv_only.c' object='yuv_only-yuv_only.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_two_way_CFLAGS) $(CFLAGS) -c -o vp8_two_way-misc_system.o `test -f 'misc_system.c' || echo '$(srcdir)/'`misc_system.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -c -o yuv_only-yuv_only.o `test -f 'yuv_only.c' || echo '$(srcdir)/'`yuv_only.c
 
-vp8_two_way-misc_system.obj: misc_system.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_two_way_CFLAGS) $(CFLAGS) -MT vp8_two_way-misc_system.obj -MD -MP -MF $(DEPDIR)/vp8_two_way-misc_system.Tpo -c -o vp8_two_way-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/vp8_two_way-misc_system.Tpo $(DEPDIR)/vp8_two_way-misc_system.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_system.c' object='vp8_two_way-misc_system.obj' libtool=no @AMDEPBACKSLASH@
+yuv_only-yuv_only.obj: yuv_only.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -MT yuv_only-yuv_only.obj -MD -MP -MF $(DEPDIR)/yuv_only-yuv_only.Tpo -c -o yuv_only-yuv_only.obj `if test -f 'yuv_only.c'; then $(CYGPATH_W) 'yuv_only.c'; else $(CYGPATH_W) '$(srcdir)/yuv_only.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/yuv_only-yuv_only.Tpo $(DEPDIR)/yuv_only-yuv_only.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='yuv_only.c' object='yuv_only-yuv_only.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(vp8_two_way_CFLAGS) $(CFLAGS) -c -o vp8_two_way-misc_system.obj `if test -f 'misc_system.c'; then $(CYGPATH_W) 'misc_system.c'; else $(CYGPATH_W) '$(srcdir)/misc_system.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -c -o yuv_only-yuv_only.obj `if test -f 'yuv_only.c'; then $(CYGPATH_W) 'yuv_only.c'; else $(CYGPATH_W) '$(srcdir)/yuv_only.c'; fi`
+
+yuv_only-misc_writefile.o: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -MT yuv_only-misc_writefile.o -MD -MP -MF $(DEPDIR)/yuv_only-misc_writefile.Tpo -c -o yuv_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/yuv_only-misc_writefile.Tpo $(DEPDIR)/yuv_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='yuv_only-misc_writefile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -c -o yuv_only-misc_writefile.o `test -f 'misc_writefile.c' || echo '$(srcdir)/'`misc_writefile.c
+
+yuv_only-misc_writefile.obj: misc_writefile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -MT yuv_only-misc_writefile.obj -MD -MP -MF $(DEPDIR)/yuv_only-misc_writefile.Tpo -c -o yuv_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/yuv_only-misc_writefile.Tpo $(DEPDIR)/yuv_only-misc_writefile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='misc_writefile.c' object='yuv_only-misc_writefile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(yuv_only_CFLAGS) $(CFLAGS) -c -o yuv_only-misc_writefile.obj `if test -f 'misc_writefile.c'; then $(CYGPATH_W) 'misc_writefile.c'; else $(CYGPATH_W) '$(srcdir)/misc_writefile.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

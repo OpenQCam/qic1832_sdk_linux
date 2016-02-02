@@ -8,57 +8,30 @@
 --                  on all copies and should not be removed.                  --
 */
 
-
 #ifndef _QIC_CFG_H_
 #define _QIC_CFG_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif 
-
-/*using quanta uvc driver*/
-//#define QUANTA_UVC_DRIVER
-
-/*Supported QIC chips and APIs             */
-//#define QIC1802 
-//#define QIC1816 
+// Supported QIC chips and APIs
 #define QIC1822
 
+// Enable debug log
+//#define DEBUG_LOG
 
+// Option for supported function, enable it by removing comment mark
+// 1.Simulcast
+#define QIC_SIMULCAST_API
 
-#ifdef QIC1816
-/*CQIC module1  for support special moulde version */         
-//#define CQIC_MOUDLE1 
-
-#endif
-
-/*add force for TV F/w download issue */
-#ifdef QUANTA_UVC_DRIVER
-#define ADD_FORCE
-#endif
-
-
-/*define for MPEG AVC function*/
-//#define QIC_MPEGTS_API
-
-#ifdef QIC1822
-/*define for 1822 VP8 and AVC simulcast function */
-#define QIC_SIMULCAST_API  
-//#define QIC_OSD_API
+// 2.MD
 #define QIC_MD_API
 
-/*support 2nd Boot Rom for FW upgarde procedure*/
+// 3.OSD
+//#define QIC_OSD_API
+
+// 4.2nd bootrom
 //#define QIC_SUPPORT_2ND_BL
 
-/*support backup audio calibration data*/
+// 5.Audio calibration backup
 //#define QIC_SUPPORT_AUDIO_CALIBRATION_BACKUP
-#endif
-
-
-
-
-#ifdef __cplusplus
-}
-#endif 
+// TODO:Remove it?
 
 #endif
