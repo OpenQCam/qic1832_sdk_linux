@@ -4,7 +4,7 @@
 AC_PREREQ(2.61)
 AC_INIT(qic1822_sdk_release, r343, )
 AM_INIT_AUTOMAKE([foreign subdir-objects])
-AC_CONFIG_SRCDIR([qic_example/example_yuvonly.c])
+AC_CONFIG_SRCDIR([qic_example/yuv_only.c])
 AC_CONFIG_HEADER([config.h])
 
 # Checks for programs.

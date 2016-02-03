@@ -1,1 +1,0 @@
-CC=mipsel-linux-gcc AR=mipsel-linux-ar RANLIB=mipsel-linux-ranlib LDFLAGS="-L/media/raylinw/chinchilla_repo/MediaTek_APSoC_SDK5000/source/uClibc-0.9.33.2/lib -lpthread" CFLAGS="-I/media/raylinw/chinchilla_repo/MediaTek_APSoC_SDK5000/source/uClibc-0.9.33.2/include" ./configure --host=mipsel-linux

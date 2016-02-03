@@ -1,1 +1,0 @@
-CC=mipsel-linux-gcc AR=mipsel-linux-ar RANLIB=mipsel-linux-ranlib LDFLAGS="-L/media/raylinw/chinchilla_repo/chinchilla_sdk/cl1870/lib -lpthread" CFLAGS="-I/media/raylinw/chinchilla_repo/chinchilla_sdk/cl1870/include" ./configure --host=mipsel-linux
