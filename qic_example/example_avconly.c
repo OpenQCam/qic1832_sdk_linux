@@ -76,6 +76,9 @@ float fps;
 #ifdef CALC_FPS
 
   frame_num++;
+
+  if(frame.stream_id==STREAM0)
+  printf("[frame process]timestamp %lu\n");
 if(frame_num>=30){
   clock_gettime(0,&start_ts);
   diff_sec=start_ts.tv_sec- end_ts.tv_sec;

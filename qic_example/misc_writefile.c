@@ -143,6 +143,7 @@ void add_vp8_frame_header(int frame_len, long timestamp)
 
 void write_avc (char* data, int length) {
 
+  int is_pframe=check_for_P_frame(data, length);
 #ifdef USE_FWRITE
   if (file_264 != NULL) {
     if( -1 == fwrite(data, length, 1, file_264))
@@ -152,7 +153,7 @@ void write_avc (char* data, int length) {
   gettimeofday(&tv,NULL);
   unsigned long current_ts=((tv.tv_sec*1000)+(tv.tv_usec/1000));
   if (file_ts != NULL) {
-    if( fprintf(file_ts, "%d %lu\n",length, current_ts) < 0 )
+    if( fprintf(file_ts, "%d %lu %d\n",length, current_ts, is_pframe) < 0 )
       errno_exit("write_file_error");
   }
 #else
