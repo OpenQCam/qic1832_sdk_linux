@@ -576,7 +576,7 @@ int qic_getframe2(unsigned int dev_id)
     struct v4l2_buffer buf;
     char *video_buffer;
     unsigned int video_buffer_len;
-    unsigned short timestamp=0;
+    unsigned long timestamp=0;
     int avc_stream_id;
     out_frame_t sframe;
     //	struct timespec ts;
