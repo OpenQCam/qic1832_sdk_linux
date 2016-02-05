@@ -22,7 +22,7 @@
 #define _GNU_SOURCE
 #include <getopt.h>
 
-#include "qic_include_all.h"
+#include "../qic_api/qic_include/qic_include_all.h"
 #include "misc_writefile.h"
 
 #ifdef DMALLOC

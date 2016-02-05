@@ -911,7 +911,6 @@ int QicSetDeviceHandle (int vd)
                 if (!ret) {
                     LOG_RET_PRINT(debug_xuctrl_str,"Map 42[0x%x]: %s success \n", xu_ctrl_mappings[i].id, xu_ctrl_mappings[i].name);
                 }
-
             }
             else if(cap.version<KERNEL_VERSION(3,2,0)){
                 LOG_RET_PRINT(debug_xuctrl_str,"Map 32[0x%x]: %s start \n", xu_ctrl_mappings[i].id, xu_ctrl_mappings[i].name);

@@ -20,7 +20,7 @@
 #define _GNU_SOURCE
 #include <getopt.h>
 
-#include "qic_include_all.h"
+#include "../qic_api/qic_include/qic_include_all.h"
 #include "misc_writefile.h"
 
 #ifdef DMALLOC
@@ -36,14 +36,14 @@ int frame_count = 500;
 char *debug_level[] = {"INFO", "WARN", "CRIT", "FATL", "DEAD"};
 
 
-void debug_log(int level, char *string) {
-
+void debug_log(int level, char *string)
+{
     printf("QIC module debug_print (%s):%s", debug_level[level], string);
 }
 
 //void frame_process(unsigned int dev_id, unsigned int length, char *data,unsigned long timestamp) {
-void frame_process(unsigned int dev_id, out_frame_t frame) {
-
+void frame_process(unsigned int dev_id, out_frame_t frame)
+{
     static unsigned int yuv_count = 0;
 
     /* { calculate current frame rate*/
@@ -90,14 +90,12 @@ void frame_process(unsigned int dev_id, out_frame_t frame) {
         /*  calculate current frame rate}*/
 
         break;
-
     }
 
     frame_count--;
     if((yuv_count)%100 == 0)
         printf("\n");
 }
-
 
 static void usage(FILE * fp, int argc, char **argv)
 {
@@ -114,10 +112,7 @@ static void usage(FILE * fp, int argc, char **argv)
             argv[0]);
 }
 
-
-
 static const char short_options [] = "o:y:f:c:hd";
-
 
 static const struct option long_options [] =
 {
@@ -130,7 +125,6 @@ static const struct option long_options [] =
 
     { 0, 0, 0, 0 }
 };
-
 
 
 int main(int argc,char ** argv)
@@ -220,7 +214,6 @@ int main(int argc,char ** argv)
         }
     }
 
-
     /************************************************
  *
  * first step, init the qic module capture library
@@ -233,8 +226,6 @@ int main(int argc,char ** argv)
         printf("qic_initialize error\n");
         return 1;
     }
-
-
 
     /************************************************
  *
@@ -264,15 +255,12 @@ int main(int argc,char ** argv)
         my_qic->cam[0].is_demux =1;  //Enable YUYV bad frame check
     }
 
-
     /* commit and init the video dev */
     ret = qic_config_commit();
     if (ret) {
         printf("qic_config_commit error\n");
         return 1;
     }
-
-
 
     /************************************************
  *
@@ -354,7 +342,6 @@ int main(int argc,char ** argv)
     mem_info = mem_usage_info();
     printf("%s", mem_info);
 
-
     /************************************************
  *
  * step 6: stop the camera
@@ -365,7 +352,6 @@ int main(int argc,char ** argv)
         printf("qic_stop_capture error\n");
         return 1;
     }
-
 
     /************************************************
  *
@@ -379,7 +365,6 @@ int main(int argc,char ** argv)
     }
 
     close_file();
-
 
     return 0;
 }
