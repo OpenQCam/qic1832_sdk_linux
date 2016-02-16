@@ -1,5 +1,22 @@
 AUTOMAKE_OPTIONS= foreign
 
+nobase_include_HEADERS = \
+    qic_api/qic_include/demux_h264.h \
+    qic_api/qic_include/demux_vp8.h \
+    qic_api/qic_include/qic_api_v4l2_ctpu.h \
+    qic_api/qic_include/qic_api_video.h \
+    qic_api/qic_include/qic_utility_for_demo.h \
+    qic_api/qic_include/qic_api_stream.h \
+    qic_api/qic_include/qic_include_all.h \
+    qic_api/qic_include/qic_api_fw_update.h \
+    qic_api/qic_include/qic_api_misc.h \
+    qic_api/qic_include/qic_api_common_define.h \
+    qic_api/qic_include/qic_api_md.h \
+    qic_api/qic_include/qic_cfg.h \
+    qic_api/qic_include/qic_xuctrl.h \
+    qic_api/qic_include/qic_api_osd.h
+
+
 lib_LIBRARIES = libqic.a libqic_release.a
 
 libqic_a_SOURCES =\
