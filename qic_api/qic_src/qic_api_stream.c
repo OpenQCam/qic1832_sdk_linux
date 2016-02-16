@@ -123,7 +123,9 @@ static void send_vp8_simulcast_frame(unsigned int dev_id, char *data, unsigned i
                                      unsigned long timestamp,unsigned int stream_id, unsigned short key_frame_interval,
                                      unsigned char demux);
 
+#ifdef DEBUG_LOG
 static void debug_print_initial (int level, char *string);
+#endif
 static void frame_output_initial(unsigned int dev_id, unsigned int length, char *data, unsigned long timestamp);
 
 static int qic_open_device (qic_dev *cam);
@@ -872,7 +874,6 @@ static void send_avc_simulcast_frame(unsigned int dev_id, char *data, unsigned i
                 LOG_PRINT(debug_str, DEBUG_INFO, "dev %s Drop steamd %d bad Frame...!!\n", stream_id);
             }
         }
-
     }
     else{
 #ifdef QIC_MD_API
@@ -892,10 +893,12 @@ static void send_avc_simulcast_frame(unsigned int dev_id, char *data, unsigned i
     }
 }
 
+#ifdef DEBUG_LOG
 static void debug_print_initial (int level, char *string)
 {
     printf("level=%d,string=%s\n",level,string);
 }
+#endif
 
 static void frame_output_initial(unsigned int dev_id, unsigned int length, char *data, unsigned long timestamp)
 {

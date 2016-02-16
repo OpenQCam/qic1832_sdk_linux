@@ -30,7 +30,7 @@ int qic_change_slice_size_EU(unsigned int dev_id,unsigned short stream_id, unsig
 int qic_change_rete_control_mode_EU(unsigned int dev_id,unsigned short stream_id, unsigned char bRateControlMode);
 int qic_change_level_EU(unsigned int dev_id , unsigned short stream_id,unsigned char bLevelIDC);
 int qic_change_QP_range_EU(unsigned int dev_id ,unsigned short stream_id,unsigned char bMinQp,unsigned char bMaxQp);
-int qic_change_QP_EU(unsigned int dev_id ,unsigned short stream_layer, unsigned short value);
+int qic_change_QP_EU(unsigned int dev_id , unsigned short stream_layer, unsigned short QP_I, unsigned short QP_P, unsigned short QP_B);
 #endif
 
 int qic_set_burst_mode_peak_bitrate(unsigned int dev_id,unsigned int stream_id, unsigned int peakBitrate);

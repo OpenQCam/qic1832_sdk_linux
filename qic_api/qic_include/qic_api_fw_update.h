@@ -16,7 +16,6 @@
 /* firmware image file name default */
 #define QIC1822_2nd_BOOTROM_IMAGE_NAME  "QIC1822A_2ndBL.bin"
 #define QIC1822_USB_IMAGE_NAME          "QIC1822A_USB.bin"
-#define QIC1822_ISP_IMAGE_NAME          "QIC1822A_ISP.bin"
 #define QIC1822_PARAM_IMAGE_NAME        "QIC1822A_ISP_LSC_XXX.bin"
 #define QIC1822_AUDIO_IMAGE_NAME        "QIC1822A_AUDIO_DATA.bin"
 #define QIC1822_OSD_FONT_IMAGE_NAME     "QIC1822A_OSD_FONT_DATA.bin"
@@ -34,7 +33,6 @@ int qic_get_image_version (char *path_info, version_info_t *version_info);
 int qic_get_image_version_by_filename (char *usb_path_info, version_info_t *version_info);
 int qic_update_firmware_by_filename(unsigned int dev_id,
                                     char *update_usb_img_loc,
-                                    char *update_isp_img_loc,
                                     char *update_param_img_loc,
                                     char *update_audio_img_loc,
                                     char *update_osd_font_img_loc,

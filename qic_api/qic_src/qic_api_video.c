@@ -543,7 +543,7 @@ int qic_change_rete_control_mode_EU(unsigned int dev_id,unsigned short stream_id
     return qic_ret;
 }
 
-int qic_change_QP_EU(unsigned int dev_id ,unsigned short stream_layer, unsigned short value)
+int qic_change_QP_EU(unsigned int dev_id ,unsigned short stream_layer, unsigned short QP_I, unsigned short QP_P, unsigned short QP_B)
 {
     unsigned int index;
     int qic_ret = 0;
@@ -562,7 +562,7 @@ int qic_change_QP_EU(unsigned int dev_id ,unsigned short stream_layer, unsigned 
             qic_ret=QicEuSetSelectLayer(stream_layer);
             if(qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicEuSetSelectLayer failed \n");
 
-            qic_ret=QicEuSetQuantizationParameter((unsigned short)value, (unsigned short)(value>>16), (unsigned short)(value>>32));
+            qic_ret=QicEuSetQuantizationParameter(QP_I, QP_P, QP_B);
 
             LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
             if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicEuSetQuantizationParameter success \n");

@@ -18,9 +18,8 @@ extern qic_module *dev_pt;
 // End of common part
 
 char usb_image[] = {};
-char isp_image[] = {};
 
-static int qic_backup_firmware (char *pathinfo, char *usb_image, char *isp_image, char *parm_image, char *audio_image, char *osd_font_image);
+static int qic_backup_firmware (char *pathinfo, char *usb_image, char *parm_image, char *audio_image, char *osd_font_image);
 static unsigned long CalculateCKSum(int image_max_size);
 static int qic_dump_flash_firmware (char *pathinfo, char *dump_image,  int dump_image_size );
 
@@ -228,8 +227,8 @@ int qic_get_image_version_by_filename (char *usb_path_info, version_info_t *vers
         return 1;
     }
 
-    memset (version_info, 0, sizeof(version_info));
-    memset(usb_img_full,0,sizeof(usb_img_full));
+    memset(version_info, 0, sizeof(version_info));
+    memset(usb_img_full, 0, sizeof(usb_img_full));
 
     snprintf(usb_img_full, sizeof(usb_img_full), "%s", usb_path_info);
     usb_image_max_size=QIC1822_FLASH_USB_MAX_SIZE;
@@ -327,23 +326,29 @@ int qic_get_image_version_by_filename (char *usb_path_info, version_info_t *vers
 
 int qic_update_firmware_by_filename(unsigned int dev_id,
                                     char *update_usb_img_loc,
-                                    char *update_isp_img_loc,
                                     char *update_param_img_loc,
                                     char *update_audio_img_loc,
                                     char *update_osd_font_img_loc,
                                     unsigned char update_flags)
 {
-    unsigned char *orig_usb_image, *orig_isp_image, *orig_parm_image, orig_audio_image[QIC1822_FLASH_AUDIO_PARAM_MAX_SIZE], *orig_osd_font_image; /* read from system */
-    unsigned char *new_usb_image, *new_isp_image, *new_parm_image, *new_audio_image, *new_osd_font_image; /*read from file */
+    // read from system
+    unsigned char *orig_usb_image = NULL;
+    unsigned char *orig_parm_image = NULL;
+    unsigned char *orig_audio_image = NULL;
+    unsigned char *orig_osd_font_image = NULL;
+    // read from file
+    unsigned char *new_usb_image = NULL;
+    unsigned char *new_parm_image = NULL;
+    unsigned char *new_audio_image = NULL;
+    unsigned char *new_osd_font_image = NULL;
+
     int ret = 0;
     int usb_img_fd = -1;
-    int isp_img_fd = -1;
     int parm_img_fd = -1;
     int audio_img_fd = -1;
     int osd_font_img_fd = -1;
 
     int usb_img_size = 0;
-    int isp_img_size = 0;
     int parm_img_size = 0;
     int audio_img_size = 0;
     int osd_font_img_size = 0;
@@ -351,16 +356,21 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
     unsigned char img_header[QIC_IMG_HEADER_SIZE];
     unsigned char header_verify[QIC_IMG_HEADER_SIZE];
     unsigned char usb_fail=0;
-    unsigned char isp_fail=0;
     unsigned char parm_fail=0;
     unsigned char audio_fail=0;
     unsigned char osd_font_fail=0;
+
     int image_max_size;
     int usb_image_max_size;
-    int isp_image_max_size;
     int parm_image_max_size;
     int audio_image_max_size;
     int osd_font_image_max_size;
+
+    image_max_size=QIC1822_FLASH_MAX_SIZE;
+    usb_image_max_size=QIC1822_FLASH_USB_MAX_SIZE;
+    parm_image_max_size=QIC1822_FLASH_PARAM_MAX_SIZE;
+    audio_image_max_size=QIC1822_FLASH_AUDIO_PARAM_MAX_SIZE;
+    osd_font_image_max_size=QIC1822_FLASH_OSD_FONT_MAX_SIZE;
 
     /* read data from cam */
     unsigned int index;
@@ -374,12 +384,6 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
         }
     }
 
-    image_max_size=QIC1822_FLASH_MAX_SIZE;
-    usb_image_max_size=QIC1822_FLASH_USB_MAX_SIZE;
-    parm_image_max_size=QIC1822_FLASH_PARAM_MAX_SIZE;
-    audio_image_max_size=QIC1822_FLASH_AUDIO_PARAM_MAX_SIZE;
-    osd_font_image_max_size=QIC1822_FLASH_OSD_FONT_MAX_SIZE;
-
 #ifdef QIC_SUPPORT_2ND_BL
     /*checking 2nd Boot Rom if available*/
     ret = QicFlashRead(QIC1822_FLASH_2ndBL_ADDR, header_verify, QIC_IMG_HEADER_SIZE,image_max_size);
@@ -391,8 +395,9 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
     }
 #endif
 
-    orig_usb_image = calloc( 1, usb_image_max_size);
+    orig_usb_image = calloc(1, usb_image_max_size);
     orig_parm_image = calloc (1, parm_image_max_size);
+    orig_audio_image = calloc (1, audio_image_max_size);
     orig_osd_font_image = calloc (1, osd_font_image_max_size);
 
     new_usb_image = NULL;
@@ -549,23 +554,6 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
     }
     else
     {
-        if (update_flags & ISP_FIRMWARE)
-        {	/* ISP image */
-            LOG_PRINT(debug_str,DEBUG_INFO,"QIC1822 don't need to flash ISP image\n");
-        }
-        else
-        {
-            new_isp_image = orig_isp_image;
-            isp_img_size = isp_image_max_size;
-        }
-    }
-
-    if (ret)
-    {
-        goto ERR_CLOSE;
-    }
-    else
-    {
         if (update_flags & PARAM_FIRMWARE)
         {	/* PARM image */
             snprintf(image_name, sizeof(image_name), "%s", update_param_img_loc);
@@ -711,7 +699,7 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
                 osd_font_img_size = lseek(osd_font_img_fd, 0, SEEK_END);
                 if (-1 == osd_font_img_size)
                 {
-                    LOG_PRINT(debug_str, DEBUG_ERROR, "isp osd font file %s size error: %s\n", image_name, strerror(errno));
+                    LOG_PRINT(debug_str, DEBUG_ERROR, "osd font file %s size error: %s\n", image_name, strerror(errno));
                     close(osd_font_img_fd);
                     ret = 1;
                 }
@@ -961,11 +949,6 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
         }
     }
 
-    if (update_flags & ISP_FIRMWARE)
-    {
-        LOG_PRINT(debug_str,DEBUG_INFO,"QIC1822 don't need to verify ISP image!!\n");
-    }
-
     if (update_flags & PARAM_FIRMWARE)
     {
         ret = QicFlashRead(QIC1822_FLASH_PARAM_ADDR, BufVerify, parm_image_max_size,image_max_size);
@@ -1023,7 +1006,7 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
 
     if (update_flags & USB_FIRMWARE)
     {
-        if(!usb_fail&&!isp_fail&&!parm_fail)
+        if(!usb_fail&&!parm_fail)
         {
             printf("\ndownload ok\n");
             memset(header_verify,0,sizeof(header_verify));
@@ -1049,12 +1032,6 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
 
     /*release mem */
 ERR_CLOSE_MMAP:
-    if (new_isp_image != orig_isp_image)
-    {
-        munmap(new_isp_image, isp_img_size);
-        close(isp_img_fd);
-    }
-
     if (new_usb_image != orig_usb_image)
     {
         munmap(new_usb_image, usb_img_size);
@@ -1081,9 +1058,8 @@ ERR_CLOSE_MMAP:
 
 ERR_CLOSE:
     free(orig_usb_image);
-    free(orig_isp_image);
     free(orig_parm_image);
-    //	free(orig_audio_image);
+    free(orig_audio_image);
     free(orig_osd_font_image);
 
     return ret;
@@ -1703,30 +1679,36 @@ int qic_dump_all_flash(unsigned int dev_id)
 
 int qic_backup_firmware_to_file(unsigned int dev_id, char *update_img_loc, unsigned char update_flags, char *backup_img_loc, unsigned char backup_flags)
 {
-    unsigned char *orig_usb_image, *orig_isp_image, *orig_parm_image, *orig_audio_image, orig_osd_font_image[QIC1822_FLASH_OSD_FONT_MAX_SIZE]; /* read from system */
-    unsigned char *new_usb_image, *new_isp_image, *new_parm_image, *new_audio_image,*new_osd_font_image; /*read from file */
+    // read from system
+    unsigned char *orig_usb_image = NULL;
+    unsigned char *orig_parm_image = NULL;
+    unsigned char *orig_audio_image = NULL;
+    unsigned char *orig_osd_font_image = NULL;
+    // read from file
+    unsigned char *new_usb_image = NULL;
+    unsigned char *new_parm_image = NULL;
+    unsigned char *new_audio_image = NULL;
+    unsigned char *new_osd_font_image = NULL;
+
     int ret = 0;
 
     int usb_img_size = 0;
-    int isp_img_size = 0;
-    int parm_img_size = 0;
-    int audio_img_size = 0;
-    int osd_font_img_size = 0;
 
     unsigned char *usb_w= NULL;
-    unsigned char *isp_w = NULL;
     unsigned char *param_w = NULL;
     unsigned char *audio_w = NULL;
     unsigned char *osd_font_w = NULL;
+
     int image_max_size;
     int usb_image_max_size;
-    int isp_image_max_size;
     int parm_image_max_size;
     int audio_image_max_size;
     int osd_font_image_max_size;
+
     /* read data from cam */
     unsigned int index;
     int count = 0;
+
     for (index = 0; index < dev_pt->num_devices; index++) {
         if (dev_pt->cam[index].dev_id & dev_id) {
             count ++;
@@ -1741,20 +1723,11 @@ int qic_backup_firmware_to_file(unsigned int dev_id, char *update_img_loc, unsig
     osd_font_image_max_size=QIC1822_FLASH_OSD_FONT_MAX_SIZE;
 
     orig_usb_image = calloc( 1, usb_image_max_size);
-    orig_isp_image = calloc (1, isp_image_max_size);
     orig_parm_image = calloc (1, parm_image_max_size);
     orig_audio_image = calloc (1, audio_image_max_size);
-    //orig_osd_font_image = calloc (1, osd_font_image_max_size);
+    orig_osd_font_image = calloc (1, osd_font_image_max_size);
 
-    printf("%p, ");
-
-    new_usb_image = NULL;
-    new_isp_image = NULL;
-    new_parm_image = NULL;
-    new_audio_image = NULL;
-    new_osd_font_image = NULL;
-
-    if ((orig_usb_image == NULL) || (orig_isp_image == NULL) || (orig_parm_image == NULL)|| (orig_audio_image == NULL))	{
+    if ((orig_usb_image == NULL) || (orig_parm_image == NULL)|| (orig_audio_image == NULL))	{
         LOG_PRINT(debug_str, DEBUG_ERROR, "%s: can't malloc\n", __func__);
         goto ERR_CLOSE;
     }
@@ -1827,7 +1800,7 @@ int qic_backup_firmware_to_file(unsigned int dev_id, char *update_img_loc, unsig
 
     if (!ret) {
         //backup
-        ret = qic_backup_firmware(backup_img_loc, (char*)usb_w,  (char*)isp_w,  (char*)param_w,  (char*)audio_w,(char*)osd_font_w);
+        ret = qic_backup_firmware(backup_img_loc, (char*)usb_w, (char*)param_w, (char*)audio_w, (char*)osd_font_w);
         if (ret) {
             LOG_PRINT(debug_str, DEBUG_ERROR, "%s: firmware backup error", __func__);
         }
@@ -1841,10 +1814,9 @@ int qic_backup_firmware_to_file(unsigned int dev_id, char *update_img_loc, unsig
 
 ERR_CLOSE:
     free(orig_usb_image);
-    free(orig_isp_image);
     free(orig_parm_image);
     free(orig_audio_image);
-    //	free(orig_osd_font_image);
+    free(orig_osd_font_image);
 
     return ret;
 }
@@ -2225,7 +2197,7 @@ int qic_check_lock_stream_status( unsigned char *isLock, unsigned char *isStream
 }
 
 /* internal usage */
-static int qic_backup_firmware (char *pathinfo, char *usb_image, char *isp_image, char *parm_image, char *audio_image, char *osd_font_image)
+static int qic_backup_firmware (char *pathinfo, char *usb_image, char *parm_image, char *audio_image, char *osd_font_image)
 {
     char cur_path[512];
     char *default_path = NULL;

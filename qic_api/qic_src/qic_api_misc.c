@@ -389,7 +389,6 @@ int qic_set_advance_motor_speed( unsigned short pan_speed, unsigned short tilt_s
 int qic_change_Shutter_Mode( unsigned char mode)
 {
     int ret = 0;
-    unsigned char shutter_mode;
     int qic_ret = 0;
 
 #ifdef COMMIT_CHECK
@@ -405,6 +404,7 @@ int qic_change_Shutter_Mode( unsigned char mode)
     if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicSetShutterMode success\n");
 
 #ifdef DEBUG_LOG
+    unsigned char shutter_mode;
     shutter_mode = 0;
     qic_ret = QicGetShutterMode(&shutter_mode);
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
@@ -523,7 +523,6 @@ int qic_get_Sensor_AEInfo(unsigned short *AE_statistic)
 int qic_change_LED_Mode( unsigned char mode)
 {
     int ret = 0;
-    unsigned char led_mode;
     int qic_ret = 0;
 
 #ifdef COMMIT_CHECK
@@ -538,6 +537,7 @@ int qic_change_LED_Mode( unsigned char mode)
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
 
 #ifdef DEBUG_LOG
+    unsigned char led_mode;
     led_mode = 0;
     qic_ret = QicGetLedMode(&led_mode);
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
@@ -551,7 +551,6 @@ int qic_change_LED_Mode( unsigned char mode)
 int qic_change_LED_Brightness( unsigned char brightness)
 {
     int ret = 0;
-    unsigned char led_brightness;
     int qic_ret = 0;
 
 #ifdef COMMIT_CHECK
@@ -566,6 +565,7 @@ int qic_change_LED_Brightness( unsigned char brightness)
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
 
 #ifdef DEBUG_LOG
+    unsigned char led_brightness;
     led_brightness = 0;
     qic_ret = QicGetLEDBrightness(&led_brightness);
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
@@ -579,7 +579,6 @@ int qic_change_LED_Brightness( unsigned char brightness)
 // Audio Function control
 int qic_change_NR_mode(unsigned char onoff)
 {
-    unsigned char mode=0;
     int qic_ret;
 
     /* check if committed */
@@ -594,6 +593,7 @@ int qic_change_NR_mode(unsigned char onoff)
     if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicSetANRStatus success...\n");
 
 #ifdef DEBUG_LOG
+    unsigned char mode=0;
     qic_ret = QicGetANRStatus(&mode);
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
     if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicGetANRStatus success,  OnOff=%d ..., \n", mode);
@@ -629,7 +629,6 @@ int qic_change_EQ_mode(unsigned char onoff, unsigned char type)
 
 int qic_change_BF_mode(unsigned char onoff)
 {
-    unsigned char mode=0;
     int qic_ret;
 
     /* check if committed */
@@ -644,6 +643,7 @@ int qic_change_BF_mode(unsigned char onoff)
     if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicSetBFStatus success...\n");
 
 #ifdef DEBUG_LOG
+    unsigned char mode=0;
     qic_ret = QicGetBFStatus(&mode);
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
     if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicGetBFStatus success,  OnOff=%d ..., \n", mode);

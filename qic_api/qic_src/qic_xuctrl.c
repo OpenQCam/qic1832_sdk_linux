@@ -1941,7 +1941,7 @@ int QicGetFirmwareVersion(FirmwareVersion_t *version)
 int QicSetSerialNumber( unsigned char *serial_number, unsigned char data_len)
 {
     int ret=0;
-    int j=0;
+    int i=0, j=0;
 
 #ifdef QIC_SUPPORT_2ND_BL	
     unsigned char szTemp[QIC1822_FLASH_SERIAL_NUMBER_MAX_SIZE];
@@ -1949,9 +1949,9 @@ int QicSetSerialNumber( unsigned char *serial_number, unsigned char data_len)
 #else		
     unsigned char szTemp[0x50];
     unsigned char *usb_dump, *BufVerify;
-
 #endif
-    unsigned int iSreialNumberIndex = 0, iDescStrSize = 0, i;
+    unsigned int iSerialNumberIndex = 0;
+    unsigned int iDescStrSize = 0;
     unsigned int image_max_size;
     unsigned int usb_dump_size;
 
@@ -1977,13 +1977,14 @@ int QicSetSerialNumber( unsigned char *serial_number, unsigned char data_len)
         LOG_RET_PRINT(debug_xuctrl_str, "serial number sector erase Error (Read String ), (%d)%s", errno, strerror(errno));
 
         return (ret = 1);
-    } else {
+    }
+    else {
         LOG_RET_PRINT(debug_xuctrl_str, "serial number sector erase Success");
     }
 
     ret = QicFlashRead(QIC1822_FLASH_SERIAL_NUMBER_ADDR, BufVerify, 0x50,image_max_size);
 
-    for (i = 0; i < QIC1822_FLASH_SERIAL_NUMBER_MAX_SIZE; i++)
+    for (int i = 0; i < QIC1822_FLASH_SERIAL_NUMBER_MAX_SIZE; i++)
     {
         if (BufVerify[i] != 0xff)
         {
@@ -2051,7 +2052,7 @@ int QicSetSerialNumber( unsigned char *serial_number, unsigned char data_len)
 
     ret = QicFlashRead(QIC1822_FLASH_USB_ADDR, BufVerify, usb_dump_size,image_max_size);
 
-    for (i = 0; i < usb_dump_size; i++)
+    for(i = 0; i < usb_dump_size; i++)
     {
         if (BufVerify[i] != 0xff)
         {
@@ -2065,7 +2066,7 @@ int QicSetSerialNumber( unsigned char *serial_number, unsigned char data_len)
     usleep(10000);
 
     /* Read Device Descriptor */
-    iSreialNumberIndex = usb_dump[SF_ADDR_DEVICE_DESC+16];
+    iSerialNumberIndex = usb_dump[SF_ADDR_DEVICE_DESC+16];
 
     /* Read String Descriptor */
     for (i=4; i<sizeof(szTemp);i++)
@@ -2088,12 +2089,10 @@ int QicSetSerialNumber( unsigned char *serial_number, unsigned char data_len)
 
         printf("iDescStrSize=%d, data_len=%d\n",iDescStrSize,data_len);
 
-
         usb_dump[SF_ADDR_DEVICE_DESC+16] = 3;
 
         usb_dump[ SF_ADDR_STRING_DESC + iDescStrSize*3 ] = 2 + data_len*2;
         usb_dump[ SF_ADDR_STRING_DESC + iDescStrSize*3 + 1 ] = 0x03;
-
 
         j = data_len;
 
@@ -2131,7 +2130,7 @@ int QicGetSerialNumber( char *serial_number, int data_len, int *bytes_returned)
 #else
     char szTemp[0x50];
 #endif
-    unsigned int iSreialNumberIndex = 0, iDescStrSize = 0, i;
+    unsigned int iSerialNumberIndex = 0, iDescStrSize = 0, i;
     unsigned int image_max_size;
 
     image_max_size=QIC1822_FLASH_MAX_SIZE;
@@ -2184,9 +2183,9 @@ int QicGetSerialNumber( char *serial_number, int data_len, int *bytes_returned)
         return (ret = 1);
     }
 
-    iSreialNumberIndex = szTemp[0];
+    iSerialNumberIndex = szTemp[0];
 
-    if (iSreialNumberIndex == 0)
+    if (iSerialNumberIndex == 0)
     {
         *bytes_returned = 0;
         return ret;
@@ -2210,7 +2209,7 @@ int QicGetSerialNumber( char *serial_number, int data_len, int *bytes_returned)
 
     if (iDescStrSize != 0)
     {
-        ret = QicFlashRead (SF_ADDR_STRING_DESC+(iDescStrSize*iSreialNumberIndex),  (unsigned char*)szTemp, iDescStrSize,image_max_size);
+        ret = QicFlashRead (SF_ADDR_STRING_DESC+(iDescStrSize*iSerialNumberIndex),  (unsigned char*)szTemp, iDescStrSize,image_max_size);
         if(ret) {
             LOG_RET_PRINT(debug_xuctrl_str, "Get Serial Number Error (Read String Descriptor #2), (%d)%s", errno, strerror(errno));
             return (ret = 1);
@@ -2894,6 +2893,7 @@ int QicGetAdvMotorPosition(MotorPosition_t *postion)
 {
     unsigned char buf[XU_MAX_SIZE];
     int ret;
+    int i;
 
     memset(buf, 0, XU_MAX_SIZE);
 
@@ -2917,8 +2917,11 @@ int QicGetAdvMotorPosition(MotorPosition_t *postion)
     postion->pan=buf[5]+(buf[6]<<8);
     postion->tilt=buf[7]+(buf[8]<<8);
 
-    printf(" Get %d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d.%d,%d,%d \n", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10],
-           buf[11], buf[12], buf[13], buf[14], buf[15], buf[16], buf[17], buf[18], buf[19]);
+    printf("Get ");
+    for(i=0; i<20; ++i){
+        printf("%d,", buf[i]);
+    }
+    printf("\n");
 
     //printf(" Get %d,%d \n", buf[6]<<8, buf[8]<<8);
 
