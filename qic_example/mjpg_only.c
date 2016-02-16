@@ -21,6 +21,7 @@
 #include <getopt.h>
 
 #include "../qic_api/qic_include/qic_include_all.h"
+#include "misc_writefile.h"
 
 #ifdef DMALLOC
 #include <dmalloc.h>
@@ -94,10 +95,10 @@ static void usage(FILE * fp, int argc, char **argv)
     fprintf(fp,
             "Usage: %s [options]\n\n"
             "Options:\n"
-            "-o | --output		MJPEG output [filename]\n"
+            "-o | --output      MJPEG output [filename]\n"
             "-n | --device node H.264/AVC device [devicenode]\n"
             "-y | --MJPEGsize	MJPEG stream [width]x[height]\n"
-            "-f | --fps		Framerate\n"
+            "-f | --fps     Framerate\n"
             "-c | --count		Capture Counter\n"
             "-h | --help		Print this message\n"
             "",

@@ -37,12 +37,12 @@ FILE *file_templayer3 = NULL;
 #else
 /*int file = -1;*/
 int file_stream0 = -1;
-int file_stream1= -1;
+int file_stream1 = -1;
 int file_stream2 = -1;
 int file_stream3 = -1;
 
 int file_templayer0 = -1;
-int file_templayer1= -1;
+int file_templayer1 = -1;
 int file_templayer2 = -1;
 int file_templayer3 = -1;
 #endif

@@ -43,7 +43,6 @@ void debug_log(int level, char *string)
 void frame_process(unsigned int dev_id,  out_frame_t frame)
 {
     static unsigned int vp8_count = 0;
-    unsigned int new_len=0;
     /* { calculate current frame rate sample code*/
 #ifdef CALC_FPS
     static struct timespec start_ts,end_ts;
@@ -60,7 +59,7 @@ void frame_process(unsigned int dev_id,  out_frame_t frame)
         {
             //vp8_count++;
             //write_vp8((unsigned char*)data,length,timestamp);
-            write_vp8((unsigned char*)frame.frame_data,frame.frame_len,vp8_count);
+            write_vp8(frame.frame_data,frame.frame_len,vp8_count);
             vp8_count++;
             putchar('V');fflush(stdout);
 

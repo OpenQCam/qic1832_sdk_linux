@@ -307,9 +307,9 @@ int main(int argc,char ** argv)
 
         qic_get_sysinfo(DEV_ID_0,&qicSysInfo);
 
-        printf("\n \033[1;33m QIC(system) VID:0x%.4lX PID:0x%.4lX REV:0x%.4lX svn:(%d)\033[m \n", qicSysInfo.sVID, qicSysInfo.sPID,
+        printf("\n \033[1;33m QIC(system) VID:0x%.4x PID:0x%.4x REV:0x%.4x svn:(%d)\033[m \n", qicSysInfo.sVID, qicSysInfo.sPID,
                qicSysInfo.sREV, qicSysInfo.sSVN);
-        printf("\n \033[1;33m QIC(system) VID:0x%.4lX PID:0x%.4lX REV:0x%.4lX svn(%d), fw_api_version(%d), update dir=%s \033[m \n", qic_info.vid, qic_info.pid,
+        printf("\n \033[1;33m QIC(system) VID:0x%.4lx PID:0x%.4lx REV:0x%.4lx svn(%d), fw_api_version(%d), update dir=%s \033[m \n", qic_info.vid, qic_info.pid,
                qic_info.revision,qic_info.svn,qic_info.fw_api_version,usb_bin);
 
         return 0;
@@ -318,7 +318,7 @@ int main(int argc,char ** argv)
     if (read_file_version && (usb_bin != NULL)) {
         qic_get_image_version_by_filename(usb_bin, &qic_info);
 
-        printf("\n \033[1;33m QIC(file) VID:0x%.4lX PID:0x%.4lX REV:0x%.4lX svn(%d), fw_api_version(%d), update dir=%s \033[m \n", qic_info.vid, qic_info.pid,
+        printf("\n \033[1;33m QIC(file) VID:0x%.4lx PID:0x%.4lx REV:0x%.4lx svn(%d), fw_api_version(%d), update dir=%s \033[m \n", qic_info.vid, qic_info.pid,
                qic_info.revision,qic_info.svn,qic_info.fw_api_version,usb_bin);
 
         return 0;
@@ -459,8 +459,7 @@ int main(int argc,char ** argv)
         printf("\n");
         printf("\nStart firmware upgrade ....\n");
         qic_set_lock_steam_control( 1);
-        //TODO: Compile error here
-        ret=qic_update_firmware_by_filename(DEV_ID_0, usb_bin,NULL,isp_param_bin,audio_bin,osd_font_bin,update_flags);
+        ret=qic_update_firmware_by_filename(DEV_ID_0, usb_bin, isp_param_bin, audio_bin, osd_font_bin, update_flags);
         qic_set_lock_steam_control( 0);
         g_runing=0;
         clock_gettime(0,&end_ts);

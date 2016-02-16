@@ -425,7 +425,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         return -1;
 
     case Ctrl_PU_WhiteBalance:
-        return qic_V4L2_Control(g_fd, V4L2_CID_WHITE_BALANCE_TEMPERATURE, 1, val, 0);
+        return qic_V4L2_Control(g_fd, V4L2_CID_WHITE_BALANCE_TEMPERATURE, 1, (signed long*)val, 0);
 
     case Ctrl_PU_BacklightComp:
         return qic_V4L2_Control(g_fd, V4L2_CID_BACKLIGHT_COMPENSATION, 1, (signed long*)val, 0);
@@ -557,7 +557,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
             return -1;
         }
         printf("ir_status=%d, ALS_status=%d\n", ir_status, ALS_status);
-        val = ir_status | (ALS_status<<1);
+        *val = ir_status | (ALS_status<<1);
         return 0;
     }
 

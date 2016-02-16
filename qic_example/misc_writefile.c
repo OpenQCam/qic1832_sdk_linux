@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include <sys/time.h>
 
 #ifdef DMALLOC
 #include <dmalloc.h>

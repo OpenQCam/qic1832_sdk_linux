@@ -48,7 +48,7 @@ void debug_log(int level, char *string)
     printf("QIC module debug_print (%s):%s", debug_level[level], string);
 }
 
-void temproal_layer_steams(unsigned char* data, unsigned int length, unsigned long timestamp)
+void temproal_layer_steams(char* data, unsigned int length, unsigned long timestamp)
 {
     int temporal_id;
     int is_pframe;

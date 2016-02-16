@@ -184,8 +184,8 @@ int main(int argc,char ** argv)
     unsigned short vp8_height = 720;
     unsigned short yuv_width = 320;
     unsigned short yuv_height = 240;
-    unsigned short mjpeg_width=320;
-    unsigned short  mjpeg_height = 240;
+    unsigned short mjpeg_width = 320;
+    unsigned short mjpeg_height = 240;
     unsigned char u_framerate = 30, demux=0;
     unsigned int u_frame_interval=333333;  //frame rate interval, unit:100nS ->0.1uS
     unsigned int u_bitrate = 3000000;

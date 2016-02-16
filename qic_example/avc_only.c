@@ -27,11 +27,8 @@
 #include <dmalloc.h>
 #endif
 
-
 #define AVC_ESMODE1
-
 #define CALC_FPS
-
 
 /* capture 500 frames for demo */
 int frame_count = 500;
@@ -39,14 +36,13 @@ int frame_count = 500;
 /* debug mesg level */
 char *debug_level[] = {"INFO", "WARN", "CRIT", "FATL", "DEAD"};
 
-
-void debug_log(int level, char *string) {
-
+void debug_log(int level, char *string)
+{
     printf("QIC debug_print (%s):%s", debug_level[level], string);
 }
 
-void frame_process(unsigned int dev_id,  out_frame_t frame) {
-
+void frame_process(unsigned int dev_id,  out_frame_t frame)
+{
     static unsigned int avc_count = 0;
 
     /* { calculate current frame rate*/
@@ -59,7 +55,6 @@ void frame_process(unsigned int dev_id,  out_frame_t frame) {
 
 #endif
     /*  calculate current frame rate}*/
-
     switch (dev_id) {
 
     case DEV_ID_0:
@@ -73,7 +68,6 @@ void frame_process(unsigned int dev_id,  out_frame_t frame) {
 
         /*  {calculate current frame rate*/
 #ifdef CALC_FPS
-
         frame_num++;
         if(frame_num>=30){
             clock_gettime(0,&start_ts);
@@ -86,13 +80,11 @@ void frame_process(unsigned int dev_id,  out_frame_t frame) {
             frame_num=0;
 
             clock_gettime(0,&end_ts);
-
         }
 #endif
         /*  calculate current frame rate}*/
 
         break;
-
     }
 
     frame_count--;
@@ -101,13 +93,12 @@ void frame_process(unsigned int dev_id,  out_frame_t frame) {
 
 }
 
-
 static void usage(FILE * fp, int argc, char **argv)
 {
     fprintf(fp,
             "Usage: %s [options]\n\n"
             "Options:\n"
-            "-o | --output		H.264/AVC output [filename]\n"
+            "-o | --output      H.264/AVC output [filename]\n"
             "-n | --device node H.264/AVC device [devicenode]\n"
             "-s | --AVCsize		H.264/AVC stream [width]x[height]\n"
             "-f | --fps		Framerate\n"
@@ -121,9 +112,7 @@ static void usage(FILE * fp, int argc, char **argv)
 }
 
 
-
 static const char short_options [] = "o:s:f:b:g:c:dh:n:";
-
 
 static const struct option long_options [] =
 {
@@ -138,7 +127,6 @@ static const struct option long_options [] =
     { "devicenode", required_argument,  NULL, 'n' },
     { 0, 0, 0, 0 }
 };
-
 
 int main(int argc,char ** argv)
 {	
@@ -178,7 +166,6 @@ int main(int argc,char ** argv)
         c = getopt_long(argc, argv,
                         short_options, long_options,
                         &index);
-
         if (-1 == c)
             break;
 
@@ -204,7 +191,8 @@ int main(int argc,char ** argv)
             if (*separator != 'x') {
                 printf("Error in size use -s widthxheight\n");
                 exit(1);
-            } else {
+            }
+            else {
                 ++separator;
                 avc_height = strtoul(separator, &separator, 10);
                 if (*separator != 0)
@@ -248,8 +236,7 @@ int main(int argc,char ** argv)
         }
     }
 
-
-    /************************************************
+ /************************************************
  *
  * first step, init the qic module capture library
  * two devices, /dev/video0 as YUV raw
@@ -262,9 +249,7 @@ int main(int argc,char ** argv)
         return 1;
     }
 
-
-
-    /************************************************
+ /************************************************
  *
  * step 2: set the parameters and commit the settings
  * need to setup two call back functions, debug_print & frame_output
@@ -291,11 +276,10 @@ int main(int argc,char ** argv)
     my_qic->cam[0].is_encoding_video=1;
     my_qic->cam[0].key_frame_interval=u_key_frame_interval;
     my_qic->cam[0].frame_interval=u_frame_interval;
+
     if(demux){
         my_qic->cam[0].is_demux =1;  //Enable Encoding stream bad frame check
     }
-
-
 
     /* commit and init the video dev */
     ret = qic_config_commit();
@@ -311,8 +295,7 @@ int main(int argc,char ** argv)
     qic_generate_key_frame_EU(DEV_ID_0,SIMULCAST_STREAM0,1,u_key_frame_interval, 0);
     qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM0,LAYER_START);
 
-
-    /************************************************
+ /************************************************
  *
  * step 3: config print debug can be called at any time
  *
@@ -324,8 +307,7 @@ int main(int argc,char ** argv)
     /* open file for dump */
     open_file_dump(filename);
 
-
-    /************************************************
+ /************************************************
  *
  * step 4: activate the camera before capture frames
  *
@@ -382,9 +364,7 @@ int main(int argc,char ** argv)
                 printf("qic_getframe error\n");
                 return 1;
             }
-
         }
-
     }
 
     /* print the mem usage */
@@ -392,8 +372,7 @@ int main(int argc,char ** argv)
     mem_info = mem_usage_info();
     printf("%s", mem_info);
 
-
-    /************************************************
+/************************************************
  *
  * step 6: stop the camera
  *
@@ -404,11 +383,10 @@ int main(int argc,char ** argv)
         return 1;
     }
 
-
-    /************************************************
+ /************************************************
  *
  * step 7: release all fd and malloc(s) before exit
-  *
+ *
  *************************************************/
     ret = qic_release();
     if (ret) {
@@ -416,9 +394,7 @@ int main(int argc,char ** argv)
         return 1;
     }
 
-
     close_file();
-
 
     return 0;
 }
