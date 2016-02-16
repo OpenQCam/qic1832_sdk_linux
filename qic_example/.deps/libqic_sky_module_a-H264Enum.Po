@@ -1,4 +1,0 @@
-libqic_sky_module_a-H264Enum.o: ../qic_api/qic_src/H264Enum.c \
- ../qic_api/qic_src/../qic_include/H264Enum.h
-
-../qic_api/qic_src/../qic_include/H264Enum.h:
