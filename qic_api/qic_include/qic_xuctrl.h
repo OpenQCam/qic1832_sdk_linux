@@ -156,7 +156,7 @@ typedef enum {
     ADV_MOTOR_NAVIGATE_POSITION_SET			= 0x03,   /*Set position array of Navigation mode*/
     ADV_MOTOR_NAVIGATE_SET				= 0x04,   /*Set position array of Navigation mode and then start Navigation mode*/
     ADV_MOTOR_RESET					= 0x05,   /*Reset all of positions to defalut for Navigation and Single mode*/
-    ADV_MOTOR_SPEED					= 0x06,   /*Set motor speed */
+    ADV_MOTOR_SPEED					= 0x06   /*Set motor speed */
 } AdvMotorCtlMode_e;
 
 /*Advanced Motor Control Position setting for Navigation*/
@@ -206,7 +206,6 @@ typedef enum {
     BLINK		= 3
 } OsdColorMode_e;
 
-
 /*Miscellaneous setting refer to -	OSD Miscellaneous Control:*/
 typedef struct {
     unsigned char bg_alpha; 				/*Background alpha, 0~15*/
@@ -254,13 +253,10 @@ typedef struct {
     unsigned char initial_min;				/*The initial minute when timer starts, 0~59*/
     unsigned char initial_sec;				/*The initial second when timer starts, 0~59*/
 } OsdTimer_t;
-
-
 #endif
 
 
 #ifdef QIC_MD_API
-
 typedef struct {
     unsigned char x; // in number of macro blocks.
     unsigned char y; // in number of macro blocks.
@@ -305,18 +301,12 @@ typedef enum {
     AUTO_UPDATE			= 0x02   // auto update MD status on usb interrupt control
 } MdInterrupt_e;
 
-
-
-
 typedef struct{
     unsigned char	long_term_time;  //
     unsigned char	short_term_time; //
     unsigned char   sensitivity;     //range:0~100
 }td_config_t;
-
-
 #endif
-
 
 typedef enum {
     MODE_FLASH_PROGRAM_PP	= 0x00,
@@ -363,7 +353,6 @@ typedef enum {
     FORMAT_STREAM_H264_ADD_PADDING 	      = 0x01
 } EncoderStreamSizeFormat_t;
 
-
 /*AVC Rate Control*/
 typedef enum {
     VBR_MODE 		=0, /*VBR (MB Based) quanta range(17~40) */ /*avc spec define range (0~51)*/
@@ -371,7 +360,6 @@ typedef enum {
     FIXED_QP_MODE 	=2, /*Fixed QP range(17~40)*/
     GVBR_MODE		=3  /*Global VBR (Reserved for simulcast) not implement yet*/
 }EncoderRateControlMode_t;		
-
 
 typedef enum {
     ADC_SNN4_MODE	= 1,
@@ -387,13 +375,10 @@ typedef enum {
 #define QIC_XU1_QUALITY_OVERSHOOT		0x02
 #define QIC_XU1_QUALITY_MINQP			0x04
 #define QIC_XU1_QUALITY_MAXQP			0x08
-#define QIC_XU1_QUALITY_ALL			(QIC_XU1_QUALITY_TIMEWINDOW | QIC_XU1_QUALITY_OVERSHOOT |	\
-    QIC_XU1_QUALITY_MINQP | QIC_XU1_QUALITY_MAXQP)
-
+#define QIC_XU1_QUALITY_ALL			(QIC_XU1_QUALITY_TIMEWINDOW | QIC_XU1_QUALITY_OVERSHOOT | QIC_XU1_QUALITY_MINQP | QIC_XU1_QUALITY_MAXQP)
 
 
 /*****************************QIC1822 EU Controls for UVC1.0**************************************/
-
 typedef enum {
     SIMULCAST_STREAM0            		        = 0,
     SIMULCAST_STREAM1 				= 0x400,
@@ -426,7 +411,6 @@ typedef enum {
     SIMULCAST_STREAMALL_LAYER3		        = 0x1D80,
     SIMULCAST_STREAMALL_LAYER_ALL	                = 0x1F80
 } StreamLayerId_t;
-
 
 typedef enum {
     CODEC_VP8				= 0x00,    /*VP8 single stream*/
@@ -461,9 +445,8 @@ typedef enum {
 /*Stream Layer Control*/
 typedef enum {
     LAYER_STOP      			=0,  /*Stream Layer off*/
-    LAYER_START					=1,  /*Stream Layer on*/
+    LAYER_START					=1  /*Stream Layer on*/
 }EuStreamLayerControl_t;
-
 
 
 #define H264_MIN_QP 10
@@ -473,8 +456,6 @@ typedef enum {
 #define VP8_MAX_QP 127
 
 /*****************************QIC1822 EU Controls for UVC1.0**************************************/
-
-
 
 /* Data types for UVC control data */
 #define UVC_CTRL_DATA_TYPE_RAW		0
@@ -507,7 +488,6 @@ struct uvc_xu_control_info {
     __u16 size;
     __u32 flags;
 };
-
 
 struct uvc_menu_info {
     __u32 value;
@@ -582,7 +562,6 @@ struct uvc_xu_control_query {
 #define UVCIOC_CTRL_GET		_IOWR('U', 3, struct uvc_xu_control)
 #define UVCIOC_CTRL_SET		_IOW('U', 4, struct uvc_xu_control)
 
-
 //The mapping macros are duplicated per driver difference.
 #define UVCIOC_CTRL_MAP_2_6_32  _IOWR('U', 2, struct uvc_xu_control_mapping_2_6_32)
 #define UVCIOC_CTRL_MAP_2_6_36  _IOWR('U', 2, struct uvc_xu_control_mapping_2_6_36)
@@ -606,12 +585,8 @@ int QicFlashWriteUSBIMG (int addr, unsigned char *data, int data_size, unsigned 
 int QicFlashRead(int addr, unsigned char *data, int data_size, unsigned int max_flash_size);
 int QicFlashSetSpiConfig(unsigned int divider, FlashProgramMode_t mode);
 
-
-
-
 int QicXuSet (unsigned int ctrlId, unsigned char* pBuf, unsigned int size);
 int QicXuGet (unsigned int ctrlId, unsigned char* pBuf, unsigned int size);
-
 
 int QicSetFlipMode(unsigned char flip_v, unsigned char flip_h);
 int QicGetFlipMode(unsigned char *flip_v, unsigned char *flip_h);
@@ -688,8 +663,6 @@ int QicGetEQStatus(unsigned char *onoff, unsigned char *type);
 int QicSetBFStatus(unsigned char onoff);
 int QicGetBFStatus(unsigned char *onoff);
 
-
-
 #if defined(QIC1822)&& defined(QIC_SIMULCAST_API) 
 /* qic1832 OSD Control just for H.264 stream */
 #ifdef QIC_OSD_API
@@ -713,7 +686,6 @@ int QicOsdLineArrayGet(unsigned char line_id, unsigned char *str,
                        OsdCharAttr_t *char_attr);
 int QicOsdLineClear(unsigned char line_id);
 int QicOsdTimerSet(unsigned char line_id, unsigned char enable, OsdTimer_t timer);
-
 #endif
 
 #ifdef QIC_MD_API
@@ -736,9 +708,7 @@ int QicTDGetEnable(unsigned char *enable);
 int QicTDSetConfiguration(td_config_t* config);
 int QicTDGetConfiguration(td_config_t* config);
 int QicTDGetStatus(int* status);
-
 #endif
-
 
 /* EU Codec Controls for UVC1.0 */
 int QicEuSetSelectLayer(unsigned short wLayerOrViewID);

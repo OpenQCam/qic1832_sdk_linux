@@ -67,6 +67,9 @@ typedef enum tagControls
     Ctrl_XU_LTRPictureControl,
     Ctrl_XU_LTRValidationControl,
     Ctrl_XU_IR,
+    Ctrl_XU_ALS,
+    Ctrl_PU_PowerLineFrequency,
+    Ctrl_PU_flip,
 }Controls;
 
 #define NYI printf("%s: id %d is not yet implemented.\n", __FUNCTION__, id)
@@ -109,6 +112,9 @@ char* ToString(Controls ctrl)
     case Ctrl_XU_LTRPictureControl:		pName = "LTRPictureControl"; break;
     case Ctrl_XU_LTRValidationControl:	pName = "LTRValidationControl"; break;
     case Ctrl_XU_IR:					pName = "IR"; break;
+    case Ctrl_XU_ALS:					pName = "ALS"; break;
+    case Ctrl_PU_PowerLineFrequency:	pName = "PowerLineFrequency"; break;
+    case Ctrl_PU_flip:					pName = "flip"; break;
     default:							pName = "UNKNOWN"; break;
     }
 
@@ -119,6 +125,7 @@ int SetControl(int id, __uint64_t val, int bAuto)
 {
     int qic_ret;
     signed short pan, tilt;
+    unsigned char h_flip, v_flip;
 
     switch(id)
     {
@@ -352,6 +359,20 @@ int SetControl(int id, __uint64_t val, int bAuto)
 
     case Ctrl_XU_IR:
         return QicSetIRControl((unsigned char)val);
+
+    case Ctrl_XU_ALS:
+        NYI;
+        return -1;
+
+    case Ctrl_PU_PowerLineFrequency:
+        return qic_V4L2_Control(g_fd, V4L2_CID_POWER_LINE_FREQUENCY, 0, 0,val);
+
+    case Ctrl_PU_flip:
+        h_flip = val & H_FLIP;
+        v_flip = (val & V_FLIP)>>1;
+
+        QicChangeFD(g_fd);
+        return QicSetFlipMode(v_flip, h_flip);
     }
     return -1;
 }
@@ -360,6 +381,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 {
     int qic_ret;
     signed short pan, tilt;
+    unsigned char h_flip, v_flip;
 
     *val = 0;
     *bAuto = 0;
@@ -397,10 +419,10 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         return qic_V4L2_Control(g_fd, V4L2_CID_IRIS_ABSOLUTE, 1, (signed long*)val, 0);
 
     case Ctrl_CT_Focus:
-        return qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_ABSOLUTE, 1, val, 0);
+        return qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_ABSOLUTE, 1, (signed long*)val, 0);
 
     case Ctrl_CT_Exposure:
-        return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE, 1, val, 0);
+        return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE, 1, (signed long*)val, 0);
 
     case Ctrl_PU_Brightness:
         return qic_V4L2_Control(g_fd, V4L2_CID_BRIGHTNESS, 1, (signed long*)val, 0);
@@ -561,6 +583,28 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         return 0;
     }
 
+    case Ctrl_XU_ALS:
+    {
+        unsigned short ALS;
+        if(!QicGetALS(&ALS)){
+            printf("ALS value:%d\n", ALS);
+            return 0;
+        }
+        else{
+            return -1;
+        }
+    }
+
+    case Ctrl_PU_PowerLineFrequency:
+        return qic_V4L2_Control(g_fd, V4L2_CID_POWER_LINE_FREQUENCY, 1, (signed long*)val, 0);
+
+    case Ctrl_PU_flip:
+    {
+        QicGetFlipMode(&v_flip, &h_flip);
+        printf("QicGetFlipMode success,  H_FLIP=%s, V_FLIP=%s\n", h_flip?"on":"off", v_flip?"on":"off");
+        return 0;
+    }
+
     default:
         return -1;
     }
@@ -600,6 +644,9 @@ void ListControls(void)
         Ctrl_XU_LTRPictureControl,
         Ctrl_XU_LTRValidationControl,
         Ctrl_XU_IR,
+        Ctrl_XU_ALS,
+        Ctrl_PU_PowerLineFrequency,
+        Ctrl_PU_flip,
     };
 
     int control_id;
