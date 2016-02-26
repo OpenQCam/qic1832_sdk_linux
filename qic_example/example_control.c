@@ -24,7 +24,6 @@
 
 #include "../qic_api/qic_include/qic_include_all.h"
 #include "misc_writefile.h"
-#include "misc_mp4_record.h"
 
 #ifdef DMALLOC
 #include <dmalloc.h>
@@ -71,7 +70,7 @@ typedef enum tagControls
     Ctrl_XU_ALS,
     Ctrl_PU_PowerLineFrequency,
     Ctrl_PU_Mirror,
-    Ctrl_PU_Flip,
+    Ctrl_PU_Flip
 }Controls;
 
 #define NYI printf("%s: id %d is not yet implemented.\n", __FUNCTION__, id)
