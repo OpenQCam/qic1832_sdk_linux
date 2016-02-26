@@ -38,8 +38,8 @@ int qic_change_Shutter_Mode( unsigned char mode);
 int qic_get_ALS(unsigned int dev_id, unsigned short *ALS);
 
 // IR control
-int qic_change_IR_control( unsigned char mode);
-int qic_get_IR_ALS_status( unsigned char *ir_status, unsigned char *ALS_status);
+int qic_set_IR(unsigned char als_mode, unsigned char ir_status);
+int qic_get_IR(unsigned char *als_mode, unsigned char *ir_status);
 
 // Sensor Information
 int qic_get_Sensor_AEInfo(unsigned short *AE_statistic);

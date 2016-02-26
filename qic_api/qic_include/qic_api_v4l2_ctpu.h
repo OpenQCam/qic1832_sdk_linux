@@ -63,20 +63,20 @@ enum  v4l2_exposure_auto_type {
 #endif
 
 int qic_V4L2_Control(int fd,unsigned long cmd,int Get,signed long *value,signed long invalue);
-int qic_change_V4L2_FOCUS_ABSOLUTE(unsigned int dev_id,  unsigned int Auto,signed long  ABSOLUTE);
-int qic_change_V4L2_BACKLIGHT_COMPENSATION(unsigned int dev_id, signed long  BC) ;
+int qic_change_V4L2_FOCUS_ABSOLUTE(unsigned int dev_id,  unsigned int Auto,signed long absolute);
+int qic_change_V4L2_BACKLIGHT_COMPENSATION(unsigned int dev_id, signed long BC) ;
 int qic_change_V4L2_flip(unsigned int dev_id, unsigned char flip) ;
-int qic_change_V4L2_WHITE_BALANCE(unsigned int dev_id, unsigned int  Auto,signed long WB);
+int qic_change_V4L2_WHITE_BALANCE(unsigned int dev_id, unsigned int Auto,signed long WB);
 int qic_change_V4L2_BRIGHTNESS(unsigned int dev_id,signed long BRIGHTNESS);
-int qic_change_V4L2_CONTRAST(unsigned int dev_id, signed long  CONTRAST);
+int qic_change_V4L2_CONTRAST(unsigned int dev_id, signed long CONTRAST);
 int qic_change_V4L2_HUE(unsigned int dev_id, signed long HUE);
 int qic_change_V4L2_SATURATION(unsigned int dev_id, signed long SATURATION);
 int qic_change_V4L2_SHARPNESS(unsigned int dev_id, signed long SHARPNESS);
 int qic_change_V4L2_GAMMA(unsigned int dev_id, signed long GAMMA);
 int qic_change_V4L2_GAIN(unsigned int dev_id, signed long GAIN);
 int qic_change_V4L2_POWER_LINE_FREQUENCY(unsigned int dev_id, signed long PLF);
-int qic_change_V4L2_EXPOSURE(unsigned int dev_id, unsigned int Auto, signed long ABSOLUTE);
-int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long PRIORITY);
-int qic_change_V4L2_ZOOM_ABSOLUTE(unsigned int dev_id, signed long ABSOLUTE);
+int qic_change_V4L2_EXPOSURE(unsigned int dev_id, unsigned int Auto, signed long absolute_or_mode);
+int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long priority);
+int qic_change_V4L2_ZOOM_ABSOLUTE(unsigned int dev_id, signed long absolute);
 
 #endif

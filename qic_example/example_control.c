@@ -24,6 +24,7 @@
 
 #include "../qic_api/qic_include/qic_include_all.h"
 #include "misc_writefile.h"
+#include "misc_mp4_record.h"
 
 #ifdef DMALLOC
 #include <dmalloc.h>
@@ -69,7 +70,8 @@ typedef enum tagControls
     Ctrl_XU_IR,
     Ctrl_XU_ALS,
     Ctrl_PU_PowerLineFrequency,
-    Ctrl_PU_flip,
+    Ctrl_PU_Mirror,
+    Ctrl_PU_Flip,
 }Controls;
 
 #define NYI printf("%s: id %d is not yet implemented.\n", __FUNCTION__, id)
@@ -114,7 +116,8 @@ char* ToString(Controls ctrl)
     case Ctrl_XU_IR:					pName = "IR"; break;
     case Ctrl_XU_ALS:					pName = "ALS"; break;
     case Ctrl_PU_PowerLineFrequency:	pName = "PowerLineFrequency"; break;
-    case Ctrl_PU_flip:					pName = "flip"; break;
+    case Ctrl_PU_Mirror:				pName = "Mirror"; break;
+    case Ctrl_PU_Flip:					pName = "Flip"; break;
     default:							pName = "UNKNOWN"; break;
     }
 
@@ -131,41 +134,37 @@ int SetControl(int id, __uint64_t val, int bAuto)
     {
     case Ctrl_CT_Pan:
         qic_ret = QicGetPanTilt(&pan, &tilt);
-        if(qic_ret)
-        {
-            printf("QicGetPanTilt() fail, ret=%d\n", qic_ret);
+        if(qic_ret){
+            printf("QicGetPanTilt() fails, ret=%d\n", qic_ret);
             return qic_ret;
         }
-        if((signed short)val<0)
-        {
+        if((signed short)val<0){
             pan=(~(signed short)val)+0x8001;
         }
         else
             pan = (signed short)val;
+
         qic_ret = QicSetPanTilt(pan, tilt);
-        if(qic_ret)
-        {
-            printf("QicSetPanTilt() fail, ret=%d\n", qic_ret);
+        if(qic_ret){
+            printf("QicSetPanTilt() fails, ret=%d\n", qic_ret);
             return qic_ret;
         }
         return 0;
 
     case Ctrl_CT_Tilt:
         qic_ret = QicGetPanTilt(&pan, &tilt);
-        if(qic_ret)
-        {
-            printf("QicGetPanTilt() fail, ret=%d\n", qic_ret);
+        if(qic_ret){
+            printf("QicGetPanTilt() fails, ret=%d\n", qic_ret);
             return qic_ret;
         }
-        if((signed short)val<0)
-        {
+        if((signed short)val<0){
             tilt=(~(signed short)val)+0x8001;
         }
         else
             tilt = (signed short)val;
+
         qic_ret = QicSetPanTilt(pan, tilt);
-        if(qic_ret)
-        {
+        if(qic_ret){
             printf("QicSetPanTilt() fail, ret=%d\n", qic_ret);
             return qic_ret;
         }
@@ -182,17 +181,13 @@ int SetControl(int id, __uint64_t val, int bAuto)
         return qic_V4L2_Control(g_fd, V4L2_CID_IRIS_ABSOLUTE, 0, 0, val);
 
     case Ctrl_CT_Focus:
-        if(bAuto == 1)
-        {
-            if(qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_AUTO, 0, 0, val))
-            {
+        if(bAuto == 1){
+            if(qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_AUTO, 0, 0, val)){
                 return -1;
             }
         }
-        else
-        {
-            if(qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_AUTO, 0, 0, 0))
-            {
+        else{
+            if(qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_AUTO, 0, 0, 0)){
                 return -1;
             }
             return qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_ABSOLUTE, 0, 0, val);
@@ -200,17 +195,13 @@ int SetControl(int id, __uint64_t val, int bAuto)
         return 0;
 
     case Ctrl_CT_Exposure:
-        if(bAuto == 1)
-        {
-            if(qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_AUTO, 0, 0, val))
-            {
+        if(bAuto == 1){
+            if(qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_AUTO, 0, 0, val)){
                 return -1;
             }
         }
-        else
-        {
-            if(qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_AUTO, 0, 0, 1))
-            {
+        else{
+            if(qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_AUTO, 0, 0, 1)){
                 return -1;
             }
             return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_ABSOLUTE, 0, 0, val);
@@ -240,17 +231,13 @@ int SetControl(int id, __uint64_t val, int bAuto)
         return -1;
 
     case Ctrl_PU_WhiteBalance:
-        if(bAuto == 1)
-        {
-            if(qic_V4L2_Control(g_fd, V4L2_CID_AUTO_WHITE_BALANCE, 0, 0, val))
-            {
+        if(bAuto == 1){
+            if(qic_V4L2_Control(g_fd, V4L2_CID_AUTO_WHITE_BALANCE, 0, 0, val)){
                 return -1;
             }
         }
-        else
-        {
-            if(qic_V4L2_Control(g_fd, V4L2_CID_AUTO_WHITE_BALANCE, 0, 0, 0))
-            {
+        else{
+            if(qic_V4L2_Control(g_fd, V4L2_CID_AUTO_WHITE_BALANCE, 0, 0, 0)){
                 return -1;
             }
             return qic_V4L2_Control(g_fd, V4L2_CID_WHITE_BALANCE_TEMPERATURE, 0, 0, val);
@@ -265,72 +252,56 @@ int SetControl(int id, __uint64_t val, int bAuto)
 
     case Ctrl_EU_CPBSize:
         qic_ret = QicEuSetCpbSizeControl((unsigned int)val);
-        if(qic_ret)
-        {
-            printf("QicEuSetCpbSizeControl failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_AverageBitRate:
         qic_ret = QicEuSetAverageBitrateControl((unsigned int)val);
-        if(qic_ret)
-        {
-            printf("QicEuSetAverageBitrateControl failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_RateControlMode:
         qic_ret = QicEuSetRateControlMode((unsigned char)val);
-        if(qic_ret)
-        {
-            printf("QicEuSetRateControlMode failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_Resolution:
         qic_ret = QicEuSetVideoResolution((unsigned short)val, (unsigned short)(val>>16));
-        if(qic_ret)
-        {
-            printf("QicEuSetVideoResolution() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_Qp:
         qic_ret = QicEuSetQuantizationParameter((unsigned short)val, (unsigned short)(val>>16), (unsigned short)(val>>32));
-        if(qic_ret)
-        {
-            printf("QicEuSetQuantizationParameter() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_SyncLongTermRefFrame:
         qic_ret = QicEuSetSynchronizationAndLongTermReferenceFrame((unsigned char)val, (unsigned short)(val>>8), (unsigned char)(val>>24));
-        if(qic_ret)
-        {
-            printf("QicEuSetSynchronizationAndLongTermReferenceFrame() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_FrameInterval:
         qic_ret = QicEuSetMinimumFrameInterval((unsigned int)val);
-        if(qic_ret)
-        {
-            printf("QicEuSetMinimumFrameInterval() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_SelectLayer:
         qic_ret = QicEuSetSelectLayer((unsigned short)val);
-        if(qic_ret)
-        {
-            printf("QicEuSetSelectLayer() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
@@ -341,9 +312,7 @@ int SetControl(int id, __uint64_t val, int bAuto)
 
     case Ctrl_EU_TemporalLayer:
         qic_ret = QicEuExSetTsvc((unsigned char)val);
-        if(qic_ret)
-        {
-            printf("QicEuExSetTsvc() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
@@ -358,7 +327,7 @@ int SetControl(int id, __uint64_t val, int bAuto)
         return -1;
 
     case Ctrl_XU_IR:
-        return QicSetIRControl((unsigned char)val);
+        return QicSetIR((unsigned char)val);
 
     case Ctrl_XU_ALS:
         NYI;
@@ -367,7 +336,14 @@ int SetControl(int id, __uint64_t val, int bAuto)
     case Ctrl_PU_PowerLineFrequency:
         return qic_V4L2_Control(g_fd, V4L2_CID_POWER_LINE_FREQUENCY, 0, 0,val);
 
-    case Ctrl_PU_flip:
+    case Ctrl_PU_Mirror:
+        qic_ret = QicSetMirror(val);
+        if(qic_ret){
+            return qic_ret;
+        }
+        return 0;
+
+    case Ctrl_PU_Flip:
         h_flip = val & H_FLIP;
         v_flip = (val & V_FLIP)>>1;
 
@@ -385,14 +361,10 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 
     *val = 0;
     *bAuto = 0;
-
-    switch(id)
-    {
+    switch(id){
     case Ctrl_CT_Pan:
         qic_ret = QicGetPanTilt(&pan, &tilt);
-        if(qic_ret)
-        {
-            printf("QicGetPanTilt() fail, ret=%d\n", qic_ret);
+        if(qic_ret){
             return qic_ret;
         }
         *val = pan;
@@ -400,9 +372,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 
     case Ctrl_CT_Tilt:
         qic_ret = QicGetPanTilt(&pan, &tilt);
-        if(qic_ret)
-        {
-            printf("QicGetPanTilt() fail, ret=%d\n", qic_ret);
+        if(qic_ret){
             return qic_ret;
         }
         *val = tilt;
@@ -457,27 +427,21 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 
     case Ctrl_EU_CPBSize:
         qic_ret = QicEuGetCpbSizeControl((unsigned int*)val);
-        if(qic_ret)
-        {
-            printf("QicEuGetCpbSizeControl failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_AverageBitRate:
         qic_ret = QicEuGetAverageBitrateControl((unsigned int*)val);
-        if(qic_ret)
-        {
-            printf("QicEuGetAverageBitrateControl failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_RateControlMode:
         qic_ret = QicEuGetRateControlMode((unsigned char*)val);
-        if(qic_ret)
-        {
-            printf("QicEuGetRateControlMode failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
@@ -486,9 +450,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
     {
         unsigned short width, height;
         qic_ret = QicEuGetVideoResolution(&width, &height);
-        if(qic_ret)
-        {
-            printf("QicEuGetVideoResolution() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         printf("width=%d, height=%d\n", width, height);
@@ -501,9 +463,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
     {
         unsigned short wQpPrime_I, wQpPrime_P, wQpPrime_B;
         qic_ret = QicEuGetQuantizationParameter(&wQpPrime_I, &wQpPrime_P, &wQpPrime_B);
-        if(qic_ret)
-        {
-            printf("QicEuGetQuantizationParameter() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         printf("wQpPrime_I=%d, wQpPrime_P=%d, wQpPrime_B=%d\n", wQpPrime_I, wQpPrime_P, wQpPrime_B);
@@ -519,9 +479,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         unsigned short wSyncFrameInterval;
         unsigned char bGradualDecoderRefresh;
         qic_ret = QicEuGetSynchronizationAndLongTermReferenceFrame(&bSyncFrameType, &wSyncFrameInterval, &bGradualDecoderRefresh);
-        if(qic_ret)
-        {
-            printf("QicEuGetSynchronizationAndLongTermReferenceFrame() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         printf("bSyncFrameType=%d, wSyncFrameInterval=%d, bGradualDecoderRefresh=%d\n", bSyncFrameType, wSyncFrameInterval, bGradualDecoderRefresh);
@@ -533,18 +491,14 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 
     case Ctrl_EU_FrameInterval:
         qic_ret = QicEuGetMinimumFrameInterval((unsigned int*)val);
-        if(qic_ret)
-        {
-            printf("QicEuGetMinimumFrameInterval() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
 
     case Ctrl_EU_SelectLayer:
         qic_ret = QicEuGetSelectLayer((unsigned short*)val);
-        if(qic_ret)
-        {
-            printf("QicEuGetSelectLayer() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
@@ -555,9 +509,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 
     case Ctrl_EU_TemporalLayer:
         qic_ret = QicEuExGetTsvc((unsigned char*)val);
-        if(qic_ret)
-        {
-            printf("QicEuExGetTsvc() failed, ret=%d\n", qic_ret);
+        if(qic_ret){
             return -1;
         }
         return 0;
@@ -573,35 +525,46 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 
     case Ctrl_XU_IR:
     {
-        unsigned char ir_status, ALS_status;
-        if(QicGetIRStatus(&ir_status, &ALS_status))
-        {
+        unsigned char als_mode, ir_status;
+        qic_ret = QicGetIR((unsigned char*)val);
+        if(qic_ret){
             return -1;
         }
-        printf("ir_status=%d, ALS_status=%d\n", ir_status, ALS_status);
-        *val = ir_status | (ALS_status<<1);
+        als_mode = (*val>>1) & 0x1;
+        ir_status = (*val) & 0x1;
+        printf("ALS mode=%d, IR status=%d\n", als_mode, ir_status);
         return 0;
     }
 
     case Ctrl_XU_ALS:
     {
-        unsigned short ALS;
-        if(!QicGetALS(&ALS)){
-            printf("ALS value:%d\n", ALS);
-            return 0;
-        }
-        else{
+        qic_ret = QicGetALS((unsigned short*)val);
+        if(qic_ret){
             return -1;
         }
+        return 0;
     }
 
     case Ctrl_PU_PowerLineFrequency:
         return qic_V4L2_Control(g_fd, V4L2_CID_POWER_LINE_FREQUENCY, 1, (signed long*)val, 0);
 
-    case Ctrl_PU_flip:
+    case Ctrl_PU_Mirror:
     {
-        QicGetFlipMode(&v_flip, &h_flip);
-        printf("QicGetFlipMode success,  H_FLIP=%s, V_FLIP=%s\n", h_flip?"on":"off", v_flip?"on":"off");
+        qic_ret = QicGetMirror((unsigned char*)val);
+        if(qic_ret){
+            return -1;
+        }
+        return 0;
+    }
+
+    case Ctrl_PU_Flip:
+    {
+        qic_ret = QicGetFlipMode(&v_flip, &h_flip);
+        if(qic_ret){
+            return -1;
+        }
+        printf("H_FLIP=%s, V_FLIP=%s\n", h_flip?"on":"off", v_flip?"on":"off");
+
         return 0;
     }
 
@@ -646,7 +609,8 @@ void ListControls(void)
         Ctrl_XU_IR,
         Ctrl_XU_ALS,
         Ctrl_PU_PowerLineFrequency,
-        Ctrl_PU_flip,
+        Ctrl_PU_Mirror,
+        Ctrl_PU_Flip,
     };
 
     int control_id;
@@ -663,8 +627,9 @@ void ListControls(void)
                 printf("id: %d, %s, current:%lld. auto \n\n", control_id, ToString(control_id), control_value);
             else
                 printf("id: %d, %s, current:%lld. \n\n", control_id, ToString(control_id), control_value);
-        }else{
-            printf("id: %d, %s, get failed. \n\n", control_id, ToString(control_id));
+        }
+        else{
+            printf("id: %d, %s, get fails. \n\n", control_id, ToString(control_id));
         }
     }
 }
@@ -819,7 +784,7 @@ int main(int argc,char ** argv)
     int qic_ret = QicSetDeviceHandle(g_fd);
     if(qic_ret)
     {
-        printf("QicSetDeviceHandle failed, ret=%d\n", qic_ret);
+        printf("QicSetDeviceHandle fails, ret=%d\n", qic_ret);
         exit(EXIT_FAILURE);
     }
 
@@ -838,8 +803,9 @@ int main(int argc,char ** argv)
                 printf("Control %s get ok, is:%lld auto. \n\n", ToString(control_id), control_value);
             else
                 printf("Control %s get ok, is:%lld. \n\n", ToString(control_id), control_value);
-        }else{
-            printf("Control %s get failed. \n\n", ToString(control_id));
+        }
+        else{
+            printf("Control %s get fails. \n\n", ToString(control_id));
         }
         break;
 
@@ -848,7 +814,7 @@ int main(int argc,char ** argv)
         {
             printf("Control %s set ok. \n\n", ToString(control_id));
         }else{
-            printf("Control %s set failed. \n\n", ToString(control_id));
+            printf("Control %s set fails. \n\n", ToString(control_id));
         }
         break;
 

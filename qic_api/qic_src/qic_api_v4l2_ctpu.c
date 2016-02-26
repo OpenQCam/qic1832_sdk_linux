@@ -17,7 +17,8 @@ extern int config_is_commit;
 extern qic_module *dev_pt;
 // End of common part
 
-int qic_V4L2_Control(int fd,unsigned long cmd,int Get,signed long *value,signed long invalue)
+int qic_V4L2_Control(int fd, unsigned long cmd, int Get,
+                     signed long *value, signed long invalue)
 {
     struct v4l2_queryctrl queryctrl;
     struct v4l2_control control;
@@ -53,15 +54,15 @@ int qic_V4L2_Control(int fd,unsigned long cmd,int Get,signed long *value,signed 
     }
 
     if (-1 == ioctl (fd, VIDIOC_QUERYCTRL, &queryctrl)) {
-        LOG_PRINT(debug_str, DEBUG_ERROR, " %u is not supported\n",  queryctrl.id);
+        LOG_PRINT(debug_str, DEBUG_ERROR, "%u is not supported\n", queryctrl.id);
         return 1;
     }
     else if (queryctrl.flags & V4L2_CTRL_FLAG_DISABLED) {
-        LOG_PRINT(debug_str, DEBUG_ERROR, " %u is not supported\n",  queryctrl.id);
+        LOG_PRINT(debug_str, DEBUG_ERROR, "%u is not supported\n", queryctrl.id);
         return 1;
     }
     else {
-        LOG_PRINT(debug_str,DEBUG_INFO, "%s is supported, %u\n", queryctrl.name,queryctrl.id);
+        LOG_PRINT(debug_str, DEBUG_INFO, "%s is supported, %u\n", queryctrl.name, queryctrl.id);
     }
 
     memset (&control, 0, sizeof (control));
@@ -74,17 +75,17 @@ int qic_V4L2_Control(int fd,unsigned long cmd,int Get,signed long *value,signed 
     else {
         control.value=invalue;
         if(0 == xioctl(fd, VIDIOC_S_CTRL, &control)) {
-            LOG_PRINT(debug_str,DEBUG_INFO, "%s set success ,value=%u\n", queryctrl.name,control.value );
+            LOG_PRINT(debug_str, DEBUG_INFO, "%s set success, value=%u\n", queryctrl.name, control.value);
         }
         else{
-            LOG_PRINT(debug_str, DEBUG_ERROR, " %s set fail,value=%u\n",  queryctrl.name,control.value );
+            LOG_PRINT(debug_str, DEBUG_ERROR, "%s set fail, value=%u\n",  queryctrl.name, control.value);
             return 1;
         }
     }
     return 0;
 }
 
-int qic_change_V4L2_FOCUS_ABSOLUTE(unsigned int dev_id, unsigned int Auto,signed long  ABSOLUTE)
+int qic_change_V4L2_FOCUS_ABSOLUTE(unsigned int dev_id, unsigned int Auto, signed long absolute)
 {
     unsigned int index;
     int ret=0;
@@ -100,11 +101,11 @@ int qic_change_V4L2_FOCUS_ABSOLUTE(unsigned int dev_id, unsigned int Auto,signed
     for (index = 0; index < dev_pt->num_devices; index++) {
         if (dev_pt->cam[index].dev_id & dev_id) {
             if(Auto)
-                ret= qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_FOCUS_AUTO,0,0,ABSOLUTE);
+                ret= qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_FOCUS_AUTO,0,0,absolute);
             else
             {
                 ret= qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_FOCUS_AUTO,0,0,0);
-                ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_FOCUS_ABSOLUTE,0, 0,ABSOLUTE);
+                ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_FOCUS_ABSOLUTE,0, 0,absolute);
             }
 #ifdef DEBUG_LOG
             /*TIME_DELAY(1);*/
@@ -436,7 +437,7 @@ int qic_change_V4L2_POWER_LINE_FREQUENCY(unsigned int dev_id, signed long PLF)
     return ret;
 }
 
-int qic_change_V4L2_EXPOSURE(unsigned int dev_id, unsigned int Auto, signed long ABSOLUTE)
+int qic_change_V4L2_EXPOSURE(unsigned int dev_id, unsigned int Auto, signed long absolute_or_mode)
 {
     unsigned int index;
     int ret=0;
@@ -453,11 +454,11 @@ int qic_change_V4L2_EXPOSURE(unsigned int dev_id, unsigned int Auto, signed long
         if (dev_pt->cam[index].dev_id & dev_id) {
 
             if(Auto)
-                ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_EXPOSURE_AUTO,0,0,ABSOLUTE);
+                ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_EXPOSURE_AUTO,0,0,absolute_or_mode);// note: 1:manual, 3:auto
             else
             {
                 ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_EXPOSURE_AUTO,0,0,1);
-                ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_EXPOSURE_ABSOLUTE,0,0,ABSOLUTE);
+                ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_EXPOSURE_ABSOLUTE,0,0,absolute_or_mode);
             }
 #ifdef DEBUG_LOG
             /*TIME_DELAY(1);*/
@@ -475,7 +476,7 @@ int qic_change_V4L2_EXPOSURE(unsigned int dev_id, unsigned int Auto, signed long
     return ret;
 }
 
-int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long PRIORITY)
+int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long priority)
 {
     unsigned int index;
     int ret=0;
@@ -489,7 +490,7 @@ int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long PRIO
     /* device array loop */
     for (index = 0; index < dev_pt->num_devices; index++) {
         if (dev_pt->cam[index].dev_id & dev_id) {
-            ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_EXPOSURE_AUTO_PRIORITY,0,0,PRIORITY);
+            ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_EXPOSURE_AUTO_PRIORITY,0,0,priority);
 #ifdef DEBUG_LOG
             /*TIME_DELAY(1);*/
             signed long value=0;
@@ -502,7 +503,7 @@ int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long PRIO
     return ret;
 }
 
-int qic_change_V4L2_ZOOM_ABSOLUTE(unsigned int dev_id, signed long ABSOLUTE)
+int qic_change_V4L2_ZOOM_ABSOLUTE(unsigned int dev_id, signed long absolute)
 {
     unsigned int index;
     int ret=0;
@@ -517,7 +518,7 @@ int qic_change_V4L2_ZOOM_ABSOLUTE(unsigned int dev_id, signed long ABSOLUTE)
     /* device array loop */
     for (index = 0; index < dev_pt->num_devices; index++) {
         if (dev_pt->cam[index].dev_id & dev_id) {
-            ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_ZOOM_ABSOLUTE,0,0,ABSOLUTE);
+            ret=qic_V4L2_Control(dev_pt->cam[index].fd,V4L2_CID_ZOOM_ABSOLUTE,0,0,absolute);
 #ifdef DEBUG_LOG
             /*TIME_DELAY(1);*/
             signed long value=0;

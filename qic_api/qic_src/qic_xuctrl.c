@@ -2931,7 +2931,7 @@ int QicGetAdvMotorPosition(MotorPosition_t *postion)
 /*******************************************************************
 QIC Utility XU5: Set IR Control
 *******************************************************************/
-int QicSetIRControl(unsigned char mode)
+int QicSetIR(unsigned char als_mode_and_ir_status)
 {
     /*
 //IR ALS Mode
@@ -2946,7 +2946,7 @@ typedef enum {
 
     buf[0] = C5_IR_CONTROL;
     buf[1] = C5_IR_SET_STATUS;
-    buf[2] = mode;
+    buf[2] = als_mode_and_ir_status;
 
     ret = QicXuSet(XU_TEST_CONTROL, buf, XU_TEST_SIZE_DEF);
     if(ret) {
@@ -2961,7 +2961,7 @@ typedef enum {
 /*******************************************************************
 QIC Utility XU5: Get IR control Current Status
 *******************************************************************/
-int QicGetIRStatus(unsigned char *ir_status, unsigned char *ALS_status)
+int QicGetIR(unsigned char *als_mode_and_ir_status)
 {
     unsigned char buf[XU_MAX_SIZE];
     int ret;
@@ -2983,8 +2983,7 @@ int QicGetIRStatus(unsigned char *ir_status, unsigned char *ALS_status)
         LOG_RET_PRINT(debug_xuctrl_str, "Get IR status Success");
     }
 
-    *ir_status = buf[2]&0x01;
-    *ALS_status = (buf[2]>>1)&0x01;
+    *als_mode_and_ir_status = buf[2];
 
     return ret;
 }
@@ -3740,7 +3739,8 @@ int QicSetWUSBDisableAutoSwitch(void)
 /*******************************************************************/
 /*XU control 6: AVC Advance Controls*/
 /*AVC Image Mirror Control setting*/
-/* setting 1/0 to on/off*/
+/*Bit 0 : Preview image mirror*/
+/*Bit 1 : Encoded image mirror*/
 /*******************************************************************/
 int QicSetMirror(unsigned char mirror)
 {
@@ -3753,9 +3753,9 @@ int QicSetMirror(unsigned char mirror)
 
     ret = QicXuSet(XU_AVC_ADVANCE_CONTROL, buf,XU_AVC_ADVANCE_SIZE_DEF);
     if(ret) {
-        LOG_RET_PRINT(debug_xuctrl_str, "Set mirror Status Error, (%d)%s", errno, strerror(errno));
+        LOG_RET_PRINT(debug_xuctrl_str, "Set Mirror Status Error, (%d)%s", errno, strerror(errno));
     } else {
-        LOG_RET_PRINT(debug_xuctrl_str, "Set mirror Status Success");
+        LOG_RET_PRINT(debug_xuctrl_str, "Set Mirror Status Success");
     }
     return ret;
 }
@@ -3776,18 +3776,18 @@ int QicGetMirror(unsigned char *mirror)
     buf[0] = QIC_XU6_MIRROR_CONTROL; // GET Command
     buf[1] = QIC_XU6_MIRROR_GET_STATUS;
 
-    ret = QicXuSet(XU_AVC_ADVANCE_CONTROL, buf,XU_AVC_ADVANCE_SIZE_DEF);
+    ret = QicXuSet(XU_AVC_ADVANCE_CONTROL, buf, XU_AVC_ADVANCE_SIZE_DEF);
     if(ret) {
-        LOG_RET_PRINT(debug_xuctrl_str, "Set mirror Status Error, (%d)%s", errno, strerror(errno));
+        LOG_RET_PRINT(debug_xuctrl_str, "Set Mirror Status Error, (%d)%s", errno, strerror(errno));
     } else {
-        LOG_RET_PRINT(debug_xuctrl_str, "Set mirror Status Success");
+        LOG_RET_PRINT(debug_xuctrl_str, "Set Mirror Status Success");
     }
 
     ret = QicXuGet(XU_AVC_ADVANCE_CONTROL, buf, XU_AVC_ADVANCE_SIZE_DEF);
     if(ret) {
-        LOG_RET_PRINT(debug_xuctrl_str, "Get mirror Status Error, (%d)%s", errno, strerror(errno));
+        LOG_RET_PRINT(debug_xuctrl_str, "Get Mirror Status Error, (%d)%s", errno, strerror(errno));
     } else {
-        LOG_RET_PRINT(debug_xuctrl_str, "Get mirror Status Success");
+        LOG_RET_PRINT(debug_xuctrl_str, "Get Mirror Status Success");
     }
 
     *mirror = buf[2];
