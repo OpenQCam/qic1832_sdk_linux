@@ -29,6 +29,25 @@
 #include <dmalloc.h>
 #endif
 
+/*
+// Developing
+typedef struct{
+    signed int max;
+    signed int min;
+    signed int def;
+    signed int cur;
+}api_param_attr;
+
+typedef struct {
+    api_param_attr api_obj[50];
+}api_list;
+
+int ShowApiParameterRange(int api_id, api_param_attr* api_);
+*/
+
+int GetControlMmio(int id, unsigned int mmio_addr, unsigned int *mmio_value);
+int SetControlMmio(int id, unsigned int mmio_addr, unsigned int mmio_value);
+
 ////////////////////////////////////////////////
 ///
 /// Controls
@@ -70,10 +89,11 @@ typedef enum tagControls
     Ctrl_XU_ALS,
     Ctrl_PU_PowerLineFrequency,
     Ctrl_PU_Mirror,
-    Ctrl_PU_Flip
+    Ctrl_PU_Flip,
+    Ctrl_XU_MMIO
 }Controls;
 
-#define NYI printf("%s: id %d is not yet implemented.\n", __FUNCTION__, id)
+#define NYI printf("%s: id %d is not implemented yet.\n", __FUNCTION__, id)
 
 static int g_fd;
 
@@ -117,6 +137,7 @@ char* ToString(Controls ctrl)
     case Ctrl_PU_PowerLineFrequency:	pName = "PowerLineFrequency"; break;
     case Ctrl_PU_Mirror:				pName = "Mirror"; break;
     case Ctrl_PU_Flip:					pName = "Flip"; break;
+    case Ctrl_XU_MMIO:                  pName = "MMIO"; break;
     default:							pName = "UNKNOWN"; break;
     }
 
@@ -360,6 +381,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
 
     *val = 0;
     *bAuto = 0;
+
     switch(id){
     case Ctrl_CT_Pan:
         qic_ret = QicGetPanTilt(&pan, &tilt);
@@ -572,6 +594,48 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
     }
 }
 
+int SetControlMmio(int id, unsigned int mmio_addr, unsigned int mmio_value)
+{
+    int qic_ret;
+
+    switch(id)
+    {
+    case Ctrl_XU_MMIO:
+        printf("MMIO Set, addr=0x%x, value=0x%x\n", mmio_addr, mmio_value);
+        qic_ret = QicMmioWrite(mmio_addr, mmio_value);
+        if(qic_ret){
+            return qic_ret;
+        }
+        return 0;
+
+    default:
+        return -1;
+    }
+}
+
+int GetControlMmio(int id, unsigned int mmio_addr, unsigned int *mmio_value)
+{
+    int qic_ret;
+
+    *mmio_value = 0;
+
+    switch(id){
+    case Ctrl_XU_MMIO:
+    {
+        printf("before MMIO Get, addr=0x%x, value=0x%x\n", mmio_addr, *mmio_value);
+        qic_ret = QicMmioRead(mmio_addr, mmio_value);
+        printf("MMIO Get, addr=0x%x, value=0x%x\n", mmio_addr, *mmio_value);
+        if(qic_ret){
+            return -1;
+        }
+        return 0;
+    }
+
+    default:
+        return -1;
+    }
+}
+
 void ListControls(void)
 {
     static const Controls suppported_control_list[] = {
@@ -610,6 +674,7 @@ void ListControls(void)
         Ctrl_PU_PowerLineFrequency,
         Ctrl_PU_Mirror,
         Ctrl_PU_Flip,
+        Ctrl_XU_MMIO
     };
 
     int control_id;
@@ -642,7 +707,9 @@ enum cmd_t{
     CMD_SET,
     CMD_GET,
     CMD_LIST,
-    CMD_RESET
+    CMD_RESET,
+    CMD_MMIO_SET,
+    CMD_MMIO_GET
 };
 
 static void usage(FILE * fp, int argc, char **argv)
@@ -697,6 +764,8 @@ int main(int argc,char ** argv)
     int control_id = 0;
     __uint64_t control_value;
     signed long control_value_auto = -1;
+    unsigned int mmio_addr = 0;
+    unsigned int mmio_value = 0;
     enum cmd_t command = CMD_LIST;
 
     for (;;)
@@ -726,25 +795,46 @@ int main(int argc,char ** argv)
             }
             control_id = atoi(tmp);
 
-            /* get val */
-            tmp = strtok(NULL, " ");
-            if(tmp == NULL){
-                printf("Invalid arguments %s\n", optarg);
-            }
-            control_value = atoll(tmp);
+            if(control_id==Ctrl_XU_MMIO){// cmd example: -s '35 0x20020200 0x2'
+                // Get addr
+                tmp = strtok(NULL, " ");
+                if(tmp == NULL){
+                    printf("Invalid arguments %s\n", optarg);
+                }
+                mmio_addr = myatoi(tmp);
 
-            /* get auto/manual flag */
-            tmp = strtok(NULL, " ");
-            if(tmp != NULL){
-                if(strncmp("auto", tmp, 4) == 0)
-                    control_value_auto = 1;
-                else
-                    control_value_auto = 0;
-            }else{
-                control_value_auto = -1;
+                // Get value
+                tmp = strtok(NULL, " ");
+                if(tmp == NULL){
+                    printf("Invalid arguments %s\n", optarg);
+                }
+                mmio_value = myatoi(tmp);
+
+                command = CMD_MMIO_SET;
+            }
+            else{
+                /* get val */
+                tmp = strtok(NULL, " ");
+                if(tmp == NULL){
+                    printf("Invalid arguments %s\n", optarg);
+                }
+                control_value = atoll(tmp);
+
+                /* get auto/manual flag */
+                tmp = strtok(NULL, " ");
+                if(tmp != NULL){
+                    if(strncmp("auto", tmp, 4) == 0)
+                        control_value_auto = 1;
+                    else
+                        control_value_auto = 0;
+                }
+                else{
+                    control_value_auto = -1;
+                }
+
+                command = CMD_SET;
             }
 
-            command = CMD_SET;
             break;
 
         case 'g':
@@ -753,7 +843,22 @@ int main(int argc,char ** argv)
                 printf("Invalid arguments %s\n", optarg);
             }
             control_id = atoi(tmp);
-            command = CMD_GET;
+
+            if(control_id==Ctrl_XU_MMIO){// cmd example: -g '35 0x20020200'
+                // Get addr
+                tmp = strtok(NULL, " ");
+                if(tmp == NULL){
+                    printf("Invalid arguments %s\n", optarg);
+                }
+                mmio_addr = myatoi(tmp);
+
+                command = CMD_MMIO_GET;
+            }
+            else{
+                // No input
+
+                command = CMD_GET;
+            }
             break;
 
         case 'l':
@@ -792,16 +897,28 @@ int main(int argc,char ** argv)
     my_qic->debug_print = &debug_log;
 
     // 3. Based on command to execute command
-    printf("\n\n================= \n\nDevice name: %s.\n\n", dev_name);
+    printf("================= \nDevice name: %s.\n\n", dev_name);
     switch(command)
     {
     case CMD_GET:
         if(!GetControl(control_id, &control_value, &control_value_auto))
         {
-            if(control_value_auto)
+            if(control_value_auto){
                 printf("Control %s get ok, is:%lld auto. \n\n", ToString(control_id), control_value);
-            else
+            }
+            else{
                 printf("Control %s get ok, is:%lld. \n\n", ToString(control_id), control_value);
+            }
+        }
+        else{
+            printf("Control %s get fails. \n\n", ToString(control_id));
+        }
+        break;
+
+    case CMD_MMIO_GET:
+        if(!GetControlMmio(control_id, mmio_addr, &mmio_value))
+        {
+            printf("Control %s get ok \n\n", ToString(control_id));
         }
         else{
             printf("Control %s get fails. \n\n", ToString(control_id));
@@ -812,7 +929,18 @@ int main(int argc,char ** argv)
         if(!SetControl(control_id, control_value, control_value_auto))
         {
             printf("Control %s set ok. \n\n", ToString(control_id));
-        }else{
+        }
+        else{
+            printf("Control %s set fails. \n\n", ToString(control_id));
+        }
+        break;
+
+    case CMD_MMIO_SET:
+        if(!SetControlMmio(control_id, mmio_addr, mmio_value))
+        {
+            printf("Control %s set ok. \n\n", ToString(control_id));
+        }
+        else{
             printf("Control %s set fails. \n\n", ToString(control_id));
         }
         break;

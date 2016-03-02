@@ -947,21 +947,21 @@ int QicSetDeviceHandle (int vd)
         // read FW & SVN version
         ret = QicGetFirmwareVersion (&fw_version);
         if(ret) {
-            LOG_RET_PRINT(str_t, "\nGet Firmware Version Error, (%d)%s", errno, strerror(errno));
+            LOG_RET_PRINT(str_t, "Get Firmware Version Error, (%d)%s", errno, strerror(errno));
             strcat(str, str_t);
         }
         else {
-            LOG_RET_PRINT(str_t, "\nVID : %s, PID : %s, REV : %s", fw_version.szVID, fw_version.szPID, fw_version.szREV);
+            LOG_RET_PRINT(str_t, "VID : %s, PID : %s, REV : %s", fw_version.szVID, fw_version.szPID, fw_version.szREV);
             strcat(str, str_t);
         }
 
         ret = QicGetSvnVersion (&svn_version);
         if(ret) {
-            LOG_RET_PRINT(str_t, "\nGet SVN Version Error, (%d)%s", errno, strerror(errno));
+            LOG_RET_PRINT(str_t, "Get SVN Version Error, (%d)%s", errno, strerror(errno));
             strcat(str, str_t);
         }
         else {
-            LOG_RET_PRINT(str_t, "\nSVN : %d", svn_version);
+            LOG_RET_PRINT(str_t, "SVN : %d", svn_version);
             strcat(str, str_t);
         }
 

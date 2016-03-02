@@ -13,6 +13,8 @@
 
 char * mem_usage_info(void);
 
+unsigned int myatoi(char *str);
+
 //TODO: Add mp4 record here
 
 #endif

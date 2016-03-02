@@ -12,6 +12,9 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <string.h>
+
+#include "../qic_include/qic_utility_for_demo.h"
 
 #ifdef DMALLOC
 #include <dmalloc.h>
@@ -49,5 +52,22 @@ char * mem_usage_info(void)
     return mem_print;
 }
 
+unsigned int myatoi(char *str)
+{
+    char *cstr;
+    char *p = str;
+    unsigned int val;
+    int i = 0;
 
+    if ((*p == '0') && ((*(p+1) == 'x') || (*(p+1) == 'X')))
+    {
+        cstr = p+2;
+        sscanf(cstr, "%x", &val);
+    }
+    else
+    {
+        val = atoi (str);
+    }
 
+    return val;
+}
