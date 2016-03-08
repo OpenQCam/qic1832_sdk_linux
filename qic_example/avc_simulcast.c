@@ -204,7 +204,7 @@ int main(int argc,char ** argv)
         printf("Error!! Not supported video device\n");
         return 1;
     }
-    printf("encdoing video=%s, raw video=%s\n",video_name.dev_avc, video_name.dev_yuv);
+    printf("encoding video=%s, raw video=%s\n",video_name.dev_avc, video_name.dev_yuv);
 
     s_AVCRes[0].width = 1920;
     s_AVCRes[0].height = 1080;

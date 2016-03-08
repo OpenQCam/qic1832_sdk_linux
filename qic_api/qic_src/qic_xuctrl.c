@@ -211,8 +211,12 @@
 #define C5_CHECK_LOCK_STREAM_CONTROL	21
 #define C5_CAPABILITY_LIST_CONTROL	22
 #define C5_LED_BRIGHTNESS_CONTROL   25
+#define C5_MASK_CONTROL             26
 /* for XU control5 - Misc Control */
 #define  C5_FROMAT_DESC			       0
+
+#define C5_MASK_SET_STATUS			0
+#define C5_MASK_GET_STATUS			1
 
 #define C5_LED_SET_STATUS			0
 #define C5_LED_GET_STATUS			1
@@ -2472,6 +2476,102 @@ int QicGetLEDBrightness(unsigned char *brightness)
         LOG_RET_PRINT(debug_xuctrl_str, "Get LED brightness Success");
     }
     *brightness = buf[2];
+
+    return ret;
+}
+
+/*******************************************************************
+QIC Utility : Set Mask Enable
+*******************************************************************/
+int QicSetMask(unsigned char enable)
+{
+    struct uvc_xu_control xctrl;
+    struct uvc_xu_control_query xu_q;
+    unsigned char buf[XU_MAX_SIZE];
+    int ret;
+
+    /*new uvc mapping*/
+    xu_q.query = UVC_SET_CUR;
+    xu_q.unit = QIC_UVC_XU_ID;
+    xu_q.selector = XU_TEST_CONTROL;
+    xu_q.size = XU_TEST_SIZE_DEF;
+    xu_q.data = buf;
+    /*new uvc mapping*/
+
+    xctrl.unit = QIC_UVC_XU_ID;
+    xctrl.selector = XU_TEST_CONTROL;
+    xctrl.size = XU_TEST_SIZE_DEF;
+    xctrl.data = buf;
+
+    buf[0] = C5_MASK_CONTROL;
+    buf[1] = C5_MASK_SET_STATUS;
+    buf[2] = enable;
+
+    /*try new query api first*/
+    ret = ioctl(m_vd, UVCIOC_CTRL_QUERY, &xu_q);
+
+    if(ret)
+        ret = ioctl (m_vd, UVCIOC_CTRL_SET, &xctrl);
+
+    if(ret) {
+        LOG_RET_PRINT(debug_xuctrl_str, "Set LED brightness Error, (%d)%s", errno, strerror(errno));
+    } else {
+        LOG_RET_PRINT(debug_xuctrl_str, "Set LED brightness Success");
+    }
+    return ret;
+}
+
+/*******************************************************************
+QIC Utility : Get Mask Enable
+*******************************************************************/
+int QicGetMask(unsigned char *enable)
+{
+    struct uvc_xu_control xctrl;
+    struct uvc_xu_control_query xu_q;
+    unsigned char buf[XU_MAX_SIZE];
+    int ret;
+
+    /*new uvc mapping*/
+    xu_q.query = UVC_SET_CUR;
+    xu_q.unit = QIC_UVC_XU_ID;
+    xu_q.selector = XU_TEST_CONTROL;
+    xu_q.size = XU_TEST_SIZE_DEF;
+    xu_q.data = buf;
+    /*new uvc mapping*/
+
+    xctrl.unit = QIC_UVC_XU_ID;
+    xctrl.selector = XU_TEST_CONTROL;
+    xctrl.size = XU_TEST_SIZE_DEF;
+    xctrl.data = buf;
+
+    buf[0] = C5_MASK_CONTROL; // GET Command
+    buf[1] = C5_MASK_GET_STATUS;
+
+    /*try new query api first*/
+    ret = ioctl(m_vd, UVCIOC_CTRL_QUERY, &xu_q);
+
+    if(ret)
+        ret = ioctl (m_vd, UVCIOC_CTRL_SET, &xctrl);
+
+    if(ret) {
+        LOG_RET_PRINT(debug_xuctrl_str, "Set LED brightness Error, (%d)%s", errno, strerror(errno));
+    } else {
+        LOG_RET_PRINT(debug_xuctrl_str, "Set LED brightness Success");
+    }
+
+    /* read */
+    /*try new query api first*/
+    xu_q.query = UVC_GET_CUR ;
+    ret = ioctl(m_vd, UVCIOC_CTRL_QUERY, &xu_q);
+    if(ret)
+        ret = ioctl (m_vd, UVCIOC_CTRL_GET, &xctrl);
+
+    if(ret) {
+        LOG_RET_PRINT(debug_xuctrl_str, "Get LED brightness Error, (%d)%s", errno, strerror(errno));
+    } else {
+        LOG_RET_PRINT(debug_xuctrl_str, "Get LED brightness Success");
+    }
+    *enable = buf[2];
 
     return ret;
 }

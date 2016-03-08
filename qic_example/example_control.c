@@ -29,21 +29,12 @@
 #include <dmalloc.h>
 #endif
 
-/*
-// Developing
-typedef struct{
-    signed int max;
-    signed int min;
-    signed int def;
-    signed int cur;
-}api_param_attr;
+#define USE_YUYV   /* define /dev/video0 as device 0(YUYV) */
 
-typedef struct {
-    api_param_attr api_obj[50];
-}api_list;
+sqicV4L2 camerav4l2;
 
-int ShowApiParameterRange(int api_id, api_param_attr* api_);
-*/
+void PrintParamRange(sqicv4l2value target, int id);
+int QueryParamRange(int id);
 
 int GetControlMmio(int id, unsigned int mmio_addr, unsigned int *mmio_value);
 int SetControlMmio(int id, unsigned int mmio_addr, unsigned int mmio_value);
@@ -72,6 +63,9 @@ typedef enum tagControls
     Ctrl_PU_WhiteBalance,
     Ctrl_PU_BacklightComp,
     Ctrl_PU_Gain,
+    Ctrl_PU_PowerLineFrequency,
+    Ctrl_EU_TemporalLayer,
+    Ctrl_EU_SelectLayer,
     Ctrl_EU_CPBSize,
     Ctrl_EU_AverageBitRate,
     Ctrl_EU_RateControlMode,	// probe commit use,
@@ -79,17 +73,14 @@ typedef enum tagControls
     Ctrl_EU_Qp,
     Ctrl_EU_SyncLongTermRefFrame,
     Ctrl_EU_FrameInterval,
-    Ctrl_EU_SelectLayer,
     Ctrl_EU_SupportControl, // read-only
-    Ctrl_EU_TemporalLayer,	// probe commit use
     Ctrl_EU_UsageMode,		// probe commit use
     Ctrl_XU_LTRPictureControl,
     Ctrl_XU_LTRValidationControl,
     Ctrl_XU_IR,
     Ctrl_XU_ALS,
-    Ctrl_PU_PowerLineFrequency,
-    Ctrl_PU_Mirror,
-    Ctrl_PU_Flip,
+    Ctrl_XU_Mirror,
+    Ctrl_XU_Flip,
     Ctrl_XU_MMIO
 }Controls;
 
@@ -119,6 +110,10 @@ char* ToString(Controls ctrl)
     case Ctrl_PU_WhiteBalance:			pName = "WhiteBalance"; break;
     case Ctrl_PU_BacklightComp:			pName = "BacklightComp"; break;
     case Ctrl_PU_Gain:					pName = "Gain"; break;
+    case Ctrl_PU_PowerLineFrequency:	pName = "PowerLineFrequency"; break;
+
+    case Ctrl_EU_TemporalLayer:         pName = "TemporalLayer"; break;
+    case Ctrl_EU_SelectLayer:			pName = "SelectLayer"; break;
     case Ctrl_EU_CPBSize:				pName = "CPBSize"; break;
     case Ctrl_EU_AverageBitRate:		pName = "AverageBitRate"; break;
     case Ctrl_EU_RateControlMode:		pName = "RateControlMode"; break;
@@ -126,17 +121,15 @@ char* ToString(Controls ctrl)
     case Ctrl_EU_Qp:					pName = "QuantazationParameter"; break;
     case Ctrl_EU_SyncLongTermRefFrame:	pName = "SyncLongTermRefFrame"; break;
     case Ctrl_EU_FrameInterval:			pName = "FrameInterval"; break;
-    case Ctrl_EU_SelectLayer:			pName = "SelectLayer"; break;
     case Ctrl_EU_SupportControl:        pName = "SupportControl"; break;
-    case Ctrl_EU_TemporalLayer:         pName = "TemporalLayer"; break;
     case Ctrl_EU_UsageMode:             pName = "UsageMode"; break;
+
     case Ctrl_XU_LTRPictureControl:		pName = "LTRPictureControl"; break;
     case Ctrl_XU_LTRValidationControl:	pName = "LTRValidationControl"; break;
     case Ctrl_XU_IR:					pName = "IR"; break;
     case Ctrl_XU_ALS:					pName = "ALS"; break;
-    case Ctrl_PU_PowerLineFrequency:	pName = "PowerLineFrequency"; break;
-    case Ctrl_PU_Mirror:				pName = "Mirror"; break;
-    case Ctrl_PU_Flip:					pName = "Flip"; break;
+    case Ctrl_XU_Mirror:				pName = "Mirror"; break;
+    case Ctrl_XU_Flip:					pName = "Flip"; break;
     case Ctrl_XU_MMIO:                  pName = "MMIO"; break;
     default:							pName = "UNKNOWN"; break;
     }
@@ -270,6 +263,20 @@ int SetControl(int id, __uint64_t val, int bAuto)
     case Ctrl_PU_Gain:
         return qic_V4L2_Control(g_fd, V4L2_CID_GAIN, 0, 0, val);
 
+    case Ctrl_EU_TemporalLayer:
+        qic_ret = QicEuExSetTsvc((unsigned char)val);
+        if(qic_ret){
+            return -1;
+        }
+        return 0;
+
+    case Ctrl_EU_SelectLayer:
+        qic_ret = QicEuSetSelectLayer((unsigned short)val);
+        if(qic_ret){
+            return -1;
+        }
+        return 0;
+
     case Ctrl_EU_CPBSize:
         qic_ret = QicEuSetCpbSizeControl((unsigned int)val);
         if(qic_ret){
@@ -319,23 +326,9 @@ int SetControl(int id, __uint64_t val, int bAuto)
         }
         return 0;
 
-    case Ctrl_EU_SelectLayer:
-        qic_ret = QicEuSetSelectLayer((unsigned short)val);
-        if(qic_ret){
-            return -1;
-        }
-        return 0;
-
     case Ctrl_EU_SupportControl:
         NYI;
         return -1;
-
-    case Ctrl_EU_TemporalLayer:
-        qic_ret = QicEuExSetTsvc((unsigned char)val);
-        if(qic_ret){
-            return -1;
-        }
-        return 0;
 
     case Ctrl_EU_UsageMode:
         NYI;
@@ -356,14 +349,14 @@ int SetControl(int id, __uint64_t val, int bAuto)
     case Ctrl_PU_PowerLineFrequency:
         return qic_V4L2_Control(g_fd, V4L2_CID_POWER_LINE_FREQUENCY, 0, 0,val);
 
-    case Ctrl_PU_Mirror:
+    case Ctrl_XU_Mirror:
         qic_ret = QicSetMirror(val);
         if(qic_ret){
             return qic_ret;
         }
         return 0;
 
-    case Ctrl_PU_Flip:
+    case Ctrl_XU_Flip:
         h_flip = val & H_FLIP;
         v_flip = (val & V_FLIP)>>1;
 
@@ -446,6 +439,20 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
     case Ctrl_PU_Gain:
         return qic_V4L2_Control(g_fd, V4L2_CID_GAIN, 1, (signed long*)val, 0);
 
+    case Ctrl_EU_TemporalLayer:
+        qic_ret = QicEuExGetTsvc((unsigned char*)val);
+        if(qic_ret){
+            return -1;
+        }
+        return 0;
+
+    case Ctrl_EU_SelectLayer:
+        qic_ret = QicEuGetSelectLayer((unsigned short*)val);
+        if(qic_ret){
+            return -1;
+        }
+        return 0;
+
     case Ctrl_EU_CPBSize:
         qic_ret = QicEuGetCpbSizeControl((unsigned int*)val);
         if(qic_ret){
@@ -517,23 +524,9 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         }
         return 0;
 
-    case Ctrl_EU_SelectLayer:
-        qic_ret = QicEuGetSelectLayer((unsigned short*)val);
-        if(qic_ret){
-            return -1;
-        }
-        return 0;
-
     case Ctrl_EU_SupportControl:
         NYI;
         return -1;
-
-    case Ctrl_EU_TemporalLayer:
-        qic_ret = QicEuExGetTsvc((unsigned char*)val);
-        if(qic_ret){
-            return -1;
-        }
-        return 0;
 
     case Ctrl_EU_UsageMode:
         NYI;
@@ -569,7 +562,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
     case Ctrl_PU_PowerLineFrequency:
         return qic_V4L2_Control(g_fd, V4L2_CID_POWER_LINE_FREQUENCY, 1, (signed long*)val, 0);
 
-    case Ctrl_PU_Mirror:
+    case Ctrl_XU_Mirror:
     {
         qic_ret = QicGetMirror((unsigned char*)val);
         if(qic_ret){
@@ -578,7 +571,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         return 0;
     }
 
-    case Ctrl_PU_Flip:
+    case Ctrl_XU_Flip:
     {
         qic_ret = QicGetFlipMode(&v_flip, &h_flip);
         if(qic_ret){
@@ -656,6 +649,9 @@ void ListControls(void)
         Ctrl_PU_WhiteBalance,
         Ctrl_PU_BacklightComp,
         Ctrl_PU_Gain,
+        Ctrl_PU_PowerLineFrequency,
+        Ctrl_EU_TemporalLayer,	// probe commit use
+        Ctrl_EU_SelectLayer,
         Ctrl_EU_CPBSize,
         Ctrl_EU_AverageBitRate,
         Ctrl_EU_RateControlMode,	// probe commit use,
@@ -663,17 +659,14 @@ void ListControls(void)
         Ctrl_EU_Qp,
         Ctrl_EU_SyncLongTermRefFrame,
         Ctrl_EU_FrameInterval,
-        Ctrl_EU_SelectLayer,
         Ctrl_EU_SupportControl, // read-only
-        Ctrl_EU_TemporalLayer,	// probe commit use
         Ctrl_EU_UsageMode,		// probe commit use
         Ctrl_XU_LTRPictureControl,
         Ctrl_XU_LTRValidationControl,
         Ctrl_XU_IR,
         Ctrl_XU_ALS,
-        Ctrl_PU_PowerLineFrequency,
-        Ctrl_PU_Mirror,
-        Ctrl_PU_Flip,
+        Ctrl_XU_Mirror,
+        Ctrl_XU_Flip,
         Ctrl_XU_MMIO
     };
 
@@ -695,6 +688,7 @@ void ListControls(void)
         else{
             printf("id: %d, %s, get fails. \n\n", control_id, ToString(control_id));
         }
+
     }
 }
 
@@ -707,6 +701,7 @@ enum cmd_t{
     CMD_SET,
     CMD_GET,
     CMD_LIST,
+    CMD_QUERY_PARAM_RANGE,
     CMD_RESET,
     CMD_MMIO_SET,
     CMD_MMIO_GET
@@ -721,6 +716,7 @@ static void usage(FILE * fp, int argc, char **argv)
             "-s | --set-control 'id val [auto/manual]'  Set current control to val, if there's option auto/manuel, 1:auto, 0:manual.\n"
             "-g | --get-control id                      Get current control value. \n"
             "-l | --list-controls                       List all supported controls. \n"
+            "-q | --query-parameter-range id            Query the parameter range \n"
             "-r | --reset                               reset QIC1832. \n"
             "-h | --help                                Show this menu. \n"
             "\n"
@@ -733,7 +729,7 @@ static void usage(FILE * fp, int argc, char **argv)
             argv[0]);
 }
 
-static const char short_options [] = "d:s:g:lrh";
+static const char short_options [] = "d:s:g:q:lrh";
 
 static const struct option long_options [] =
 {
@@ -741,13 +737,14 @@ static const struct option long_options [] =
     { "set-control",    required_argument,	NULL,	's' },
     { "get-control",    required_argument,	NULL,	'g' },
     { "list-controls",  no_argument,        NULL,	'l' },
+    { "query param range", required_argument,	NULL,	'q' },
     { "reset",          no_argument,        NULL,	'r' },
     { "help",           no_argument,		NULL,	'h' },
     { 0, 0, 0, 0 }
 };
 
 static void debug_log(int level, char *string) {
-    printf("QIC debug_print:%s", string);
+    //printf("QIC debug_print:%s", string);
 }
 
 int main(int argc,char ** argv)
@@ -767,6 +764,21 @@ int main(int argc,char ** argv)
     unsigned int mmio_addr = 0;
     unsigned int mmio_value = 0;
     enum cmd_t command = CMD_LIST;
+    qic_dev_name_s video_name;
+    int ret = 0;
+    unsigned short avc_width = 1280;
+    unsigned short avc_height = 720;
+    unsigned short yuv_width = 320;
+    unsigned short yuv_height = 240;
+    //unsigned short mjpeg_width = 320;
+    //unsigned short mjpeg_height = 240;
+    unsigned char u_framerate = 30;
+    unsigned int u_bitrate = 5000000;
+    unsigned char raw_dump = 0, demux=0;
+    qic_module *my_qic = NULL;
+    unsigned int u_frame_interval = 333333;  //frame rate interval, unit:100nS ->0.1uS
+    unsigned short u_key_frame_interval = 0; //mS gop interval
+    int dev_id = DEV_ID_0;
 
     for (;;)
     {
@@ -865,6 +877,16 @@ int main(int argc,char ** argv)
             command = CMD_LIST;
             break;
 
+        case 'q':
+            tmp = strtok(optarg, " ");
+            if(tmp == NULL){
+                printf("Invalid arguments %s\n", optarg);
+            }
+            control_id = atoi(tmp);
+
+            command = CMD_QUERY_PARAM_RANGE;
+            break;
+
         case 'r':
             command = CMD_RESET;
             break;
@@ -892,9 +914,89 @@ int main(int argc,char ** argv)
         exit(EXIT_FAILURE);
     }
 
-    /* fix bug: segmentation fault in sdk, caused bby debug function is not set */
-    qic_module* my_qic = qic_initialize(1);
+    memset(&video_name,0, sizeof(video_name));
+    ret=qic_enum_device_formats(&video_name);
+    if(ret){
+        printf("Not supported camera!\n");
+        return -1;
+    }
+    printf("\nQIC1822 encoding video=%s, raw video=%s\n", video_name.dev_avc, video_name.dev_yuv);
+
+    // init 2 video, ref from two_way.c
+    my_qic = qic_initialize(2);
+
+    if (my_qic == NULL) {
+        printf("qic_initialize error\n");
+        return 1;
+    }
+
+    /* call back functions */
     my_qic->debug_print = &debug_log;
+
+    /*  set scheduler */
+    my_qic->high_prio = 0;
+
+    /* set debug level */
+    my_qic->debug_msg_type = DEBUG_ERROR  + DEBUG_INFO;
+
+#ifdef USE_MJPEG
+    /* set /dev/video0 as device 0(MJPEG) */
+    if(strlen(video_name.dev_yuv)>0)
+        my_qic->cam[0].dev_name = video_name.dev_yuv;
+    else
+        my_qic->cam[0].dev_name = "/dev/video0";
+    my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG;
+    my_qic->cam[0].width = mjpeg_width;
+    my_qic->cam[0].height = mjpeg_height;
+    my_qic->cam[0].is_bind = 0; /* 2-way output from single QIC module */
+    my_qic->cam[0].framerate= u_framerate;
+    my_qic->cam[0].num_mmap_buffer = 6;
+#endif
+#ifdef USE_YUYV
+    /* set /dev/video0 as device 0(YUV) */
+    if(strlen(video_name.dev_yuv)>0)
+        my_qic->cam[0].dev_name =video_name.dev_yuv;
+    else
+        my_qic->cam[0].dev_name = "/dev/video0";
+
+    my_qic->cam[0].format = V4L2_PIX_FMT_YUYV;
+    my_qic->cam[0].width = yuv_width;
+    my_qic->cam[0].height = yuv_height;
+    my_qic->cam[0].is_bind = 0; /* 2-way output from single QIC module */
+    my_qic->cam[0].framerate= u_framerate;
+    my_qic->cam[0].num_mmap_buffer = 6;
+    if(demux){
+        my_qic->cam[0].is_demux =1;  //Enable YUYV bad frame check
+    }
+#endif
+
+    /*set /dev/video1 as device 1 (H.264/AVC) */
+    if(strlen(video_name.dev_avc)>0)
+        my_qic->cam[1].dev_name = video_name.dev_avc;
+    else
+        my_qic->cam[1].dev_name ="/dev/video1";
+    my_qic->cam[1].format = V4L2_PIX_FMT_MJPEG;
+    my_qic->cam[1].bitrate = u_bitrate;
+    my_qic->cam[1].width = avc_width;
+    my_qic->cam[1].height = avc_height;
+    my_qic->cam[1].framerate = u_framerate;
+    my_qic->cam[1].codec_type=CODEC_H264;
+    my_qic->cam[1].is_encoding_video=1;
+    my_qic->cam[1].key_frame_interval=u_key_frame_interval;
+    my_qic->cam[1].frame_interval=u_frame_interval;
+    if(demux){
+        my_qic->cam[1].is_demux =1;  //Enable Encoding stream bad frame check
+    }
+
+    if (raw_dump)
+        my_qic->cam[1].raw_dump = &ts_dump; /*raw dump*/
+
+    /* commit and init the video dev */
+    ret = qic_config_commit();
+    if (ret) {
+        printf("qic_config_commit error\n");
+        return 1;
+    }
 
     // 3. Based on command to execute command
     printf("================= \nDevice name: %s.\n\n", dev_name);
@@ -949,6 +1051,28 @@ int main(int argc,char ** argv)
         ListControls();
         break;
 
+    case CMD_QUERY_PARAM_RANGE:
+        switch(device_index)
+        {
+            case 0:
+                dev_id = DEV_ID_0;
+                break;
+            case 1:
+                dev_id = DEV_ID_1;
+                break;
+            case 2:
+                dev_id = DEV_ID_2;
+                break;
+        }
+        ret = qic_get_ctpu_setting(dev_id, &camerav4l2);
+        if(ret==0){
+            QueryParamRange(control_id);
+        }
+        else{
+            printf("Error! Can't get the parameter range from video%d.\n", device_index);
+        }
+        break;
+
     case CMD_RESET:
         printf("QIC Device reset \n");
         QicReset();
@@ -959,4 +1083,180 @@ int main(int argc,char ** argv)
     if(g_fd) close(g_fd);
 
     return 0;
+}
+
+void PrintParamRange(sqicv4l2value target, int id)
+{
+    printf("-min=%d\n-max=%d\n-def=%d\n-cur=%d\n",target.min, target.max, target.def, target.now);
+}
+
+int QueryParamRange(int id)
+{
+    int error = 0;
+
+    printf("---------------\n");
+    printf("-id:%d(%s control):\n", id, ToString(id));
+
+    switch(id)
+    {
+    case Ctrl_CT_Pan:
+        PrintParamRange(camerav4l2.Pan, id);
+        break;
+
+    case Ctrl_CT_Tilt:
+        PrintParamRange(camerav4l2.Tilt, id);
+        return 0;
+
+    case Ctrl_CT_Roll:
+        printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
+        error = 1;
+        break;
+
+    case Ctrl_CT_Zoom:
+        PrintParamRange(camerav4l2.Zoom, id);
+        break;
+
+    case Ctrl_CT_Iris:
+        printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
+        error = 1;
+        break;
+
+    case Ctrl_CT_Focus:
+        PrintParamRange(camerav4l2.Focus, id);
+        break;
+
+    case Ctrl_CT_Exposure:
+        PrintParamRange(camerav4l2.Exposure, id);
+        break;
+
+    case Ctrl_PU_Brightness:
+        PrintParamRange(camerav4l2.Brightness, id);
+        break;
+
+    case Ctrl_PU_Contrast:
+        PrintParamRange(camerav4l2.Contrast, id);
+        break;
+
+    case Ctrl_PU_Hue:
+        PrintParamRange(camerav4l2.Hue, id);
+        break;
+
+    case Ctrl_PU_Saturation:
+        PrintParamRange(camerav4l2.Saturation, id);
+        break;
+
+    case Ctrl_PU_Sharpness:
+        PrintParamRange(camerav4l2.Sharpness, id);
+        break;
+
+    case Ctrl_PU_Gamma:
+        PrintParamRange(camerav4l2.Gamma, id);
+        break;
+
+    case Ctrl_PU_ColorEnable:
+        printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
+        error = 1;
+        break;
+
+    case Ctrl_PU_WhiteBalance:
+        PrintParamRange(camerav4l2.WB, id);
+        break;
+
+    case Ctrl_PU_BacklightComp:
+        PrintParamRange(camerav4l2.BC, id);
+        break;
+
+    case Ctrl_PU_Gain:
+        PrintParamRange(camerav4l2.Gain, id);
+        break;
+
+    case Ctrl_PU_PowerLineFrequency:
+        PrintParamRange(camerav4l2.Plf, id);
+        break;
+
+    case Ctrl_EU_TemporalLayer:
+        printf("-min=%d\n-max=%d\n", 1, 4);
+        break;
+
+    case Ctrl_EU_SelectLayer:
+        printf("-min=%d\n-max=%d\n", 1, 0xFFFF);
+        break;
+
+    case Ctrl_EU_CPBSize:
+        printf("-min=%d\n-max=%d\n", 10000, 4000000);
+        break;
+
+    case Ctrl_EU_AverageBitRate:
+        printf("-min=%d\n-max=%d\n", 5000, 2000000);
+        break;
+
+    case Ctrl_EU_RateControlMode:
+        printf("-min=%d\n-max=%d\n", 1, 6);
+        break;
+
+    case Ctrl_EU_Resolution:
+        printf("-min=%d\n-max=%d\n", 160 | (120<<16),  1920 | (1080<<16) );
+        break;
+
+    case Ctrl_EU_Qp:
+        printf("-min=%llu\n-max=%llu\n", (unsigned long long)(68720590848), (unsigned long long)(545469235200));
+        break;
+
+    case Ctrl_EU_SyncLongTermRefFrame:
+        printf("-min=%d\n-max=%d\n", 0, 0x8 | (0xFFFF<8) | (6<<24) );
+        break;
+
+    case Ctrl_EU_FrameInterval:
+        printf("-min=%d\n-max=%d\n", 333333, 10000000);
+        break;
+
+    case Ctrl_EU_SupportControl:
+        printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
+        error = 1;
+        break;
+
+    case Ctrl_EU_UsageMode:
+        printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
+        error = 1;
+        break;
+
+    case Ctrl_XU_LTRPictureControl:
+        printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
+        error = 1;
+        break;
+
+    case Ctrl_XU_LTRValidationControl:
+        printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
+        error = 1;
+        break;
+
+    case Ctrl_XU_IR:
+        printf("-min=%d\n-max=%d\n", 0, 3);
+        break;
+
+    case Ctrl_XU_ALS:
+        printf("-min=%d\n-max=%d\n", 0, 1);
+        break;
+
+    case Ctrl_XU_Mirror:
+        printf("-min=%d\n-max=%d\n", 0, 1);
+        break;
+
+    case Ctrl_XU_Flip:
+        printf("-min=%d\n-max=%d\n", 0, 3);
+        break;
+
+    default:
+        printf("Error, Not supported control.\n");
+        error = 1;
+        break;
+    }
+    printf("---------------\n\n");
+
+    if(error){
+        return -1;
+    }
+    else{
+        return 0;
+    }
 }

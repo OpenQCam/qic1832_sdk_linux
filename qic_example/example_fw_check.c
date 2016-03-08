@@ -116,7 +116,7 @@ int main(int argc,char ** argv)
 
     memset(&video_name,0, sizeof(video_name));
     ret=qic_enum_device_formats(&video_name);
-    //	printf("\n QIC1822 encdoing video=%s, raw video=%s\n",video_name.dev_avc, video_name.dev_yuv);
+    //	printf("\n QIC1822 encoding video=%s, raw video=%s\n",video_name.dev_avc, video_name.dev_yuv);
     if(ret){
         printf("\033[1;31m Not supported camera !\033[m\n");
         return 0;

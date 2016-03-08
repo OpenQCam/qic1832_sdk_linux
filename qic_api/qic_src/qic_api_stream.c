@@ -164,7 +164,6 @@ qic_module* qic_initialize(int num_devices)
     my_dev = malloc(sizeof(qic_module));
     cams = calloc(num_devices, sizeof(qic_dev));
 
-
     my_dev->num_devices = num_devices;
     my_dev->cam = cams;
 

@@ -62,6 +62,32 @@ enum  v4l2_exposure_auto_type {
 #define V4L2_CID_ZOOM_ABSOLUTE          (V4L2_CID_CAMERA_CLASS_BASE+13)
 #endif
 
+typedef struct{
+    signed int max;
+    signed int min;
+    signed int def;
+    signed int now;
+}sqicv4l2value;
+
+typedef struct {
+    sqicv4l2value Brightness;
+    sqicv4l2value Contrast;
+    sqicv4l2value Hue;
+    sqicv4l2value BC;
+    sqicv4l2value WB;
+    sqicv4l2value Saturation;
+    sqicv4l2value Focus;
+    sqicv4l2value Sharpness;
+    sqicv4l2value Zoom;
+    sqicv4l2value Gamma;
+    sqicv4l2value Gain;
+    sqicv4l2value Plf;
+    sqicv4l2value E_priority;
+    sqicv4l2value Exposure;
+    sqicv4l2value Pan;
+    sqicv4l2value Tilt;
+}sqicV4L2;
+
 int qic_V4L2_Control(int fd,unsigned long cmd,int Get,signed long *value,signed long invalue);
 int qic_change_V4L2_FOCUS_ABSOLUTE(unsigned int dev_id,  unsigned int Auto,signed long absolute);
 int qic_change_V4L2_BACKLIGHT_COMPENSATION(unsigned int dev_id, signed long BC) ;
@@ -78,5 +104,7 @@ int qic_change_V4L2_POWER_LINE_FREQUENCY(unsigned int dev_id, signed long PLF);
 int qic_change_V4L2_EXPOSURE(unsigned int dev_id, unsigned int Auto, signed long absolute_or_mode);
 int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long priority);
 int qic_change_V4L2_ZOOM_ABSOLUTE(unsigned int dev_id, signed long absolute);
+
+int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2);
 
 #endif
