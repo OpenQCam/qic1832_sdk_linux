@@ -1105,7 +1105,7 @@ int QueryParamRange(int id)
 
     case Ctrl_CT_Tilt:
         PrintParamRange(camerav4l2.Tilt, id);
-        return 0;
+        break;
 
     case Ctrl_CT_Roll:
         printf("-Get the setting of id:%d(%s control) is not supported.\n", id, ToString(id));
