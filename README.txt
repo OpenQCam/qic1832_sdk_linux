@@ -106,7 +106,7 @@ QIC1822A_ISP_LSC_XXX.bin(camera ISP parameter image), and
 QIC1822A_2ndBL.bin(2nd boot rom)(If the firmware supports it).
 
 3. Update firmware version by specified firmware binary files.
-#sudo ./example_fw_update -f ./QIC1822A_USB.bin -i ./QIC1822A_ISP_LSC_XXX.bin
+#sudo ./example_fw_update -f QIC1832_USB_XXX.bin -i QIC1832_ISP_LSC_XXX.bin -o OSD_FONT_8x16.bin
 
 The firmware update completes here.
 And the following steps are the options for checking device/file firmware version.
@@ -115,12 +115,12 @@ And the following steps are the options for checking device/file firmware versio
 #sudo ./example_fw_update -r
 
 5. Check firmware binary file version.
-#sudo ./example_fw_update -R -f ./QIC1822A_USB.bin
+#sudo ./example_fw_update -R -f QIC1832_USB_IX_IJ3B.bin
 
 [Important Note]
-1. If device boots from QIC1822 Boot rom, it's necessary to download QIC1822A_2ndBL.bin(2nd boot rom code) before download QIC1822A_USB.bin(main firmware image)
+1. If device boots from QIC1832 Boot rom, it's necessary to download QIC1832_2ndBL.bin(2nd boot rom code) before download QIC1832_USB_XXX.bin(main firmware image)
 
-2. While the camera flash has QIC1822A_2ndBL.bin(2nd boot rom code), we don't suggest to update it.
-We suggest to update firmware QIC1822A_USB.bin(main firmware image) and QIC1822A_ISP_LSC_XXX.bin(camera sensor tuning vlaue) only as below command.
-#sudo ./example_fw_update -f ./QIC1822A_USB.bin -i ./QIC1822A_ISP_LSC_XXX.bin
+2. While the camera flash has QIC1832_2ndBL.bin(2nd boot rom code), we don't suggest to update it.
+We suggest to update firmware QIC1832_USB_XXX.bin(main firmware image) and QIC1832_ISP_LSC_XXX.bin(camera sensor tuning vlaue) only as below command.
+#sudo ./example_fw_update -f QIC1832_USB_XXX.bin -i QIC1832_ISP_LSC_XXX.bin
 

@@ -615,7 +615,6 @@ int GetControlMmio(int id, unsigned int mmio_addr, unsigned int *mmio_value)
     switch(id){
     case Ctrl_XU_MMIO:
     {
-        printf("before MMIO Get, addr=0x%x, value=0x%x\n", mmio_addr, *mmio_value);
         qic_ret = QicMmioRead(mmio_addr, mmio_value);
         printf("MMIO Get, addr=0x%x, value=0x%x\n", mmio_addr, *mmio_value);
         if(qic_ret){
@@ -674,19 +673,34 @@ void ListControls(void)
     __uint64_t control_value;
     signed long control_value_auto = -1;
     int i;
+    unsigned int mmio_addr = 0x90080044;
+    unsigned int mmio_value;
 
     for(i=0;i<sizeof(suppported_control_list)/sizeof(suppported_control_list[0]);i++)
     {
         control_id = suppported_control_list[i];
-        if(!GetControl(control_id, &control_value, &control_value_auto))
-        {
-            if(control_value_auto)
-                printf("id: %d, %s, current:%lld. auto \n\n", control_id, ToString(control_id), control_value);
-            else
-                printf("id: %d, %s, current:%lld. \n\n", control_id, ToString(control_id), control_value);
+
+        // MMIO:
+        if(control_id==Ctrl_XU_MMIO){
+            if(!GetControlMmio(control_id, mmio_addr, &mmio_value))
+            {
+                printf("id: %d, %s, get success. \n\n", control_id, ToString(control_id));
+            }
+            else{
+                printf("id: %d, %s, get fails. \n\n", control_id, ToString(control_id));
+            }
         }
         else{
-            printf("id: %d, %s, get fails. \n\n", control_id, ToString(control_id));
+            if(!GetControl(control_id, &control_value, &control_value_auto))
+            {
+                if(control_value_auto)
+                    printf("id: %d, %s, current:%lld. auto \n\n", control_id, ToString(control_id), control_value);
+                else
+                    printf("id: %d, %s, current:%lld. \n\n", control_id, ToString(control_id), control_value);
+            }
+            else{
+                printf("id: %d, %s, get fails. \n\n", control_id, ToString(control_id));
+            }
         }
 
     }
@@ -715,16 +729,16 @@ static void usage(FILE * fp, int argc, char **argv)
             "-d | --device <index>                      Device index, default is 0. \n"
             "-s | --set-control 'id val [auto/manual]'  Set current control to val, if there's option auto/manuel, 1:auto, 0:manual.\n"
             "-g | --get-control id                      Get current control value. \n"
-            "-l | --list-controls                       List all supported controls. \n"
+            "-l | --list-controls                       List all controls. \n"
             "-q | --query-parameter-range id            Query the parameter range \n"
             "-r | --reset                               reset QIC1832. \n"
             "-h | --help                                Show this menu. \n"
             "\n"
             "Example\n"
             "    ./example_control                      list all controls\n"
-            "    ./example_control -s \"24 0\"            select stream 0\n"
-            "    ./example_control -s \"20 15728960\"     set resolution to 320x240\n"
-            "    ./example_control -g 20                get current resolution\n"
+            "    ./example_control -s \"19 0\"            select stream 0\n"
+            "    ./example_control -s \"23 15728960\"     set resolution to 320x240\n"
+            "    ./example_control -g 23                get current resolution\n"
             "",
             argv[0]);
 }

@@ -1225,7 +1225,7 @@ int QicFlashErase (void)
         ret = ioctl (m_vd, UVCIOC_CTRL_SET, &xctrl);
 
     if(ret) {
-        LOG_RET_PRINT(debug_xuctrl_str, "Flash Erase Error, (%d)%s", errno, strerror(errno));
+        LOG_RET_PRINT(debug_xuctrl_str, "Flash Erase Error or Timeout, (%d)%s", errno, strerror(errno));
     }
     else {
         LOG_RET_PRINT(debug_xuctrl_str, "Flash Erase Success");
