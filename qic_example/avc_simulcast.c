@@ -206,8 +206,8 @@ int main(int argc,char ** argv)
     }
     printf("encoding video=%s, raw video=%s\n",video_name.dev_avc, video_name.dev_yuv);
 
-    s_AVCRes[0].width = 1920;
-    s_AVCRes[0].height = 1080;
+    s_AVCRes[0].width = 1280;
+    s_AVCRes[0].height = 720;
 
     s_AVCRes[1].width = 640;
     s_AVCRes[1].height = 360;
@@ -335,12 +335,11 @@ int main(int argc,char ** argv)
     /*  set scheduler */
     my_qic->high_prio = 0;
 
-    //    if(video_name.dev_avc>0)
-    if (0){
+    if(video_name.dev_avc>0){
         my_qic->cam[0].dev_name = video_name.dev_avc;
     }
     else{
-        my_qic->cam[0].dev_name ="/dev/video2";
+        my_qic->cam[0].dev_name ="/dev/video1";
     }
     my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG;
     my_qic->cam[0].width = 1280;
@@ -390,14 +389,14 @@ int main(int argc,char ** argv)
     qic_change_bitrate_EU( DEV_ID_0,SIMULCAST_STREAM2,u_bitrate);
     qic_change_frame_interval_EU(DEV_ID_0,SIMULCAST_STREAM2,u_frame_interval);
     qic_generate_key_frame_EU(DEV_ID_0,SIMULCAST_STREAM2,1,u_key_frame_interval, 0);
-    qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM2,LAYER_STOP);
+    qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM2,LAYER_START);
 
     //  qic_set_temporal_layer_number_EU(DEV_ID_0,SIMULCAST_STREAM3,1);
     qic_change_resolution_EU(DEV_ID_0, SIMULCAST_STREAM3,s_AVCRes[3].width, s_AVCRes[3].height);
     qic_change_bitrate_EU( DEV_ID_0,SIMULCAST_STREAM3,u_bitrate);
     qic_change_frame_interval_EU(DEV_ID_0,SIMULCAST_STREAM3,u_frame_interval);
     qic_generate_key_frame_EU(DEV_ID_0,SIMULCAST_STREAM3,1,u_key_frame_interval, 0);
-    qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM3,LAYER_STOP);
+    qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM3,LAYER_START);
 
     /************************************************
  *
