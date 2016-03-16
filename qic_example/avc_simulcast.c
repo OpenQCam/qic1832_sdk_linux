@@ -29,6 +29,9 @@
 
 #define CALC_FPS
 
+// Enable for enable the example for stream recovery
+#define EXAMPLE_CODE_FOR_STREAM_RECOVERY    1
+
 typedef struct
 {
     unsigned short width;
@@ -459,7 +462,169 @@ int main(int argc,char ** argv)
 
         if (0 == r) {
             printf("select timeout\n");
+
+#if EXAMPLE_CODE_FOR_STREAM_RECOVERY
+            // Close stream, re-init, start stream. Refer the code above
+
+            printf("Try to do stream recovery \n");
+
+            // Close
+            /************************************************
+            *
+            * step 6: stop the camera
+            *
+            *************************************************/
+            ret = qic_stop_capture(DEV_ID_0); /* deactivate both video0 & video1 */
+            if (ret) {
+                printf("qic_stop_capture error\n");
+                return 1;
+            }
+            else{
+                printf("qic_stop_capture ok\n");
+            }
+
+            /************************************************
+            *
+            * step 7: release all fd and malloc(s) before exit
+            *
+            *************************************************/
+            ret = qic_release();
+            if (ret) {
+                printf("qic_release error\n");
+                return 1;
+            }
+            else{
+                printf("qic_release ok\n");
+            }
+
+            close_simulcast_files_file();
+            if(templayer_number>1)
+                close_temporal_layer_files();
+
+            printf("Close file ok\n");
+
+            // Re-init
+            /************************************************
+             *
+             * first step, init the qic module capture library
+
+             * two devices, /dev/video0 as YUV raw
+             *
+             *************************************************/
+            my_qic = qic_initialize(1);
+
+            if (my_qic == NULL) {
+                printf("qic_initialize error\n");
+                return 1;
+            }
+
+            /************************************************
+             *
+             * step 2: set the parameters and commit the settings
+             * need to setup two call back functions, debug_print & frame_output
+             *
+             *************************************************/
+            /* call back functions */
+            my_qic->debug_print = &debug_log;
+            my_qic->frame_output2 = &frame_process;
+
+            /*  set scheduler */
+            my_qic->high_prio = 0;
+
+            if(video_name.dev_avc>0)
+                my_qic->cam[0].dev_name = video_name.dev_avc;
+            else
+                my_qic->cam[0].dev_name ="/dev/video1";
+            my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG;
+            my_qic->cam[0].width = 1280;
+            my_qic->cam[0].height = 720;
+            my_qic->cam[0].framerate= u_framerate;
+            my_qic->cam[0].frame_interval= u_frame_interval;
+            my_qic->cam[0].bitrate= u_bitrate;
+            my_qic->cam[0].is_bind = 0;
+            my_qic->cam[0].num_mmap_buffer = 6;
+            my_qic->cam[0].codec_type=CODEC_H264_SIMULCAST;
+            my_qic->cam[0].is_encoding_video=1;
+            my_qic->cam[0].key_frame_interval=u_key_frame_interval;
+            my_qic->cam[0].frame_interval=u_frame_interval;
+            if(demux){
+                my_qic->cam[0].is_demux =1;  //Enable Encoding stream bad frame check
+            }
+
+            /* commit and init the video dev */
+            ret = qic_config_commit();
+            if (ret) {
+                printf("qic_config_commit error\n");
+                return 1;
+            }
+
+            /*EU control API for uvc1.0*/
+            qic_config_codec_EU(DEV_ID_0,CODEC_H264_SIMULCAST);
+
+            qic_set_temporal_layer_number_EU(DEV_ID_0,SIMULCAST_STREAMALL,templayer_number);
+
+            // qic_set_temporal_layer_number_EU(DEV_ID_0,SIMULCAST_STREAM0,4);
+            qic_change_resolution_EU(DEV_ID_0, SIMULCAST_STREAM0,s_AVCRes[0].width, s_AVCRes[0].height);
+            qic_change_bitrate_EU( DEV_ID_0,SIMULCAST_STREAM0,u_bitrate);
+            qic_change_frame_interval_EU(DEV_ID_0,SIMULCAST_STREAM0,u_frame_interval);
+            qic_generate_key_frame_EU(DEV_ID_0,SIMULCAST_STREAM0,1,u_key_frame_interval, 0);
+            qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM0,LAYER_START);
+
+            // qic_set_temporal_layer_number_EU(DEV_ID_0,SIMULCAST_STREAM1,3);
+            qic_change_resolution_EU(DEV_ID_0, SIMULCAST_STREAM1,s_AVCRes[1].width, s_AVCRes[1].height);
+            qic_change_bitrate_EU( DEV_ID_0,SIMULCAST_STREAM1,u_bitrate);
+            qic_change_frame_interval_EU(DEV_ID_0,SIMULCAST_STREAM1,u_frame_interval);
+            qic_generate_key_frame_EU(DEV_ID_0,SIMULCAST_STREAM1,1,u_key_frame_interval, 0);
+            qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM1,LAYER_START);
+
+            // qic_set_temporal_layer_number_EU(DEV_ID_0,SIMULCAST_STREAM2,2);
+            qic_change_resolution_EU(DEV_ID_0, SIMULCAST_STREAM2,s_AVCRes[2].width, s_AVCRes[2].height);
+            qic_change_bitrate_EU( DEV_ID_0,SIMULCAST_STREAM2,u_bitrate);
+            qic_change_frame_interval_EU(DEV_ID_0,SIMULCAST_STREAM2,u_frame_interval);
+            qic_generate_key_frame_EU(DEV_ID_0,SIMULCAST_STREAM2,1,u_key_frame_interval, 0);
+            qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM2,LAYER_START);
+
+            //  qic_set_temporal_layer_number_EU(DEV_ID_0,SIMULCAST_STREAM3,1);
+            qic_change_resolution_EU(DEV_ID_0, SIMULCAST_STREAM3,s_AVCRes[3].width, s_AVCRes[3].height);
+            qic_change_bitrate_EU( DEV_ID_0,SIMULCAST_STREAM3,u_bitrate);
+            qic_change_frame_interval_EU(DEV_ID_0,SIMULCAST_STREAM3,u_frame_interval);
+            qic_generate_key_frame_EU(DEV_ID_0,SIMULCAST_STREAM3,1,u_key_frame_interval, 0);
+            qic_start_stop_layer_EU(DEV_ID_0,SIMULCAST_STREAM3,LAYER_START);
+
+            /************************************************
+             *
+             * step 3: config print debug can be called at any time
+             *
+             *************************************************/
+            char *log_str = NULL;
+            log_str = qic_print_config_param(DEV_ID_0); /* print both interface config */
+            printf("%s", log_str);
+
+            /* open file for dump */
+            open_simulcast_files_dump(WRITE_H264,filename);
+
+            if(templayer_number>1)
+                open_temporal_layer_files_dump(WRITE_H264,filename);
+
+            // Start
+            /************************************************
+             *
+             * step 4: activate the camera before capture frames
+             *
+             *************************************************/
+            ret = qic_start_capture(DEV_ID_0); /* activate both video0 & video1 */
+            if (ret) {
+                printf("qic_start_capture error\n");
+                return 1;
+            }
+            else{
+                printf("qic_start_capture ok\n");
+            }
+
+            continue;
+#else
             exit(1);
+#endif
         }
 
         if (FD_ISSET(fd0, &fds)) {
