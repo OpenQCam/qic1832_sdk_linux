@@ -163,7 +163,7 @@ int demux_H264_check_bad_frame( char *src , unsigned int size)
     }
 
     /* decode each fields */
-    char *ptr = &src[i+16];
+    unsigned char *ptr = &src[i+16];
     for(i=0;i<payload_size-16;i++){
 
         int type = *ptr++;

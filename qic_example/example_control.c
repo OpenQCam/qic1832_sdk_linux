@@ -757,6 +757,8 @@ static const struct option long_options [] =
     { 0, 0, 0, 0 }
 };
 
+int g_enum_for_query = 1;
+
 static void debug_log(int level, char *string) {
     //printf("QIC debug_print:%s", string);
 }
@@ -921,99 +923,97 @@ int main(int argc,char ** argv)
         printf("Open %s failed\n", dev_name);
         exit(EXIT_FAILURE);
     }
-    int qic_ret = QicSetDeviceHandle(g_fd);
-    if(qic_ret)
-    {
-        printf("QicSetDeviceHandle fails, ret=%d\n", qic_ret);
-        exit(EXIT_FAILURE);
-    }
 
-    memset(&video_name,0, sizeof(video_name));
-    ret=qic_enum_device_formats(&video_name);
-    if(ret){
-        printf("Not supported camera!\n");
-        return -1;
-    }
-    printf("\nQIC1822 encoding video=%s, raw video=%s\n", video_name.dev_avc, video_name.dev_yuv);
-
-    // init 2 video, ref from two_way.c
+    // init
     my_qic = qic_initialize(2);
-
-    if (my_qic == NULL) {
-        printf("qic_initialize error\n");
-        return 1;
-    }
-
-    /* call back functions */
     my_qic->debug_print = &debug_log;
 
-    /*  set scheduler */
-    my_qic->high_prio = 0;
+    g_enum_for_query = 1;
+    if(command == CMD_QUERY_PARAM_RANGE){
+        // query CT PU nees enum, but can't run with other stream app simultanously
+        // use flag to check whether enum passes before get it
+        memset(&video_name,0, sizeof(video_name));
+        ret=qic_enum_device_formats(&video_name);
+        if(ret){
+            printf("Warning: Not supported camera!\n");
+            g_enum_for_query = 0;
+            //return -1;
+        }
+        printf("\nQIC1822 encoding video=%s, raw video=%s\n", video_name.dev_avc, video_name.dev_yuv);
 
-    /* set debug level */
-    my_qic->debug_msg_type = DEBUG_ERROR  + DEBUG_INFO;
+        if (my_qic == NULL) {
+            printf("Warning: qic_initialize error\n");
+            g_enum_for_query = 0;
+            //return 1;
+        }
 
-#ifdef USE_MJPEG
-    /* set /dev/video0 as device 0(MJPEG) */
-    if(strlen(video_name.dev_yuv)>0)
-        my_qic->cam[0].dev_name = video_name.dev_yuv;
-    else
-        my_qic->cam[0].dev_name = "/dev/video0";
-    my_qic->cam[0].format = V4L2_PIX_FMT_MJPEG;
-    my_qic->cam[0].width = mjpeg_width;
-    my_qic->cam[0].height = mjpeg_height;
-    my_qic->cam[0].is_bind = 0; /* 2-way output from single QIC module */
-    my_qic->cam[0].framerate= u_framerate;
-    my_qic->cam[0].num_mmap_buffer = 6;
-#endif
-#ifdef USE_YUYV
-    /* set /dev/video0 as device 0(YUV) */
-    if(strlen(video_name.dev_yuv)>0)
-        my_qic->cam[0].dev_name =video_name.dev_yuv;
-    else
-        my_qic->cam[0].dev_name = "/dev/video0";
+        /* call back functions */
+        my_qic->debug_print = &debug_log;
 
-    my_qic->cam[0].format = V4L2_PIX_FMT_YUYV;
-    my_qic->cam[0].width = yuv_width;
-    my_qic->cam[0].height = yuv_height;
-    my_qic->cam[0].is_bind = 0; /* 2-way output from single QIC module */
-    my_qic->cam[0].framerate= u_framerate;
-    my_qic->cam[0].num_mmap_buffer = 6;
-    if(demux){
-        my_qic->cam[0].is_demux =1;  //Enable YUYV bad frame check
+        /*  set scheduler */
+        my_qic->high_prio = 0;
+
+        /* set debug level */
+        my_qic->debug_msg_type = DEBUG_ERROR  + DEBUG_INFO;
+
+        /* set /dev/video0 as device 0(YUV) */
+        if(strlen(video_name.dev_yuv)>0)
+            my_qic->cam[0].dev_name =video_name.dev_yuv;
+        else
+            my_qic->cam[0].dev_name = "/dev/video0";
+
+        my_qic->cam[0].format = V4L2_PIX_FMT_YUYV;
+        my_qic->cam[0].width = yuv_width;
+        my_qic->cam[0].height = yuv_height;
+        my_qic->cam[0].is_bind = 0; /* 2-way output from single QIC module */
+        my_qic->cam[0].framerate= u_framerate;
+        my_qic->cam[0].num_mmap_buffer = 6;
+        if(demux){
+            my_qic->cam[0].is_demux =1;  //Enable YUYV bad frame check
+        }
+
+        /*set /dev/video1 as device 1 (H.264/AVC) */
+        if(strlen(video_name.dev_avc)>0)
+            my_qic->cam[1].dev_name = video_name.dev_avc;
+        else
+            my_qic->cam[1].dev_name ="/dev/video1";
+        my_qic->cam[1].format = V4L2_PIX_FMT_MJPEG;
+        my_qic->cam[1].bitrate = u_bitrate;
+        my_qic->cam[1].width = avc_width;
+        my_qic->cam[1].height = avc_height;
+        my_qic->cam[1].framerate = u_framerate;
+        my_qic->cam[1].codec_type=CODEC_H264;
+        my_qic->cam[1].is_encoding_video=1;
+        my_qic->cam[1].key_frame_interval=u_key_frame_interval;
+        my_qic->cam[1].frame_interval=u_frame_interval;
+        if(demux){
+            my_qic->cam[1].is_demux =1;  //Enable Encoding stream bad frame check
+        }
+
+        if (raw_dump)
+            my_qic->cam[1].raw_dump = &ts_dump; /*raw dump*/
+
+        /* commit and init the video dev */
+        ret = qic_config_commit();
+        if (ret) {
+            printf("Warning: qic_config_commit error\n");
+            g_enum_for_query = 0;
+            //return 1;
+        }
+        // enum end
     }
-#endif
-
-    /*set /dev/video1 as device 1 (H.264/AVC) */
-    if(strlen(video_name.dev_avc)>0)
-        my_qic->cam[1].dev_name = video_name.dev_avc;
-    else
-        my_qic->cam[1].dev_name ="/dev/video1";
-    my_qic->cam[1].format = V4L2_PIX_FMT_MJPEG;
-    my_qic->cam[1].bitrate = u_bitrate;
-    my_qic->cam[1].width = avc_width;
-    my_qic->cam[1].height = avc_height;
-    my_qic->cam[1].framerate = u_framerate;
-    my_qic->cam[1].codec_type=CODEC_H264;
-    my_qic->cam[1].is_encoding_video=1;
-    my_qic->cam[1].key_frame_interval=u_key_frame_interval;
-    my_qic->cam[1].frame_interval=u_frame_interval;
-    if(demux){
-        my_qic->cam[1].is_demux =1;  //Enable Encoding stream bad frame check
-    }
-
-    if (raw_dump)
-        my_qic->cam[1].raw_dump = &ts_dump; /*raw dump*/
-
-    /* commit and init the video dev */
-    ret = qic_config_commit();
-    if (ret) {
-        printf("qic_config_commit error\n");
-        return 1;
+    else{
+        int qic_ret = QicSetDeviceHandle(g_fd);
+        if(qic_ret)
+        {
+            printf("QicSetDeviceHandle fails, ret=%d\n", qic_ret);
+            exit(EXIT_FAILURE);
+        }
     }
 
     // 3. Based on command to execute command
-    printf("================= \nDevice name: %s.\n\n", dev_name);
+    printf("================= \nDevice name: %s.\n", dev_name);
+
     switch(command)
     {
     case CMD_GET:
@@ -1066,7 +1066,7 @@ int main(int argc,char ** argv)
         break;
 
     case CMD_QUERY_PARAM_RANGE:
-        switch(device_index)
+/*        switch(device_index)
         {
             case 0:
                 dev_id = DEV_ID_0;
@@ -1077,8 +1077,8 @@ int main(int argc,char ** argv)
             case 2:
                 dev_id = DEV_ID_2;
                 break;
-        }
-        ret = qic_get_ctpu_setting(dev_id, &camerav4l2);
+        }*/
+        ret = qic_get_ctpu_setting(device_index, &camerav4l2);// dev_id or device index
         if(ret==0){
             QueryParamRange(control_id);
         }
@@ -1101,7 +1101,12 @@ int main(int argc,char ** argv)
 
 void PrintParamRange(sqicv4l2value target, int id)
 {
-    printf("-min=%d\n-max=%d\n-def=%d\n-cur=%d\n",target.min, target.max, target.def, target.now);
+    if(g_enum_for_query){
+        printf("-min=%d\n-max=%d\n-def=%d\n-cur=%d\n",target.min, target.max, target.def, target.now);
+    }
+    else{
+        printf("This parameter can't be queried now.\n");
+    }
 }
 
 int QueryParamRange(int id)
