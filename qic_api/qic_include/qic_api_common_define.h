@@ -162,10 +162,12 @@ typedef struct {
     qic_dev *cam;
 
     /* output frame buffer: dev_id, length, data, timestamp*/
-    void (*frame_output)(unsigned int, unsigned int, char *, unsigned long);
+    void (*frame_output)(unsigned int, unsigned int, char *, unsigned long, void *);
+    void *app_ptr;
+
 #if defined(QIC1822)&& defined(QIC_SIMULCAST_API)
     /* output simulcast frame buffer: dev_id, simulcat_frame_t*/
-    void (*frame_output2)(unsigned int, out_frame_t);
+    void (*frame_output2)(unsigned int, out_frame_t, void *);
 #endif
     /*debug info print: int level, char* string*/
     void (*debug_print)(int, char*);
