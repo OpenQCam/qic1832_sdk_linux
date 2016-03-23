@@ -708,7 +708,8 @@ int qic_enum_device_formats(qic_dev_name_s *name)
 
                 if(!ret){
                     if(found_video0&&(strcmp(dev_format,"MPEG2-TS")==0
-                                      ||strcmp(dev_format,"MJPEG")==0)){
+                                    ||strcmp(dev_format,"MJPEG")==0
+                                    ||strcmp(dev_format,"H.264")==0)){
 #ifdef ENABLE_PRINT
                         printf("AVC is %s \n",dev_name);
 #endif
@@ -1232,7 +1233,7 @@ int enum_device_formats(int fd, char* format, char print)
 
         }
         if(strcmp((char*)fmt.description,"YUV 4:2:2 (YUYV)")==0||strcmp((char*)fmt.description,"MPEG2-TS")==0
-                ||strcmp((char*)fmt.description,"MJPEG")==0)
+                ||strcmp((char*)fmt.description,"MJPEG")==0 ||strcmp((char*)fmt.description,"H.264")==0)
             strcpy(format,(char*)fmt.description);
 
     }
