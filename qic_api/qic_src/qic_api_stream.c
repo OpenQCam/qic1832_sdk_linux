@@ -126,7 +126,7 @@ static void send_vp8_simulcast_frame(unsigned int dev_id, char *data, unsigned i
 #ifdef DEBUG_LOG
 static void debug_print_initial (int level, char *string);
 #endif
-static void frame_output_initial(unsigned int dev_id, unsigned int length, char *data, unsigned long timestamp, void * app_ptr);
+static void frame_output_initial(unsigned int dev_id, unsigned int length, char *data, unsigned long timestamp);
 
 static int qic_open_device (qic_dev *cam);
 static int qic_clean_device(qic_dev *cam);
@@ -169,8 +169,6 @@ qic_module* qic_initialize(int num_devices)
 
     my_dev->frame_output = NULL;
     my_dev->debug_print = NULL;
-
-    my_dev->app_ptr=NULL;
 
     /* default - no change prio */
     my_dev->high_prio = 0;
@@ -627,7 +625,7 @@ int qic_getframe2(unsigned int dev_id)
                 sframe.frame_data=dev_pt->cam[index].buffers[buf.index].start;
                 sframe.frame_len=buf.bytesused;
                 sframe.timestamp=(unsigned long)((buf.timestamp.tv_sec*1000)+(buf.timestamp.tv_usec/1000));
-                (*dev_pt->frame_output2)(dev_id, sframe, dev_pt->app_ptr);
+                (*dev_pt->frame_output2)(dev_id, sframe);
             }
             else if (dev_pt->cam[index].format == V4L2_PIX_FMT_MJPEG){
                 video_buffer = dev_pt->cam[index].buffers[buf.index].start;
@@ -669,7 +667,7 @@ int qic_getframe2(unsigned int dev_id)
                     sframe.frame_data=video_buffer;
                     sframe.frame_len=video_buffer_len;
                     sframe.timestamp=timestamp;
-                    (*dev_pt->frame_output2)(dev_id, sframe, dev_pt->app_ptr);
+                    (*dev_pt->frame_output2)(dev_id, sframe);
                 }
             }
             /* re-queue the buffer */
@@ -794,7 +792,7 @@ static void send_vp8_simulcast_frame(unsigned int dev_id, char *data, unsigned i
                 sframe.frame_data=data;
                 sframe.frame_len=length;
                 sframe.timestamp=timestamp;
-                (*dev_pt->frame_output2)(dev_id, sframe, dev_pt->app_ptr);
+                (*dev_pt->frame_output2)(dev_id, sframe);
             }
             else{
                 //Drop VP8 P Frame
@@ -808,7 +806,7 @@ static void send_vp8_simulcast_frame(unsigned int dev_id, char *data, unsigned i
         sframe.frame_data=data;
         sframe.frame_len=length;
         sframe.timestamp=timestamp;
-        (*dev_pt->frame_output2)(dev_id, sframe, dev_pt->app_ptr);
+        (*dev_pt->frame_output2)(dev_id, sframe);
     }
 }
 
@@ -868,7 +866,7 @@ static void send_avc_simulcast_frame(unsigned int dev_id, char *data, unsigned i
                 sframe.frame_data=data;
                 sframe.frame_len=length;
                 sframe.timestamp=timestamp;
-                (*dev_pt->frame_output2)(dev_id, sframe, dev_pt->app_ptr);
+                (*dev_pt->frame_output2)(dev_id, sframe);
             }
             else{
                 //Drop bad Frame
@@ -890,7 +888,7 @@ static void send_avc_simulcast_frame(unsigned int dev_id, char *data, unsigned i
         sframe.frame_data=data;
         sframe.frame_len=length;
         sframe.timestamp=timestamp;
-        (*dev_pt->frame_output2)(dev_id, sframe, dev_pt->app_ptr);
+        (*dev_pt->frame_output2)(dev_id, sframe);
     }
 }
 
@@ -901,7 +899,7 @@ static void debug_print_initial (int level, char *string)
 }
 #endif
 
-static void frame_output_initial(unsigned int dev_id, unsigned int length, char *data, unsigned long timestamp, void * app_ptr)
+static void frame_output_initial(unsigned int dev_id, unsigned int length, char *data, unsigned long timestamp)
 {
     printf("dev_id=%d,  length=%d, data=%s,  timestamp=%lu\n",dev_id,  length, data,  timestamp);
 }
