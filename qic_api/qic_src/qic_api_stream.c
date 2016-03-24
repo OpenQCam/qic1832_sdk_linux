@@ -385,6 +385,192 @@ int qic_config_commit(void)
     return 0;
 }
 
+/**********************************************
+ *  setup functions
+**********************************************/
+int qic_config_commit_open_only(void)
+{
+    unsigned int i;
+    int check = 0;
+
+    /* check if committed */
+    if ((config_is_commit) &&(dev_pt != NULL)) {
+        LOG_PRINT(debug_str, DEBUG_ERROR, "QIC module library config is committed already\n");
+        return 0;
+    }
+
+    /* function pointer check */
+#ifdef DEBUG_LOG
+    if (dev_pt->debug_print == NULL) {
+        dev_pt->debug_print = &debug_print_initial;
+        LOG_PRINT(debug_str, DEBUG_ERROR, "debug_print is set to NULL, default to stdout\n");
+    }
+#endif
+
+    if (dev_pt->frame_output == NULL) {
+        dev_pt->frame_output = &frame_output_initial;
+        LOG_PRINT(debug_str, DEBUG_ERROR, "frame_output is set to NULL, default to stdout\n");
+    }
+
+    /* change the prio if set */
+    if (dev_pt->high_prio) {
+        set_scheduler();
+        LOG_PRINT(debug_str, DEBUG_INFO, "set scheduler to high priority\n");
+    }
+    /* check default configuration */
+    for ( i = 0; i < dev_pt->num_devices; i++) {
+        if (dev_pt->cam[i].dev_name == NULL) {
+            LOG_PRINT(debug_str, DEBUG_ERROR, "cam #%d dev_name is not set, NULL\n", dev_pt->cam[i].dev_id);
+            check = 1;
+        } else {
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d dev_name = %s\n", dev_pt->cam[i].dev_id, dev_pt->cam[i].dev_name);
+        }
+
+        /* check mmap buffer setting */
+        if (dev_pt->cam[i].num_mmap_buffer < 2 ) {
+            dev_pt->cam[i].num_mmap_buffer = 12;
+            LOG_PRINT(debug_str, DEBUG_ERROR, "cam #%d mmap_buffer is too small, set to default 12\n", dev_pt->cam[i].dev_id);
+        } else {
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d mmap_buffer size = %d\n", dev_pt->cam[i].dev_id, dev_pt->cam[i].num_mmap_buffer);
+        }
+
+        if (check) {
+
+            LOG_PRINT(debug_str, DEBUG_ERROR, "cam #%d config error, dev_name not defined, aborted\n", dev_pt->cam[i].dev_id);
+            return check;
+        }
+        /* check video format configuration */
+        if (dev_pt->cam[i].format == V4L2_PIX_FMT_MJPEG) { /* MJPEG image device */
+            /* remove bitrate, slice, demux setting */
+            //	dev_pt->cam[i].bitrate = 0;
+            //	dev_pt->cam[i].slicesize = 0;
+            //dev_pt->cam[i].is_demux = 0;
+            if(dev_pt->cam[i].is_demux){
+                vp8_h264_bad_frame_count=0;
+                generate_key_frame=0;
+                demux_VP8_H264_check_bad_frame_initial();
+            }
+            //	dev_pt->cam[i].gop = 0;
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d is MJPEG, set bitrate/slice/demux/gop to 0\n", dev_pt->cam[i].dev_id);
+            /* is_bind check */
+            dev_pt->cam[i].is_bind = dev_pt->cam[i].is_bind & 0x01;
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d format source: %s\n", dev_pt->cam[i].dev_id, dev_pt->cam[i].is_bind == 1?"MJPEG_bind_format":"MJPEG_format");
+
+            /* check video format configuration */
+            check = 0;
+            if (dev_pt->cam[i].is_bind) {
+                /*clear the framerate */
+                dev_pt->cam[i].framerate = 0;
+                check = format_check((SUPPORT_FORMAT * )MJPEG_bind_format, dev_pt->cam[i].width, dev_pt->cam[i].height, dev_pt->cam[i].framerate);
+            }
+            else
+                check = format_check((SUPPORT_FORMAT * )MJPEG_format, dev_pt->cam[i].width, dev_pt->cam[i].height, 0);
+            if (!check) {
+                if (dev_pt->cam[i].is_bind) {
+                    dev_pt->cam[i].width = MJPEG_bind_format[0].width;
+                    dev_pt->cam[i].height = MJPEG_bind_format[0].height;
+                    dev_pt->cam[i].framerate = MJPEG_bind_format[0].framerate;
+                }
+                else {
+                    dev_pt->cam[i].width = MJPEG_format[0].width;
+                    dev_pt->cam[i].height = MJPEG_format[0].height;
+                    dev_pt->cam[i].framerate = MJPEG_format[0].framerate;
+                }
+
+                LOG_PRINT(debug_str, DEBUG_ERROR, "cam #%d format error , set to %dx%d, %dfps\n", dev_pt->cam[i].dev_id, \
+                          dev_pt->cam[i].width, \
+                          dev_pt->cam[i].height, \
+                          dev_pt->cam[i].framerate);
+            } else {
+                LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d format: %dx%d, %dfps\n", dev_pt->cam[i].dev_id, \
+                          dev_pt->cam[i].width, \
+                          dev_pt->cam[i].height, \
+                          dev_pt->cam[i].framerate);
+            }
+        }
+        else if (dev_pt->cam[i].format == V4L2_PIX_FMT_YUYV) { /* YUV raw image device */
+            /* remove bitrate, slice, demux setting */
+            dev_pt->cam[i].bitrate = 0;
+            dev_pt->cam[i].slicesize = 0;
+            //dev_pt->cam[i].is_demux = 0;
+            if(dev_pt->cam[i].is_demux){
+                yuyv_bad_frame_count=0;
+                yuyv_data_length = dev_pt->cam[i].width*dev_pt->cam[i].height*2;
+            }
+            dev_pt->cam[i].gop = 0;
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d is YUYV, set bitrate/slice/demux/gop to 0\n", dev_pt->cam[i].dev_id);
+            /* is_bind check */
+            dev_pt->cam[i].is_bind = dev_pt->cam[i].is_bind & 0x01;
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d format source: %s\n", dev_pt->cam[i].dev_id, dev_pt->cam[i].is_bind == 1?"YUV_bind_format":"YUV_format");
+
+            /* check video format configuration */
+            check = 0;
+            if (dev_pt->cam[i].is_bind) {
+                /*clear the framerate */
+                dev_pt->cam[i].framerate = 0;
+                check = format_check((SUPPORT_FORMAT * )YUV_bind_format, dev_pt->cam[i].width, dev_pt->cam[i].height, dev_pt->cam[i].framerate);
+            }
+            else
+                check = format_check((SUPPORT_FORMAT * )YUV_format, dev_pt->cam[i].width, dev_pt->cam[i].height, /*dev_pt->cam[i].framerate*/0);
+            if (!check) {
+                if (dev_pt->cam[i].is_bind) {
+                    dev_pt->cam[i].width = YUV_bind_format[0].width;
+                    dev_pt->cam[i].height = YUV_bind_format[0].height;
+                    dev_pt->cam[i].framerate = YUV_bind_format[0].framerate;
+                }
+                else {
+                    dev_pt->cam[i].width = YUV_format[0].width;
+                    dev_pt->cam[i].height = YUV_format[0].height;
+                    dev_pt->cam[i].framerate = YUV_format[0].framerate;
+                }
+
+                LOG_PRINT(debug_str, DEBUG_ERROR, "cam #%d format error , set to %dx%d, %dfps\n", dev_pt->cam[i].dev_id, \
+                          dev_pt->cam[i].width, \
+                          dev_pt->cam[i].height, \
+                          dev_pt->cam[i].framerate);
+            }
+            else {
+                LOG_PRINT(debug_str, DEBUG_INFO, "cam #%d format: %dx%d, %dfps\n", dev_pt->cam[i].dev_id, \
+                          dev_pt->cam[i].width, \
+                          dev_pt->cam[i].height, \
+                          dev_pt->cam[i].framerate);
+            }
+        }
+        else {
+            /* printf("  Frame format: "FOURCC_FORMAT"\n", FOURCC_ARGS(my_dev->cam[i].format)); */
+            LOG_PRINT(debug_str, DEBUG_ERROR, "cam #%d format unknown("FOURCC_FORMAT"), aborted\n", dev_pt->cam[i].dev_id, FOURCC_ARGS(dev_pt->cam[i].format));
+
+            return 1; /*error~*/
+        }
+
+        /* clear flag */
+        dev_pt->cam[i].is_on = 0;
+        /* initial device */
+        check = qic_open_device(&dev_pt->cam[i]);
+        if (check) {
+            LOG_PRINT(debug_str, DEBUG_ERROR, "cam %s open failed\n", dev_pt->cam[i].dev_name);
+            return check;
+        }
+        else {
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam %s open succeeded\n", dev_pt->cam[i].dev_name);
+        }
+        // Remove qic_initial_device in this function
+        /*
+        check = qic_initial_device(&dev_pt->cam[i]);
+        if (check) {
+            LOG_PRINT(debug_str, DEBUG_ERROR, "cam %s initial failed\n", dev_pt->cam[i].dev_name);
+            return check;
+        }
+        else {
+            LOG_PRINT(debug_str, DEBUG_INFO, "cam %s initial succeeded\n", dev_pt->cam[i].dev_name);
+        }*/
+    }
+    /* signal the commit */
+    config_is_commit = 1;
+    //	LOG_PRINT(debug_str, DEBUG_DETAIL, "qic_config_commit - OUT\n");
+    return 0;
+}
+
 int qic_force_config(void)
 {
     int check = 0;

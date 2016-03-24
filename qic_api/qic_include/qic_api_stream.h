@@ -24,6 +24,7 @@ typedef struct {
 /* intial, setup, teardown */
 qic_module* qic_initialize(int num_devices);
 int qic_config_commit(void);
+int qic_config_commit_open_only(void);
 int qic_force_config(void);
 int qic_release(void);
 

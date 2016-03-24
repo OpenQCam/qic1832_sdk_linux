@@ -928,23 +928,16 @@ int main(int argc,char ** argv)
     my_qic = qic_initialize(2);
     my_qic->debug_print = &debug_log;
 
-    g_enum_for_query = 1;
     if(command == CMD_QUERY_PARAM_RANGE){
-        // query CT PU nees enum, but can't run with other stream app simultanously
-        // use flag to check whether enum passes before get it
         memset(&video_name,0, sizeof(video_name));
         ret=qic_enum_device_formats(&video_name);
         if(ret){
-            printf("Warning: Not supported camera!\n");
-            g_enum_for_query = 0;
-            //return -1;
+            printf("Warning: Not a supported camera!\n");
         }
         printf("\nQIC1822 encoding video=%s, raw video=%s\n", video_name.dev_avc, video_name.dev_yuv);
 
         if (my_qic == NULL) {
             printf("Warning: qic_initialize error\n");
-            g_enum_for_query = 0;
-            //return 1;
         }
 
         /* call back functions */
@@ -993,14 +986,11 @@ int main(int argc,char ** argv)
         if (raw_dump)
             my_qic->cam[1].raw_dump = &ts_dump; /*raw dump*/
 
-        /* commit and init the video dev */
-        ret = qic_config_commit();
+        /* commit and init the video dev without ready for streaming*/
+        ret = qic_config_commit_open_only();
         if (ret) {
-            printf("Warning: qic_config_commit error\n");
-            g_enum_for_query = 0;
-            //return 1;
+            printf("Warning: qic_config_commit_open_only error\n");
         }
-        // enum end
     }
     else{
         int qic_ret = QicSetDeviceHandle(g_fd);
@@ -1066,7 +1056,7 @@ int main(int argc,char ** argv)
         break;
 
     case CMD_QUERY_PARAM_RANGE:
-/*        switch(device_index)
+        switch(device_index)
         {
             case 0:
                 dev_id = DEV_ID_0;
@@ -1077,8 +1067,8 @@ int main(int argc,char ** argv)
             case 2:
                 dev_id = DEV_ID_2;
                 break;
-        }*/
-        ret = qic_get_ctpu_setting(device_index, &camerav4l2);// dev_id or device index
+        }
+        ret = qic_get_ctpu_setting(dev_id, &camerav4l2);// dev_id or device index
         if(ret==0){
             QueryParamRange(control_id);
         }
@@ -1101,12 +1091,7 @@ int main(int argc,char ** argv)
 
 void PrintParamRange(sqicv4l2value target, int id)
 {
-    if(g_enum_for_query){
-        printf("-min=%d\n-max=%d\n-def=%d\n-cur=%d\n",target.min, target.max, target.def, target.now);
-    }
-    else{
-        printf("This parameter can't be queried now.\n");
-    }
+    printf("-min=%d\n-max=%d\n-def=%d\n-cur=%d\n",target.min, target.max, target.def, target.now);
 }
 
 int QueryParamRange(int id)
