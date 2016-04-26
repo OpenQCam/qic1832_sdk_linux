@@ -660,7 +660,7 @@ int qic_change_QP_range_EU(unsigned int dev_id ,unsigned short stream_id,unsigne
 #endif
 
 
-
+#ifdef QIC_MD_API
 int qic_set_burst_mode_peak_bitrate(unsigned int dev_id, unsigned int stream_id, unsigned int peakBitrate)
 {
     int ret=0;
@@ -729,6 +729,7 @@ int qic_get_burst_mode_peak_bitrate(unsigned int dev_id, unsigned short stream_i
     }
     return ret;
 }
+#endif
 
 // Get H.264/VP8 Encoder Number of Capabilitiess
 int qic_get_frame_number_of_encoder(unsigned char *count)
