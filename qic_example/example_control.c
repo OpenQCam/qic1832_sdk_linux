@@ -406,7 +406,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         return qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_ABSOLUTE, 1, (signed long*)val, 0);
 
     case Ctrl_CT_Exposure:
-        return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE, 1, (signed long*)val, 0);
+        return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_ABSOLUTE, 1, (signed long*)val, 0);
 
     case Ctrl_PU_Brightness:
         return qic_V4L2_Control(g_fd, V4L2_CID_BRIGHTNESS, 1, (signed long*)val, 0);
