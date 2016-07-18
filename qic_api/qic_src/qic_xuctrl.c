@@ -1988,7 +1988,7 @@ int QicSetSerialNumber( unsigned char *serial_number, unsigned char data_len)
 
     ret = QicFlashRead(QIC1822_FLASH_SERIAL_NUMBER_ADDR, BufVerify, 0x50,image_max_size);
 
-    for (int i = 0; i < QIC1822_FLASH_SERIAL_NUMBER_MAX_SIZE; i++)
+    for (i = 0; i < QIC1822_FLASH_SERIAL_NUMBER_MAX_SIZE; i++)
     {
         if (BufVerify[i] != 0xff)
         {

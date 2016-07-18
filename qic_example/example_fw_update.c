@@ -129,6 +129,9 @@ int main(int argc,char ** argv)
     char *osd_font_bin=NULL;
 #ifdef QIC_SUPPORT_2ND_BL
     char *BL2nd_bin=NULL;
+    char have_to_erased_all=0;
+    char *backup_BL2nd=NULL;
+    char backup_path[512];
 #endif
     char *audio_bin=NULL;
     unsigned char update_flags=0;

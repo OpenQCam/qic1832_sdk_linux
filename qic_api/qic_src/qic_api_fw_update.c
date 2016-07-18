@@ -813,7 +813,7 @@ int qic_update_firmware_by_filename(unsigned int dev_id,
     LOG_PRINT(debug_str, DEBUG_ERROR, "Check Flash USB sector erase ret=%d\n",ret);
 
 #ifdef QIC_SUPPORT_2ND_BL
-    for (i = /*QIC1822_FLASH_USB_ADDR*/0; i < image_max_size-QIC1822_FLASH_2ndBL_MAX_SIZE; i++
+    for (i = /*QIC1822_FLASH_USB_ADDR*/0; i < image_max_size-QIC1822_FLASH_2ndBL_MAX_SIZE; i++)
     {
         if (BufVerify[i] != 0xff)
         {

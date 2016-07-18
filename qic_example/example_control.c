@@ -200,9 +200,9 @@ int SetControl(int id, __uint64_t val, int bAuto)
             }
         }
         else{
-            if(qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_AUTO, 0, 0, 0)){
-                return -1;
-            }
+            // Some device may not support auto enable/disable, so skip this return value check.
+            qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_AUTO, 0, 0, 0);
+
             return qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_ABSOLUTE, 0, 0, val);
         }
         return 0;
@@ -214,9 +214,9 @@ int SetControl(int id, __uint64_t val, int bAuto)
             }
         }
         else{
-            if(qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_AUTO, 0, 0, 1)){
-                return -1;
-            }
+            // Some device may not support auto enable/disable, so skip this return value check.
+            qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_AUTO, 0, 0, 1);
+
             return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_ABSOLUTE, 0, 0, val);
         }
         return 0;
@@ -250,9 +250,9 @@ int SetControl(int id, __uint64_t val, int bAuto)
             }
         }
         else{
-            if(qic_V4L2_Control(g_fd, V4L2_CID_AUTO_WHITE_BALANCE, 0, 0, 0)){
-                return -1;
-            }
+            // Some device may not support auto enable/disable, so skip this return value check.
+            qic_V4L2_Control(g_fd, V4L2_CID_AUTO_WHITE_BALANCE, 0, 0, 0);
+
             return qic_V4L2_Control(g_fd, V4L2_CID_WHITE_BALANCE_TEMPERATURE, 0, 0, val);
         }
         return 0;
@@ -406,7 +406,7 @@ int GetControl(int id, __uint64_t* val, signed long* bAuto)
         return qic_V4L2_Control(g_fd, V4L2_CID_FOCUS_ABSOLUTE, 1, (signed long*)val, 0);
 
     case Ctrl_CT_Exposure:
-        return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE, 1, (signed long*)val, 0);
+        return qic_V4L2_Control(g_fd, V4L2_CID_EXPOSURE_ABSOLUTE, 1, (signed long*)val, 0);
 
     case Ctrl_PU_Brightness:
         return qic_V4L2_Control(g_fd, V4L2_CID_BRIGHTNESS, 1, (signed long*)val, 0);
