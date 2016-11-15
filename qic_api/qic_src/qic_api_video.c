@@ -530,7 +530,8 @@ int qic_change_rete_control_mode_EU(unsigned int dev_id,unsigned short stream_id
             qic_ret=QicEuSetRateControlMode( bRateControlMode);
             LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
             if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicEuSetRateControlMode success \n");
-#ifdef DEBUG_LOG
+//#ifdef DEBUG_LOG
+#if 0
             unsigned char bRateControlMode;
 
             qic_ret=QicEuGetRateControlMode(&bRateControlMode);
@@ -826,7 +827,7 @@ int qic_change_MJPEG_QP_Value(unsigned char value)
     if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicSet_MJPEG_QP_Value success...\n");
 
 #ifdef DEBUG_LOG
-	unsigned char retValue=0;
+  unsigned char retValue=0;
     qic_ret = QicGet_MJPEG_QP_Value(&retValue);
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
     if(!qic_ret) LOG_PRINT(debug_str, DEBUG_INFO, "QicGet_MJPEG_QP_Value success, MJPEG_QP_Value=%d ...\n", retValue);

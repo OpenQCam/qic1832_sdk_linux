@@ -20,7 +20,6 @@ Check "About Plugins"->"AutotoolsProjectManager", and enable it.
 
 To build the library and sample code, please follow the steps below:
 
-#cd qic_example
 #./configure
 #make
 
