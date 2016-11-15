@@ -113,6 +113,7 @@ int last_frame_sizes[4];
 
 unsigned int yuyv_data_length, yuyv_bad_frame_count, vp8_h264_bad_frame_count;
 unsigned char generate_key_frame;
+unsigned char h264_generate_key_frames[4];
 
 // Internal function
 static void send_avc_simulcast_frame(unsigned int dev_id, char *data, unsigned int length,
@@ -263,7 +264,7 @@ int qic_config_commit(void)
             //dev_pt->cam[i].is_demux = 0;
             if(dev_pt->cam[i].is_demux){
                 vp8_h264_bad_frame_count=0;
-                generate_key_frame=0;
+                memset(h264_generate_key_frames, 0, sizeof(h264_generate_key_frames));
                 demux_VP8_H264_check_bad_frame_initial();
             }
             //	dev_pt->cam[i].gop = 0;
@@ -447,7 +448,7 @@ int qic_config_commit_open_only(void)
             //dev_pt->cam[i].is_demux = 0;
             if(dev_pt->cam[i].is_demux){
                 vp8_h264_bad_frame_count=0;
-                generate_key_frame=0;
+                memset(h264_generate_key_frames, 0, sizeof(h264_generate_key_frames));
                 demux_VP8_H264_check_bad_frame_initial();
             }
             //	dev_pt->cam[i].gop = 0;
@@ -953,9 +954,9 @@ static void send_vp8_simulcast_frame(unsigned int dev_id, char *data, unsigned i
         last_frame_sizes[stream_id] = last_frame_size;
 
         if(!demux_ret){
-            if(generate_key_frame){
+            if(h264_generate_key_frames[stream_id]){
                 if((data[3]&0x00ff)==0x9d && (data[4]&0x00ff)==0x01 && (data[5]&0x00ff)==0x2a){
-                    generate_key_frame=0;
+                    h264_generate_key_frames[stream_id] = 0;;
                     LOG_PRINT(debug_str, DEBUG_INFO, " Found VP8 IDR Frame......!!\n");
                 }else{
                     //LOG_PRINT(debug_str, DEBUG_INFO, "dev %s VP8 P Frame...!!\n", dev_pt->cam[index].dev_name);
@@ -965,13 +966,20 @@ static void send_vp8_simulcast_frame(unsigned int dev_id, char *data, unsigned i
 
         /*this is bad frame, we drop it and request key frame at once */
         if(demux_ret){
-            LOG_PRINT(debug_str, DEBUG_INFO, "Error!! Bad Frame found: stream id %d, qic generate key frame!!\n\n", stream_id);
-            qic_generate_key_frame_EU(dev_id,stream_id,1,key_frame_interval, 0);
-            generate_key_frame=1;
+			if (!h264_generate_key_frames[stream_id]){
+		        LOG_PRINT(debug_str, DEBUG_INFO, "Error!! Bad Frame found: stream id %d, qic generate key frame!!\n\n", stream_id);
+				switch (stream_id) {
+				    case STREAM0: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM0, 1, key_frame_interval, 0); break;
+				    case STREAM1: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM1, 1, key_frame_interval, 0); break;
+				    case STREAM2: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM2, 1, key_frame_interval, 0); break;
+				    case STREAM3: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM3, 1, key_frame_interval, 0); break;
+				}
+            	h264_generate_key_frames[stream_id] = 1;
+            }
             vp8_h264_bad_frame_count++;
         }
         else{
-            if(!generate_key_frame){
+            if(!h264_generate_key_frames[stream_id]){
 
                 /*frame is good send to user*/
                 sframe.bencding_stream=1;
@@ -1017,10 +1025,10 @@ static void send_avc_simulcast_frame(unsigned int dev_id, char *data, unsigned i
         demux_ret = demux_H264_check_bad_frame( data, length);
         last_frame_sizes[stream_id] = last_frame_size;
         if(!demux_ret){
-            if(generate_key_frame){
+            if(h264_generate_key_frames[stream_id]){
                 for(i=0;i<(length-4);i++){
                     if((data[i+0] == 0x00) && (data[i+1] == 0x00) && (data[i+2] == 0x00) && (data[i+3] == 0x01) && ((data[i+4]&0x1F) == 0x05)){
-                        generate_key_frame=0;
+                        h264_generate_key_frames[stream_id] = 0;
                         LOG_PRINT(debug_str, DEBUG_INFO, "stream %d Found H264 IDR Frame i=%d......!!\n",stream_id, i);
                         break;
                     }
@@ -1031,13 +1039,20 @@ static void send_avc_simulcast_frame(unsigned int dev_id, char *data, unsigned i
 
         /*this is bad frame, we drop it and request key frame at once */
         if(demux_ret){
-            LOG_PRINT(debug_str, DEBUG_INFO, "Error!! Bad Frame found: stream id %d, qic generate key frame!!\n\n", stream_id);
-            qic_generate_key_frame_EU(dev_id,stream_id,1,key_frame_interval, 0);
-            generate_key_frame=1;
+			if (!h264_generate_key_frames[stream_id]){
+		        LOG_PRINT(debug_str, DEBUG_INFO, "Error!! Bad Frame found: stream id %d, qic generate key frame!!\n\n", stream_id);
+				switch (stream_id) {
+				    case STREAM0: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM0, 1, key_frame_interval, 0); break;
+				    case STREAM1: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM1, 1, key_frame_interval, 0); break;
+				    case STREAM2: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM2, 1, key_frame_interval, 0); break;
+				    case STREAM3: qic_generate_key_frame_EU(dev_id, SIMULCAST_STREAM3, 1, key_frame_interval, 0); break;
+				}
+            	h264_generate_key_frames[stream_id] = 1;
+            }
             vp8_h264_bad_frame_count++;
         }
         else{
-            if(!generate_key_frame){
+            if(!h264_generate_key_frames[stream_id]){
                 is_pframe=check_for_P_frame((unsigned char*)data,length);
                 sframe.bPframe=is_pframe;
 
