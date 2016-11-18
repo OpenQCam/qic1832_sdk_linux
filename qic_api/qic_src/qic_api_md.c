@@ -158,7 +158,7 @@ int qic_md_get_version(unsigned int dev_id,int *major_version, int *minor_versio
     return ret;
 }
 
-int qic_md_start_stop(unsigned int dev_id,unsigned char on)
+int qic_md_start_stop(unsigned int dev_id, unsigned char on, unsigned short stream_id)
 {
     int ret=0;
     unsigned int index;
@@ -174,7 +174,7 @@ int qic_md_start_stop(unsigned int dev_id,unsigned char on)
         if (dev_pt->cam[index].dev_id & dev_id){
             QicChangeFD(dev_pt->cam[index].fd);
             ret=QicMmioWrite(0x6F0000A0, (unsigned int)on); //Enable MD info in SEI of H.264
-            ret=QicMDSetEnable(on);
+            ret=QicMDSetEnable(on, stream_id);
 #ifdef DEBUG_LOG
             unsigned char md_status;
             QicMDGetEnable (&md_status);

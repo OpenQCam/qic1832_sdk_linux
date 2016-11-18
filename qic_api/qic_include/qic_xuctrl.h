@@ -691,7 +691,7 @@ int QicOsdTimerSet(unsigned char line_id, unsigned char enable, OsdTimer_t timer
 #ifdef QIC_MD_API
 /* Motion detection APIs */
 int QicMDGetVersion(int *major_version, int *minor_version);
-int QicMDSetEnable(unsigned char enable);
+int QicMDSetEnable(unsigned char enable, unsigned short stream_id);
 int QicMDGetEnable(unsigned char *enable);
 int QicMDSetConfiguration(md_config_t* config);
 int QicMDGetConfiguration(md_config_t* config);

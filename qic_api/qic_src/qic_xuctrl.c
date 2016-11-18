@@ -5416,7 +5416,7 @@ int QicMDGetVersion(int *major_version, int *minor_version)
     return ret;
 }
 
-int QicMDSetEnable(unsigned char enable)
+int QicMDSetEnable(unsigned char enable, unsigned short stream_id)
 {
     int ret;
     unsigned char buf[XU_MD_SIZE_DEF];
@@ -5430,6 +5430,8 @@ int QicMDSetEnable(unsigned char enable)
     buf[3] = QIC_XU19_MD_SET_SUBCMD;
     // Data part
     buf[4] = enable;
+    buf[5] = stream_id & 0xFF;
+    buf[6] = (stream_id >> 8) & 0xFF;
 
     ret = QicXuSet(XU_MD_CONTROL, buf, XU_MD_SIZE_DEF);
     if(ret) {

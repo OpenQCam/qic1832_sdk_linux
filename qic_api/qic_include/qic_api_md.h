@@ -27,7 +27,7 @@ unsigned int AnalyzeSEIMessages(unsigned char* buffer,unsigned int size,unsigned
 
 /*MD*/
 int qic_md_get_version(unsigned int dev_id,int *major_version, int *minor_version);
-int qic_md_start_stop(unsigned int dev_id,unsigned char on);
+int qic_md_start_stop(unsigned int dev_id, unsigned char on, unsigned short stream_id);
 int qic_md_change_config(unsigned int dev_id,md_config_t* config, unsigned char interrupt_mode);
 int qic_md_get_config(unsigned int dev_id,md_config_t* config, unsigned char* interrupt_mode);
 int qic_md_get_status(unsigned int dev_id,md_status_t* status);// no used
