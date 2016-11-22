@@ -11,6 +11,10 @@
 #ifndef _QIC_DEMUX_H264_H_
 #define _QIC_DEMUX_H264_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_xuctrl.h"
 
 #define MAXFRAMESIZE				128*1024
@@ -87,5 +91,9 @@ int demux_H264_check_bad_frame( char *src , unsigned int size);
 int get_avc_stream_id(unsigned char* data, unsigned int data_size);
 int get_stream_temporal_id(unsigned char* data, unsigned int data_size);
 int check_for_P_frame(unsigned char* data, unsigned int data_size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -11,6 +11,10 @@
 #ifndef _QIC_API_V4L2_CTPU_H_
 #define _QIC_API_V4L2_CTPU_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_api_common_define.h"
 
 //#define USE_K26_24
@@ -106,5 +110,9 @@ int qic_change_V4L2_EXPOSURE_AUTO_PRIORITY(unsigned int dev_id, signed long prio
 int qic_change_V4L2_ZOOM_ABSOLUTE(unsigned int dev_id, signed long absolute);
 
 int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

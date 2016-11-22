@@ -11,6 +11,10 @@
 #ifndef _QIC_API_STREAM_H_
 #define _QIC_API_STREAM_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_api_common_define.h"
 
 #define MAX_SUPPORT_DEVICES 8
@@ -41,5 +45,9 @@ int qic_getframe2(unsigned int dev_id);
 int enum_device_formats(int fd, char* format,char print);
 
 int qic_enum_device_formats(qic_dev_name_s *name);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

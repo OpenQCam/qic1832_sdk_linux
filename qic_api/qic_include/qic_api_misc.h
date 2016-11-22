@@ -11,6 +11,10 @@
 #ifndef _QIC_API_MISC_H_
 #define _QIC_API_MISC_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_api_common_define.h"
 
 // System information
@@ -74,6 +78,8 @@ char* qic_print_config_param(unsigned int dev_id);
 
 int qic_set_lock_steam_control( unsigned char lock);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

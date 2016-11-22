@@ -11,6 +11,10 @@
 #ifndef _QIC_INCLUDE_ALL_H_
 #define _QIC_INCLUDE_ALL_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "demux_h264.h"
 #include "demux_vp8.h"
 #include "qic_api_common_define.h"
@@ -24,5 +28,9 @@
 #include "qic_cfg.h"
 #include "qic_utility_for_demo.h"
 #include "qic_xuctrl.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

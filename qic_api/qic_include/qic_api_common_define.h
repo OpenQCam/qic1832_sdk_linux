@@ -11,6 +11,10 @@
 #ifndef _QIC_API_COMMON_DEFINE_H_
 #define _QIC_API_COMMON_DEFINE_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -203,5 +207,9 @@ typedef enum {
 
 // Common
 int xioctl(int fd, int request, void * arg);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

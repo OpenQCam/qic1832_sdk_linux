@@ -11,10 +11,18 @@
 #ifndef _MISC_SYSTEM_H_
 #define _MISC_SYSTEM_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 char * mem_usage_info(void);
 
 unsigned int myatoi(char *str);
 
 //TODO: Add mp4 record here
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

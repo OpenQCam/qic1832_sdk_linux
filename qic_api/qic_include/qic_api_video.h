@@ -11,6 +11,10 @@
 #ifndef _QIC_API_VIDEO_H_
 #define _QIC_API_VIDEO_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_api_common_define.h"
 
 /*EU control API for QIC1822*/
@@ -44,5 +48,9 @@ int qic_get_descriptor_of_encoder(unsigned char index, EncoderCapability_t *capa
 // MJPEG QP control
 int qic_get_MJPEG_QP_Value(unsigned char *value);
 int qic_change_MJPEG_QP_Value(unsigned char value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

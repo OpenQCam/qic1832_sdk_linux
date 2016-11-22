@@ -11,6 +11,10 @@
 #ifndef _QIC_API_MD_H_
 #define _QIC_API_MD_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_api_common_define.h"
 
 #ifdef QIC_MD_API
@@ -39,6 +43,10 @@ int qic_td_change_config(unsigned int dev_id,td_config_t* config);
 int qic_td_get_config(unsigned int dev_id,td_config_t* config);
 int qic_td_get_status(unsigned int dev_id,int* status);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

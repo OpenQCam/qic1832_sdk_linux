@@ -11,6 +11,10 @@
 #ifndef _QIC_API_OSD_H_
 #define _QIC_API_OSD_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_api_common_define.h"
 
 #ifdef QIC_OSD_API
@@ -27,6 +31,10 @@ int qic_osd_get_char_of_string(unsigned int dev_id,unsigned char line_id, unsign
 int qic_osd_change_line_attr(unsigned int dev_id,unsigned char line_id,OsdLineAttr_t line_attr);
 int qic_osd_get_line_attr(unsigned int dev_id,unsigned char line_id,OsdLineAttr_t *line_attr);
 int qic_osd_change_timer(unsigned int dev_id,unsigned char line_id,unsigned char enable,OsdTimer_t timer);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

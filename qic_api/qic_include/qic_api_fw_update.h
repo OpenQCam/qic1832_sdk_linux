@@ -11,6 +11,10 @@
 #ifndef _QIC_API_FW_UPDATE_H_
 #define _QIC_API_FW_UPDATE_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "qic_api_common_define.h"
 
 /* firmware image file name default */
@@ -53,5 +57,9 @@ int qic_backup_2nd_Boot_Rom(unsigned int dev_id, char *backup_BL2nd_img_loc);
 /*Check Lock Streaming control*/
 int qic_set_lock_steam_control( unsigned char lock);
 int qic_check_lock_stream_status( unsigned char *isLock, unsigned char *isStream);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

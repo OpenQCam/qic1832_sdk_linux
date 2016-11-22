@@ -11,6 +11,10 @@
 #ifndef _QIC_CFG_H_
 #define _QIC_CFG_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 // Supported QIC chips and APIs
 #define QIC1822
 
@@ -33,5 +37,9 @@
 // 5.Audio calibration backup
 //#define QIC_SUPPORT_AUDIO_CALIBRATION_BACKUP
 // TODO:Remove it?
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -11,6 +11,10 @@
 #ifndef _DEMUX_VP8_H_
 #define _DEMUX_VP8_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include <stdint.h>
 
 
@@ -97,5 +101,9 @@ typedef struct{
  *    this overwrites the following MJPG marker structures.
  */
 int vp8demux_ex(BYTE* src, int size, vp8_frames_ex_t* frames);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
