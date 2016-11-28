@@ -455,8 +455,12 @@ int qic_set_IR(unsigned char als_mode, unsigned char ir_status)
         return 1;
     }
 #endif
-
-    qic_ret = QicSetIR((als_mode<<1) && ir_status);
+    if(als_mode==1){
+        qic_ret = QicSetIR((als_mode<<1) + 0);
+    }
+    else{
+        qic_ret = QicSetIR((als_mode<<1) + ir_status);
+    }
     LOG_XU_PRINT(debug_str, debug_xuctrl_str, qic_ret);
 
     if(!qic_ret){
