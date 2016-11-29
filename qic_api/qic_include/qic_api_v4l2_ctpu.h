@@ -69,6 +69,7 @@ enum  v4l2_exposure_auto_type {
 typedef struct{
     signed int max;
     signed int min;
+    signed int step;
     signed int def;
     signed int now;
 }sqicv4l2value;

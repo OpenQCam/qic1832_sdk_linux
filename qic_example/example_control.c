@@ -1091,7 +1091,7 @@ int main(int argc,char ** argv)
 
 void PrintParamRange(sqicv4l2value target, int id)
 {
-    printf("-min=%d\n-max=%d\n-def=%d\n-cur=%d\n",target.min, target.max, target.def, target.now);
+    printf("-min=%d\n-max=%d\n-step=%d\n-def=%d\n-cur=%d\n",target.min, target.max, target.step, target.def, target.now);
 }
 
 int QueryParamRange(int id)

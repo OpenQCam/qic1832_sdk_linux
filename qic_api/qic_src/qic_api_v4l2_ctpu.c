@@ -652,6 +652,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Brightness.def=queryctrl.default_value;
                         camerav4l2->Brightness.max=queryctrl.maximum;
                         camerav4l2->Brightness.min=queryctrl.minimum;
+                        camerav4l2->Brightness.step=queryctrl.step;
                         camerav4l2->Brightness.now=control_s.value;
                     }
 
@@ -660,6 +661,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Contrast.def=queryctrl.default_value;
                         camerav4l2->Contrast.max=queryctrl.maximum;
                         camerav4l2->Contrast.min=queryctrl.minimum;
+                        camerav4l2->Contrast.step=queryctrl.step;
                         camerav4l2->Contrast.now=control_s.value;
                     }
 
@@ -668,6 +670,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Saturation.def=queryctrl.default_value;
                         camerav4l2->Saturation.max=queryctrl.maximum;
                         camerav4l2->Saturation.min=queryctrl.minimum;
+                        camerav4l2->Saturation.step=queryctrl.step;
                         camerav4l2->Saturation.now=control_s.value;
                     }
 
@@ -676,6 +679,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Hue.def=queryctrl.default_value;
                         camerav4l2->Hue.max=queryctrl.maximum;
                         camerav4l2->Hue.min=queryctrl.minimum;
+                        camerav4l2->Hue.step=queryctrl.step;
                         camerav4l2->Hue.now=control_s.value;
                     }
 
@@ -684,6 +688,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Gamma.def=queryctrl.default_value;
                         camerav4l2->Gamma.max=queryctrl.maximum;
                         camerav4l2->Gamma.min=queryctrl.minimum;
+                        camerav4l2->Gamma.step=queryctrl.step;
                         camerav4l2->Gamma.now=control_s.value;
                     }
 
@@ -692,6 +697,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Gain.def=queryctrl.default_value;
                         camerav4l2->Gain.max=queryctrl.maximum;
                         camerav4l2->Gain.min=queryctrl.minimum;
+                        camerav4l2->Gain.step=queryctrl.step;
                         camerav4l2->Gain.now=control_s.value;
                     }
 
@@ -701,6 +707,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Plf.def=queryctrl.default_value;
                         camerav4l2->Plf.max=queryctrl.maximum;
                         camerav4l2->Plf.min=queryctrl.minimum;
+                        camerav4l2->Plf.step=queryctrl.step;
                         camerav4l2->Plf.now=control_s.value;
                     }
 
@@ -709,6 +716,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->WB.def=queryctrl.default_value;
                         camerav4l2->WB.max=queryctrl.maximum;
                         camerav4l2->WB.min=queryctrl.minimum;
+                        camerav4l2->WB.step=queryctrl.step;
                         camerav4l2->WB.now=control_s.value;
                     }
 
@@ -717,6 +725,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Sharpness.def=queryctrl.default_value;
                         camerav4l2->Sharpness.max=queryctrl.maximum;
                         camerav4l2->Sharpness.min=queryctrl.minimum;
+                        camerav4l2->Sharpness.step=queryctrl.step;
                         camerav4l2->Sharpness.now=control_s.value;
                     }
 
@@ -725,6 +734,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->BC.def=queryctrl.default_value;
                         camerav4l2->BC.max=queryctrl.maximum;
                         camerav4l2->BC.min=queryctrl.minimum;
+                        camerav4l2->BC.step=queryctrl.step;
                         camerav4l2->BC.now=control_s.value;
                     }
 
@@ -759,6 +769,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Exposure.def=queryctrl.default_value;
                         camerav4l2->Exposure.max=queryctrl.maximum;
                         camerav4l2->Exposure.min=queryctrl.minimum;
+                        camerav4l2->Exposure.step=queryctrl.step;
                         camerav4l2->Exposure.now=control_s.value;
                     }
 
@@ -767,6 +778,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->E_priority.def=queryctrl.default_value;
                         camerav4l2->E_priority.max=queryctrl.maximum;
                         camerav4l2->E_priority.min=queryctrl.minimum;
+                        camerav4l2->E_priority.step=queryctrl.step;
                         camerav4l2->E_priority.now=control_s.value;
                     }
 
@@ -775,6 +787,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Focus.def=queryctrl.default_value;
                         camerav4l2->Focus.max=queryctrl.maximum;
                         camerav4l2->Focus.min=queryctrl.minimum;
+                        camerav4l2->Focus.step=queryctrl.step;
                         camerav4l2->Focus.now=control_s.value;
                     }
                     if(V4L2_CID_PAN_ABSOLUTE==queryctrl.id)
@@ -782,6 +795,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Pan.def=queryctrl.default_value;
                         camerav4l2->Pan.max=queryctrl.maximum/queryctrl.step;
                         camerav4l2->Pan.min=queryctrl.minimum/queryctrl.step;
+                        camerav4l2->Pan.step=queryctrl.step/queryctrl.step;
                         camerav4l2->Pan.now=control_s.value/queryctrl.step;
                     }
                     if(V4L2_CID_TILT_ABSOLUTE==queryctrl.id)
@@ -789,6 +803,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Tilt.def=queryctrl.default_value;
                         camerav4l2->Tilt.max=queryctrl.maximum/queryctrl.step;
                         camerav4l2->Tilt.min=queryctrl.minimum/queryctrl.step;
+                        camerav4l2->Tilt.step=queryctrl.step/queryctrl.step;
                         camerav4l2->Tilt.now=control_s.value/queryctrl.step;
                     }
 
@@ -797,6 +812,7 @@ int qic_get_ctpu_setting(int dev_id, sqicV4L2 *camerav4l2)
                         camerav4l2->Zoom.def=queryctrl.default_value;
                         camerav4l2->Zoom.max=queryctrl.maximum;
                         camerav4l2->Zoom.min=queryctrl.minimum;
+                        camerav4l2->Zoom.step=queryctrl.step;
                         camerav4l2->Zoom.now=control_s.value;
                     }
 
